@@ -7,7 +7,7 @@ obj/local/armeabi/objs/game_shared/__/__/Classes/AppDelegate.o: \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/platform/CCPlatformConfig.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/platform/CCPlatformConfig.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/platform/android/CCPlatformDefine.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/android/log.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/android/log.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/platform/CCApplicationProtocol.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/include/cocos2d.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/include/ccConfig.h \
@@ -20,56 +20,56 @@ obj/local/armeabi/objs/game_shared/__/__/Classes/AppDelegate.o: \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/base_nodes/CCNode.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/include/ccMacros.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/platform/android/CCStdC.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/math.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/sys/cdefs.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/sys/cdefs_elf.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/android/api-level.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/sys/types.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/stdint.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/sys/_types.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/machine/_types.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/linux/posix_types.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/linux/stddef.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/linux/compiler.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/asm/posix_types.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/asm/types.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/linux/types.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/machine/kernel.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/sys/sysmacros.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/limits.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/sys/limits.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/linux/limits.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/machine/internal_types.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/machine/limits.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/sys/syslimits.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/asm/page.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/string.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/malloc.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/stdio.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/stdlib.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/alloca.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/strings.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/memory.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/time.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/sys/time.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/linux/time.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/asm/siginfo.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/asm-generic/siginfo.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/math.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/sys/types.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/stdint.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/sys/_types.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/machine/_types.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/linux/posix_types.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/linux/stddef.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/linux/compiler.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/asm/posix_types.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/asm/types.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/linux/types.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/machine/kernel.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/limits.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/sys/limits.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/linux/limits.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/machine/internal_types.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/machine/limits.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/sys/syslimits.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/asm/page.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/string.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/malloc.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/stdio.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/stdlib.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/alloca.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/strings.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/memory.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/time.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/sys/time.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/linux/time.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/asm/siginfo.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/asm-generic/siginfo.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/cocoa/CCAffineTransform.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/cocoa/CCGeometry.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/cocoa/CCArray.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/support/data_support/ccCArray.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/platform/android/CCGL.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/GLES2/gl2platform.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/KHR/khrplatform.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/GLES2/gl2.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/GLES2/gl2ext.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/GLES2/gl2platform.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/KHR/khrplatform.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/GLES2/gl2.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/GLES2/gl2ext.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/shaders/ccGLStateCache.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/shaders/CCGLProgram.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/kazmath/include/kazmath/kazmath.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/kazmath/include/kazmath/vec2.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/kazmath/include/kazmath/vec3.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/assert.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/assert.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/kazmath/include/kazmath/mat3.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/kazmath/include/kazmath/utility.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/kazmath/include/kazmath/mat4.h \
@@ -96,7 +96,7 @@ obj/local/armeabi/objs/game_shared/__/__/Classes/AppDelegate.o: \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/sprite_nodes/CCAnimation.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/cocoa/CCDictionary.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/support/data_support/uthash.h \
- /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/inttypes.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/inttypes.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/cocoa/CCArray.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/cocoa/CCString.h \
  /Users/kien_metalrock/android/android-ndk-r8e/sources/cxx-stl/gnu-libstdc++/4.6/include/functional \
@@ -230,7 +230,53 @@ obj/local/armeabi/objs/game_shared/__/__/Classes/AppDelegate.o: \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/touch_dispatcher/CCTouchDispatcher.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/CCScheduler.h \
  /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/support/data_support/uthash.h \
- jni/../../Classes/HelloWorldScene.h
+ jni/../../Classes/GameLayer.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../CocosDenshion/android/../include/SimpleAudioEngine.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../CocosDenshion/android/../include/Export.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Box2D.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Common/b2Settings.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/sources/cxx-stl/gnu-libstdc++/4.6/include/cassert \
+ /Users/kien_metalrock/android/android-ndk-r8e/sources/cxx-stl/gnu-libstdc++/4.6/include/cmath \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Common/b2Draw.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Common/b2Math.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/sources/cxx-stl/gnu-libstdc++/4.6/include/cfloat \
+ /Users/kien_metalrock/android/android-ndk-r8e/sources/cxx-stl/gnu-libstdc++/4.6/include/cstddef \
+ /Users/kien_metalrock/android/android-ndk-r8e/sources/cxx-stl/gnu-libstdc++/4.6/include/limits \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Common/b2Timer.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/Shapes/b2CircleShape.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/Shapes/b2Shape.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Common/b2BlockAllocator.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/b2Collision.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/Shapes/b2EdgeShape.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/Shapes/b2ChainShape.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/Shapes/b2PolygonShape.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/b2BroadPhase.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/b2DynamicTree.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Common/b2GrowableStack.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/sources/cxx-stl/gnu-libstdc++/4.6/include/algorithm \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/b2Distance.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/b2TimeOfImpact.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/b2Body.h \
+ /Users/kien_metalrock/android/android-ndk-r8e/sources/cxx-stl/gnu-libstdc++/4.6/include/memory \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/b2Fixture.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/b2WorldCallbacks.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/b2TimeStep.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/b2World.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Common/b2StackAllocator.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/b2ContactManager.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Contacts/b2Contact.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2DistanceJoint.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2Joint.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2FrictionJoint.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2GearJoint.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2WheelJoint.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2MouseJoint.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2PrismaticJoint.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2PulleyJoint.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2RevoluteJoint.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2RopeJoint.h \
+ /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2WeldJoint.h \
+ jni/../../Classes/Ball.h jni/../../Classes/b2Sprite.h
 
 jni/../../Classes/AppDelegate.h:
 
@@ -248,7 +294,7 @@ jni/../../Classes/AppDelegate.h:
 
 /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/platform/android/CCPlatformDefine.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/android/log.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/android/log.h:
 
 /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/platform/CCApplicationProtocol.h:
 
@@ -274,75 +320,75 @@ jni/../../Classes/AppDelegate.h:
 
 /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/platform/android/CCStdC.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/math.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/math.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/sys/cdefs.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/sys/cdefs.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/sys/cdefs_elf.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/android/api-level.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/android/api-level.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/sys/types.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/sys/types.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/stdint.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/stdint.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/sys/_types.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/sys/_types.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/machine/_types.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/machine/_types.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/linux/posix_types.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/linux/posix_types.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/linux/stddef.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/linux/stddef.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/linux/compiler.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/linux/compiler.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/asm/posix_types.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/asm/posix_types.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/asm/types.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/asm/types.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/linux/types.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/linux/types.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/machine/kernel.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/machine/kernel.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/sys/sysmacros.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/sys/sysmacros.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/limits.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/limits.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/sys/limits.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/sys/limits.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/linux/limits.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/linux/limits.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/machine/internal_types.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/machine/internal_types.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/machine/limits.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/machine/limits.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/sys/syslimits.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/sys/syslimits.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/asm/page.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/asm/page.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/string.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/string.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/malloc.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/malloc.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/stdio.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/stdio.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/stdlib.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/stdlib.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/alloca.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/alloca.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/strings.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/strings.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/memory.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/memory.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/time.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/time.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/sys/time.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/sys/time.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/linux/time.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/linux/time.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/asm/siginfo.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/asm/siginfo.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/asm-generic/siginfo.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/asm-generic/siginfo.h:
 
 /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/cocoa/CCAffineTransform.h:
 
@@ -354,13 +400,13 @@ jni/../../Classes/AppDelegate.h:
 
 /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/platform/android/CCGL.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/GLES2/gl2platform.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/GLES2/gl2platform.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/KHR/khrplatform.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/KHR/khrplatform.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/GLES2/gl2.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/GLES2/gl2.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/GLES2/gl2ext.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/GLES2/gl2ext.h:
 
 /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/shaders/ccGLStateCache.h:
 
@@ -372,7 +418,7 @@ jni/../../Classes/AppDelegate.h:
 
 /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/kazmath/include/kazmath/vec3.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/assert.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/assert.h:
 
 /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/kazmath/include/kazmath/mat3.h:
 
@@ -426,7 +472,7 @@ jni/../../Classes/AppDelegate.h:
 
 /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/support/data_support/uthash.h:
 
-/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include/inttypes.h:
+/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-8/arch-arm/usr/include/inttypes.h:
 
 /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/cocoa/CCArray.h:
 
@@ -694,4 +740,98 @@ jni/../../Classes/AppDelegate.h:
 
 /Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../cocos2dx/support/data_support/uthash.h:
 
-jni/../../Classes/HelloWorldScene.h:
+jni/../../Classes/GameLayer.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../CocosDenshion/android/../include/SimpleAudioEngine.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../CocosDenshion/android/../include/Export.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Box2D.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Common/b2Settings.h:
+
+/Users/kien_metalrock/android/android-ndk-r8e/sources/cxx-stl/gnu-libstdc++/4.6/include/cassert:
+
+/Users/kien_metalrock/android/android-ndk-r8e/sources/cxx-stl/gnu-libstdc++/4.6/include/cmath:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Common/b2Draw.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Common/b2Math.h:
+
+/Users/kien_metalrock/android/android-ndk-r8e/sources/cxx-stl/gnu-libstdc++/4.6/include/cfloat:
+
+/Users/kien_metalrock/android/android-ndk-r8e/sources/cxx-stl/gnu-libstdc++/4.6/include/cstddef:
+
+/Users/kien_metalrock/android/android-ndk-r8e/sources/cxx-stl/gnu-libstdc++/4.6/include/limits:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Common/b2Timer.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/Shapes/b2CircleShape.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/Shapes/b2Shape.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Common/b2BlockAllocator.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/b2Collision.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/Shapes/b2EdgeShape.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/Shapes/b2ChainShape.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/Shapes/b2PolygonShape.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/b2BroadPhase.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/b2DynamicTree.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Common/b2GrowableStack.h:
+
+/Users/kien_metalrock/android/android-ndk-r8e/sources/cxx-stl/gnu-libstdc++/4.6/include/algorithm:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/b2Distance.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Collision/b2TimeOfImpact.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/b2Body.h:
+
+/Users/kien_metalrock/android/android-ndk-r8e/sources/cxx-stl/gnu-libstdc++/4.6/include/memory:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/b2Fixture.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/b2WorldCallbacks.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/b2TimeStep.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/b2World.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Common/b2StackAllocator.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/b2ContactManager.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Contacts/b2Contact.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2DistanceJoint.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2Joint.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2FrictionJoint.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2GearJoint.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2WheelJoint.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2MouseJoint.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2PrismaticJoint.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2PulleyJoint.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2RevoluteJoint.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2RopeJoint.h:
+
+/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/proj.android/../../external/Box2D/../Box2D/Dynamics/Joints/b2WeldJoint.h:
+
+jni/../../Classes/Ball.h:
+
+jni/../../Classes/b2Sprite.h:
