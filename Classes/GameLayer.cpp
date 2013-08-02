@@ -45,16 +45,20 @@ GameLayer::GameLayer() {
 //    this->getCamera()->setEyeXYZ(x, y, 70);
     CCSprite *backGroundImg = CCSprite::create("Court3.png");
     backGroundImg->setPosition(ccp(w/2, h/2));
+    backGroundImg->setScaleY(h/backGroundImg->getContentSize().height);
+    backGroundImg->setScaleX(w/backGroundImg->getContentSize().width);
     this->addChild(backGroundImg);
     
     // Score Counter
-    _scoreLabel1 = CCLabelTTF::create("0", "BankGothic Md BT", 48);
+//    _scoreLabel1 = CCLabelTTF::create("0", "BankGothic Md BT", 48);
+    _scoreLabel1 = CCLabelTTF::create("0", "Fonts/BankGothic Md BT.ttf", 48);
     _scoreLabel1->setColor(ccBLACK);
-    _scoreLabel2 = CCLabelTTF::create("0", "BankGothic Md BT", 48);
+//    _scoreLabel2 = CCLabelTTF::create("0", "BankGothic Md BT", 48);
+    _scoreLabel2 = CCLabelTTF::create("0", "Fonts/BankGothic Md BT.ttf", 48);
     _scoreLabel2->setColor(ccBLACK);
-    _scoreLabel1->setPosition(ccp(w - 70, h/2 - 100));
+    _scoreLabel1->setPosition(ccp(w - 70, h*3/8 + 10));
     _scoreLabel1->setRotation(90);
-    _scoreLabel2->setPosition(ccp(w - 70, h/2 + 100));
+    _scoreLabel2->setPosition(ccp(w - 70, h*5/8 - 10));
     _scoreLabel2->setRotation(90);
     this->addChild(_scoreLabel1);
     this->addChild(_scoreLabel2);
@@ -74,8 +78,11 @@ GameLayer::GameLayer() {
     _quitButton     = CCSprite::create("Buttons/Quit.png");
     _restartButton  = CCSprite::create("Buttons/Restart.png");
     _continueButton = CCSprite::create("Buttons/Continue.png");
-    _resultLabel    = CCLabelTTF::create("DRAW", "BankGothic Md BT", 60);
-    _scoreLabel     = CCLabelTTF::create("score: 0", "BankGothic Md BT", 36);
+    
+//    _resultLabel    = CCLabelTTF::create("DRAW", "BankGothic Md BT", 60);
+//    _scoreLabel     = CCLabelTTF::create("score: 0", "BankGothic Md BT", 36);
+    _resultLabel    = CCLabelTTF::create("DRAW", "Fonts/BankGothic Md BT.ttf", 60);
+    _scoreLabel     = CCLabelTTF::create("score: 0", "Fonts/BankGothic Md BT.ttf", 36);
 
     _quitButton->setPosition(ccp(ew/2, eh/4));
     _restartButton->setPosition(ccp(ew/2, eh/2));
@@ -97,8 +104,11 @@ GameLayer::GameLayer() {
     _playing = false;
     char timeBuf[20] = {0};
 	sprintf(timeBuf, "0%i:0%i", _minutes, _seconds);
-
-    _time = CCLabelTTF::create(timeBuf, "BankGothic Md BT", 40);
+	// Android Font
+    _time = CCLabelTTF::create(timeBuf, "Fonts/BankGothic Md BT.ttf", 40);
+    // iOS Font
+//    _time = CCLabelTTF::create(timeBuf, "BankGothic Md BT", 40);
+    
     _time->setColor(ccBLACK);
 	_time->setPosition(ccp(60, h/2));
     _time->setRotation(90);
@@ -381,9 +391,9 @@ void GameLayer::ccTouchesBegan(CCSet* touches, CCEvent* event) {
                 md.bodyB = _player1->getBody();
                 md.target = target;
                 md.collideConnected = true;
-                md.maxForce = 100000.0f * _player1->getBody()->GetMass();
+                md.maxForce = 1000000.0f * _player1->getBody()->GetMass();
                 md.dampingRatio = 0;
-                md.frequencyHz = 1000;
+                md.frequencyHz = 100000;
                 
                 _player1->setSpritePosition(tap);
                 _mouseJoint = (b2MouseJoint *)_world->CreateJoint(&md);
@@ -437,9 +447,9 @@ void GameLayer::ccTouchesBegan(CCSet* touches, CCEvent* event) {
             md.bodyB = _player1->getBody();
             md.target = this->ptm(tap);
             md.collideConnected = true;
-            md.maxForce = 100000.0f * _player1->getBody()->GetMass();
+            md.maxForce = 1000000.0f * _player1->getBody()->GetMass();
             md.dampingRatio = 0;
-            md.frequencyHz = 1000;
+            md.frequencyHz = 100000;
             
             _mouseJoint = (b2MouseJoint *)_world->CreateJoint(&md);
             _player1->getBody()->SetAwake(true);

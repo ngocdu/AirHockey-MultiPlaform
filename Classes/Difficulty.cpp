@@ -26,6 +26,8 @@ bool Difficulty::init() {
     h = size.height;
     CCSprite *background = CCSprite::create("BackGrounds/BackGround3.png");
     background->setPosition(ccp(w/2, h/2));
+    background->setScaleY(h/background->getContentSize().height);
+    background->setScaleX(w/background->getContentSize().width);
     this->addChild(background);
     
 //    CCPoint visibleOrigin = CCEGLView::sharedOpenGLView()->getVisibleOrigin();

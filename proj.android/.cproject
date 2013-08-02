@@ -31,7 +31,6 @@
 							<tool id="org.eclipse.cdt.build.core.settings.holder.148457523" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
 								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.1860819201" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include"/>
-									<listOptionValue builtIn="false" value="/Users/kien_metalrock/XcodeProjects/New/AirHockey/libs/cocos2dx/include"/>
 									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/libs/cocos2dx/include"/>
 									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/libs/rapidjson"/>
 								</option>
@@ -48,7 +47,6 @@
 							<tool id="org.eclipse.cdt.build.core.settings.holder.518746864" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
 								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.1668575913" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include"/>
-									<listOptionValue builtIn="false" value="/Users/kien_metalrock/XcodeProjects/New/AirHockey/libs/cocos2dx/include"/>
 									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/libs/cocos2dx/include"/>
 									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/libs/rapidjson"/>
 								</option>

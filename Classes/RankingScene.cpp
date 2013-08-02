@@ -40,6 +40,8 @@ bool RankingScene::init() {
     
     CCSprite *background = CCSprite::create("BackGrounds/BackGround2.png");
     background->setPosition(ccp(w/2, h/2));
+    background->setScaleY(h/background->getContentSize().height);
+    background->setScaleX(w/background->getContentSize().width);
     this->addChild(background);
     
     CCSprite *topLine = CCSprite::create("line.png");
@@ -116,11 +118,12 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
             response->getHttpRequest()->getTag());
     
     if (!response->isSucceed()) {
-        CCLabelTTF *notConnectLabel =
-            CCLabelTTF::create("Can't load Data", "BankGothic Md BT", 20);
+//        CCLabelTTF *notConnectLabel = CCLabelTTF::create("Can't load Data", "BankGothic Md BT", 20);
+        CCLabelTTF *notConnectLabel = CCLabelTTF::create("Can't load Data", "Fonts/BankGothic Md BT.ttf", 20);
         notConnectLabel->setPosition(ccp(w/2, h/2));
         
-        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!", "BankGothic Md BT", 24);
+//        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!", "BankGothic Md BT", 24);
+        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!", "Fonts/BankGothic Md BT.ttf", 24);
         checkInternetMsg->setPosition(ccp(w/2, h/2 - 40));
         
         this->addChild(notConnectLabel);

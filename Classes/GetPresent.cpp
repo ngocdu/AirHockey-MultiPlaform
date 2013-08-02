@@ -28,17 +28,21 @@ bool GetPresent::init() {
     CCSize editBoxSize = CCSizeMake(w - 100, 60);
     
     // Congrats 
-    CCLabelTTF *congrats = CCLabelTTF::create("BEST SCORE !!!", "BankGothic Md BT", 64);
+//    CCLabelTTF *congrats = CCLabelTTF::create("BEST SCORE !!!", "BankGothic Md BT", 64);
+    CCLabelTTF *congrats = CCLabelTTF::create("BEST SCORE !!!", "Fonts/BankGothic Md BT.ttf", 64);
     congrats->setPosition(ccp(w/2, h*6/8));
     congrats->setColor(ccYELLOW);
     this->addChild(congrats);
     
     
     // email
-    CCLabelTTF *emailLabel1 = CCLabelTTF::create("Please enter your Email", "BankGothic Md BT", 36);
+//    CCLabelTTF *emailLabel1 = CCLabelTTF::create("Please enter your Email", "BankGothic Md BT", 36);
+    CCLabelTTF *emailLabel1 = CCLabelTTF::create("Please enter your Email", "Fonts/BankGothic Md BT.ttf", 36);
     emailLabel1->setPosition(ccp(w/2, h*5/8));
     this->addChild(emailLabel1);
-    CCLabelTTF *emailLabel2 = CCLabelTTF::create("to get Presents:", "BankGothic Md BT", 36);
+    
+//    CCLabelTTF *emailLabel2 = CCLabelTTF::create("to get Presents:", "BankGothic Md BT", 36);
+    CCLabelTTF *emailLabel2 = CCLabelTTF::create("to get Presents:", "Fonts/BankGothic Md BT.ttf", 36);
     emailLabel2->setPosition(ccp(w/2, emailLabel1->getPositionY() - 45));
     this->addChild(emailLabel2);
     
@@ -58,7 +62,8 @@ bool GetPresent::init() {
     
     // Email Fail Message
     
-    emailFailMsg = CCLabelTTF::create("Invalid Email !! Please Try Again !!", "BankGothic Md BT", 24);
+//    emailFailMsg = CCLabelTTF::create("Invalid Email !! Please Try Again !!", "BankGothic Md BT", 24);
+    emailFailMsg = CCLabelTTF::create("Invalid Email !! Please Try Again !!", "Fonts/BankGothic Md BT.ttf", 24);
     emailFailMsg->setPosition(ccp(m_pUserEmail->getPosition().x,
                                   m_pUserEmail->getPosition().y - 50));
     emailFailMsg->setColor(ccRED);
@@ -66,7 +71,8 @@ bool GetPresent::init() {
     this->addChild(emailFailMsg);
     
     // name
-    CCLabelTTF *nameLabel = CCLabelTTF::create("please choose your username:","BankGothic Md BT", 36);
+//    CCLabelTTF *nameLabel = CCLabelTTF::create("please choose your username:","BankGothic Md BT", 36);
+    CCLabelTTF *nameLabel = CCLabelTTF::create("please choose your username:","Fonts/BankGothic Md BT.ttf", 36);
     nameLabel->setPosition(ccp(w/2, h*3/8));
     this->addChild(nameLabel);
     m_pUserName =
@@ -81,7 +87,8 @@ bool GetPresent::init() {
     m_pUserName->setDelegate(this);
     this->addChild(m_pUserName);
     
-    nameFailMsg = CCLabelTTF::create("please enter your username !!", "BankGothic Md BT", 24);
+//    nameFailMsg = CCLabelTTF::create("please enter your username !!", "BankGothic Md BT", 24);
+    nameFailMsg = CCLabelTTF::create("please enter your username !!", "Fonts/BankGothic Md BT.ttf", 24);
     nameFailMsg->setPosition(ccp(m_pUserName->getPosition().x,
                                   m_pUserName->getPosition().y - 50));
     nameFailMsg->setColor(ccRED);
