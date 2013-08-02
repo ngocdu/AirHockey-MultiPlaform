@@ -20,25 +20,44 @@
 					<folderInfo id="0.803332532." name="/" resourcePath="">
 						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.334501029" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
 							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.334501029.1839823669" name=""/>
-							<builder arguments="${workspace_loc:/AirHockey}/build_native.sh NDK_DEBUG=1 V=1" command="bash" id="org.eclipse.cdt.build.core.settings.default.builder.118055211" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
-							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.1859635914" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
+							<builder arguments="${workspace_loc:/AirHockey}/build_native.sh NDK_DEBUG=1 V=1" command="bash" id="org.eclipse.cdt.build.core.settings.default.builder.118055211" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder">
+								<outputEntries>
+									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name=""/>
+								</outputEntries>
+							</builder>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.1859635914" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs">
+								<option id="org.eclipse.cdt.build.core.settings.holder.libpaths.1169799596" name="Library Paths" superClass="org.eclipse.cdt.build.core.settings.holder.libpaths" valueType="libPaths"/>
+							</tool>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.148457523" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.1860819201" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
+									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include"/>
+									<listOptionValue builtIn="false" value="/Users/kien_metalrock/XcodeProjects/New/AirHockey/libs/cocos2dx/include"/>
+									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/libs/cocos2dx/include"/>
+									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/libs/rapidjson"/>
+								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.384286847" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.694202469" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
 								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.297521727" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include"/>
 									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/libs/cocos2dx/include"/>
+									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/libs/rapidjson"/>
 								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.2072597582" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.518746864" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.1668575913" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
+									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include"/>
+									<listOptionValue builtIn="false" value="/Users/kien_metalrock/XcodeProjects/New/AirHockey/libs/cocos2dx/include"/>
+									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/libs/cocos2dx/include"/>
+									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/libs/rapidjson"/>
+								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.164840290" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Classes" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="rapidjson|Classes2|Classes" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Classes"/>
 					</sourceEntries>
 				</configuration>

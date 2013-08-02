@@ -1,3 +1,11 @@
+//
+//  AirHockeyAppDelegate.h
+//  AirHockey
+//
+//  Created by Trung Kien Do on 13/07/09.
+//  Copyright __FRAMGIA__ 2013年. All rights reserved.
+//
+
 #ifndef  _APP_DELEGATE_H_
 #define  _APP_DELEGATE_H_
 
@@ -13,6 +21,7 @@ class  AppDelegate : private cocos2d::CCApplication
 public:
     AppDelegate();
     virtual ~AppDelegate();
+
 
     /**
     @brief    Implement CCDirector and CCScene init code here.

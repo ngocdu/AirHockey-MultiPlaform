@@ -1,62 +1,119 @@
+//
+//  GameLayer.h
+//  AirHockey
+//
+//  Created by Trung Kien Do on 13/07/09.
+//  Copyright __FRAMGIA__ 2013年. All rights reserved.
+//
 #ifndef __GAME_LAYER_H__
 #define __GAME_LAYER_H__
 
-#include "cocos2d.h"
-#include "SimpleAudioEngine.h"
-#include <Box2D/Box2D.h>
 #include "Ball.h"
+#include "MyContactListener.h"
+#include "SimpleAudioEngine.h"
+#include "GameManager.h"
+#include "HttpClient.h"
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/document.h"
+#include "RankingScene.h"
+#include "GetPresent.h"
 
-#define PTM_RATIO 32.0
 
+
+USING_NS_CC;
+using namespace cocos2d::extension;
 using namespace CocosDenshion;
-using namespace cocos2d;
 using namespace std;
 
-class GameLayer : public cocos2d::CCLayer
-{
-private:
-    CCSize size;
-    float w, h;
-    
-    // Game Objects
-    Ball *_humanPlayer;
-    Ball *_aiPlayer;
-    Ball *_puck;
-    
-    // Physics Object
-    b2Body *_groundBody;
-    
-    // Mouse Joint
-    b2MouseJoint *_mouseJoint;
-    
+class GameLayer : public CCLayer {
 public:
-    CC_SYNTHESIZE(b2World*, _world, World);
-    GameLayer();
     ~GameLayer();
+    GameLayer();
     
-    // Init all Box2D Physics here
+    CC_SYNTHESIZE(b2World *, _world, World);
+    
+    static CCScene* scene();
+    
     void initPhysics();
     void createEdge(float x1, float y1, float x2, float y2, int groupIndex);
     
-    // Update
+    void onStart();
+    
+    virtual void draw();
     void update(float dt);
     
-    // Touch Event Handle
-    virtual bool ccTouchBegan(CCTouch *touch, CCEvent *event);
-    virtual void ccTouchMoved(CCTouch *touch, CCEvent *event);
-    virtual void ccTouchEnded(CCTouch *touch, CCEvent *event);
-//    
-//    virtual void ccTouchesBegan(CCSet* touches, CCEvent* event);
-//    virtual void ccTouchesMoved(CCSet* touches, CCEvent* event);
-//    virtual void ccTouchesEnded(CCSet* touches, CCEvent* event);
+    void getStateInfo();
+    void handleProcess();
+    void defenseCenter();
+    void defenseLeft();
+    void defenseRight();
+    void attack();
     
-    // Main Scene
-    static CCScene* scene();
+    virtual void ccTouchesBegan(CCSet* touches, CCEvent* event);
+    virtual void ccTouchesMoved(CCSet* touches, CCEvent* event);
+    virtual void ccTouchesEnded(CCSet* touches, CCEvent* event);
+    
+    void newTurn();
+    void gameReset();
+    void scoreCounter(int player);
+    
+    void Timer();
+    void checkHighScore();
+    void onHttpRequestCompleted(CCNode *sender, void *data);
+    
+    void endGame();
+    void addEffect(CCPoint point);
+    void convertName(char *str_name);
     
     b2Vec2 ptm(CCPoint point);
     b2Vec2 ptm2(float x, float y);
+private:
     
-    CREATE_FUNC(GameLayer);
+    CCSize size;
+    float w, h;
+    
+    b2Body *_groundBody;
+
+    CCSprite *_pauseButton;
+    CCSprite *_endLayerBg;
+    CCSprite *_continueButton;
+    CCSprite *_restartButton;
+    CCSprite *_quitButton;
+    
+//    GLESDebugDraw *m_debugDraw;
+    
+    Ball *_player1;
+    Ball *_player2;
+    Ball *_puck;
+
+    b2MouseJoint *_mouseJoint;
+    
+    int _score1;
+    int _score2;
+    int lastHit;
+    int _minutes, _seconds;
+    int point;
+    int pointCal;
+    int pointUnit;
+    // Game Level Easy = 1, Medium = 2, Hard = 3
+    int _level;
+    
+    bool _playing;
+    bool _isPauseClicked;
+    bool _isEnd;
+    
+    float x, y, px, py;
+    float vx, vy, vpx, vpy;
+    float pr;
+    float ew, eh;
+    
+    CCLabelTTF *_scoreLabel1;
+    CCLabelTTF *_scoreLabel2;
+    CCLabelTTF *_time;
+    CCLabelTTF *_resultLabel;
+    CCLabelTTF *_scoreLabel;
+    
+    MyContactListener *_contactListener;
 };
 
-#endif // __GAME_LAYER_H__
+#endif

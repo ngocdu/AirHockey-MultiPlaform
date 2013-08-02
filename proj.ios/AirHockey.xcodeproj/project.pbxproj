@@ -299,6 +299,12 @@
 		FB275A1D17AA560100A75ED1 /* WhiteBox.png in Resources */ = {isa = PBXBuildFile; fileRef = FB275A0917AA560100A75ED1 /* WhiteBox.png */; };
 		FB275A2017AA591D00A75ED1 /* b2Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB275A1E17AA591D00A75ED1 /* b2Sprite.cpp */; };
 		FB275A2317AA59CB00A75ED1 /* Ball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB275A2117AA59CB00A75ED1 /* Ball.cpp */; };
+		FBAF557F17AB556C00E8F022 /* Difficulty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBAF557317AB556C00E8F022 /* Difficulty.cpp */; };
+		FBAF558017AB556C00E8F022 /* GameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBAF557517AB556C00E8F022 /* GameManager.cpp */; };
+		FBAF558117AB556C00E8F022 /* GetPresent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBAF557717AB556C00E8F022 /* GetPresent.cpp */; };
+		FBAF558217AB556C00E8F022 /* MyContactListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBAF557917AB556C00E8F022 /* MyContactListener.cpp */; };
+		FBAF558317AB556C00E8F022 /* RankingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBAF557B17AB556C00E8F022 /* RankingScene.cpp */; };
+		FBAF558417AB556C00E8F022 /* RewardScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBAF557D17AB556C00E8F022 /* RewardScene.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -926,6 +932,18 @@
 		FB275A1F17AA591D00A75ED1 /* b2Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2Sprite.h; sourceTree = "<group>"; };
 		FB275A2117AA59CB00A75ED1 /* Ball.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ball.cpp; sourceTree = "<group>"; };
 		FB275A2217AA59CB00A75ED1 /* Ball.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ball.h; sourceTree = "<group>"; };
+		FBAF557317AB556C00E8F022 /* Difficulty.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Difficulty.cpp; sourceTree = "<group>"; };
+		FBAF557417AB556C00E8F022 /* Difficulty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Difficulty.h; sourceTree = "<group>"; };
+		FBAF557517AB556C00E8F022 /* GameManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameManager.cpp; sourceTree = "<group>"; };
+		FBAF557617AB556C00E8F022 /* GameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameManager.h; sourceTree = "<group>"; };
+		FBAF557717AB556C00E8F022 /* GetPresent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GetPresent.cpp; sourceTree = "<group>"; };
+		FBAF557817AB556C00E8F022 /* GetPresent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPresent.h; sourceTree = "<group>"; };
+		FBAF557917AB556C00E8F022 /* MyContactListener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MyContactListener.cpp; sourceTree = "<group>"; };
+		FBAF557A17AB556C00E8F022 /* MyContactListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyContactListener.h; sourceTree = "<group>"; };
+		FBAF557B17AB556C00E8F022 /* RankingScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RankingScene.cpp; sourceTree = "<group>"; };
+		FBAF557C17AB556C00E8F022 /* RankingScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RankingScene.h; sourceTree = "<group>"; };
+		FBAF557D17AB556C00E8F022 /* RewardScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RewardScene.cpp; sourceTree = "<group>"; };
+		FBAF557E17AB556C00E8F022 /* RewardScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RewardScene.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1002,14 +1020,26 @@
 		FB27565D17AA476200A75ED1 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				FB275A2117AA59CB00A75ED1 /* Ball.cpp */,
-				FB275A2217AA59CB00A75ED1 /* Ball.h */,
 				FB27565E17AA476200A75ED1 /* AppDelegate.cpp */,
 				FB27565F17AA476200A75ED1 /* AppDelegate.h */,
 				FB275A1E17AA591D00A75ED1 /* b2Sprite.cpp */,
 				FB275A1F17AA591D00A75ED1 /* b2Sprite.h */,
+				FB275A2117AA59CB00A75ED1 /* Ball.cpp */,
+				FB275A2217AA59CB00A75ED1 /* Ball.h */,
+				FBAF557317AB556C00E8F022 /* Difficulty.cpp */,
+				FBAF557417AB556C00E8F022 /* Difficulty.h */,
 				FB27566017AA476200A75ED1 /* GameLayer.cpp */,
 				FB27566117AA476200A75ED1 /* GameLayer.h */,
+				FBAF557517AB556C00E8F022 /* GameManager.cpp */,
+				FBAF557617AB556C00E8F022 /* GameManager.h */,
+				FBAF557717AB556C00E8F022 /* GetPresent.cpp */,
+				FBAF557817AB556C00E8F022 /* GetPresent.h */,
+				FBAF557917AB556C00E8F022 /* MyContactListener.cpp */,
+				FBAF557A17AB556C00E8F022 /* MyContactListener.h */,
+				FBAF557B17AB556C00E8F022 /* RankingScene.cpp */,
+				FBAF557C17AB556C00E8F022 /* RankingScene.h */,
+				FBAF557D17AB556C00E8F022 /* RewardScene.cpp */,
+				FBAF557E17AB556C00E8F022 /* RewardScene.h */,
 			);
 			name = Classes;
 			path = ../Classes;
@@ -2491,6 +2521,12 @@
 				FB2759F517AA4BBA00A75ED1 /* RootViewController.mm in Sources */,
 				FB275A2017AA591D00A75ED1 /* b2Sprite.cpp in Sources */,
 				FB275A2317AA59CB00A75ED1 /* Ball.cpp in Sources */,
+				FBAF557F17AB556C00E8F022 /* Difficulty.cpp in Sources */,
+				FBAF558017AB556C00E8F022 /* GameManager.cpp in Sources */,
+				FBAF558117AB556C00E8F022 /* GetPresent.cpp in Sources */,
+				FBAF558217AB556C00E8F022 /* MyContactListener.cpp in Sources */,
+				FBAF558317AB556C00E8F022 /* RankingScene.cpp in Sources */,
+				FBAF558417AB556C00E8F022 /* RewardScene.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
