@@ -28,6 +28,10 @@ GameLayer::GameLayer() {
     size = CCDirector::sharedDirector()->getWinSize();
     w = size.width;
     h = size.height;
+    SIZE_RATIO = (w + h)/(768 + 1024);
+    SIZE_RATIO_X = w/768;
+    SIZE_RATIO_Y = h/1024;
+
     _score1 = 0;
     _score2 = 0;
     lastHit = -1200;
@@ -51,38 +55,53 @@ GameLayer::GameLayer() {
     
     // Score Counter
 //    _scoreLabel1 = CCLabelTTF::create("0", "BankGothic Md BT", 48);
-    _scoreLabel1 = CCLabelTTF::create("0", "Fonts/BankGothic Md BT.ttf", 48);
+    _scoreLabel1 = CCLabelTTF::create("0",
+                                      "Fonts/BankGothic Md BT.ttf",
+                                      48 * SIZE_RATIO);
     _scoreLabel1->setColor(ccBLACK);
 //    _scoreLabel2 = CCLabelTTF::create("0", "BankGothic Md BT", 48);
-    _scoreLabel2 = CCLabelTTF::create("0", "Fonts/BankGothic Md BT.ttf", 48);
+    _scoreLabel2 = CCLabelTTF::create("0",
+                                      "Fonts/BankGothic Md BT.ttf",
+                                      48 * SIZE_RATIO);
     _scoreLabel2->setColor(ccBLACK);
-    _scoreLabel1->setPosition(ccp(w - 70, h*3/8 + 10));
+    _scoreLabel1->setPosition(ccp(w*0.91, h*3/8 + 10));
     _scoreLabel1->setRotation(90);
-    _scoreLabel2->setPosition(ccp(w - 70, h*5/8 - 10));
+    _scoreLabel2->setPosition(ccp(w*0.91, h*5/8 - 10));
     _scoreLabel2->setRotation(90);
     this->addChild(_scoreLabel1);
     this->addChild(_scoreLabel2);
 
     // Pause Button
     _pauseButton = CCSprite::create("Buttons/PauseButton.png");
-    _pauseButton->setPosition(ccp(w - 70, h/2));
+    _pauseButton->setScaleX(SIZE_RATIO_X);
+    _pauseButton->setScaleY(SIZE_RATIO_Y);
+    _pauseButton->setPosition(ccp(w*0.91, h/2));
     this->addChild(_pauseButton);
     
     // End Game
     _endLayerBg = CCSprite::create("BackGrounds/EndGameBG.png");
-    _endLayerBg->setPosition(ccp(w/2, h/2));
+    _endLayerBg->setScaleX(SIZE_RATIO_X);
+    _endLayerBg->setScaleY(SIZE_RATIO_Y);
+    _endLayerBg->setPosition(ccp(w/2 - 10, h/2));
     this->addChild(_endLayerBg, 5);
     ew = _endLayerBg->getContentSize().width;
     eh = _endLayerBg->getContentSize().height;
     
     _quitButton     = CCSprite::create("Buttons/Quit.png");
+    _quitButton->setScale(SIZE_RATIO);
     _restartButton  = CCSprite::create("Buttons/Restart.png");
+    _restartButton->setScale(SIZE_RATIO);
     _continueButton = CCSprite::create("Buttons/Continue.png");
+    _continueButton->setScale(SIZE_RATIO);
     
 //    _resultLabel    = CCLabelTTF::create("DRAW", "BankGothic Md BT", 60);
 //    _scoreLabel     = CCLabelTTF::create("score: 0", "BankGothic Md BT", 36);
-    _resultLabel    = CCLabelTTF::create("DRAW", "Fonts/BankGothic Md BT.ttf", 60);
-    _scoreLabel     = CCLabelTTF::create("score: 0", "Fonts/BankGothic Md BT.ttf", 36);
+    _resultLabel    = CCLabelTTF::create("DRAW",
+                                         "Fonts/BankGothic Md BT.ttf",
+                                         60 * SIZE_RATIO);
+    _scoreLabel     = CCLabelTTF::create("score: 0",
+                                         "Fonts/BankGothic Md BT.ttf",
+                                         36 * SIZE_RATIO);
 
     _quitButton->setPosition(ccp(ew/2, eh/4));
     _restartButton->setPosition(ccp(ew/2, eh/2));
@@ -105,12 +124,14 @@ GameLayer::GameLayer() {
     char timeBuf[20] = {0};
 	sprintf(timeBuf, "0%i:0%i", _minutes, _seconds);
 	// Android Font
-    _time = CCLabelTTF::create(timeBuf, "Fonts/BankGothic Md BT.ttf", 40);
+    _time = CCLabelTTF::create(timeBuf,
+                               "Fonts/BankGothic Md BT.ttf",
+                               40 * SIZE_RATIO);
     // iOS Font
 //    _time = CCLabelTTF::create(timeBuf, "BankGothic Md BT", 40);
     
     _time->setColor(ccBLACK);
-	_time->setPosition(ccp(60, h/2));
+	_time->setPosition(ccp(w/12.5, h/2));
     _time->setRotation(90);
 	this->addChild(_time);
     
@@ -137,8 +158,6 @@ GameLayer::GameLayer() {
 GameLayer::~GameLayer() {
     delete _world;
     _world = NULL;
-    
-//    delete m_debugDraw;
 }
 
 #pragma mark INIT PHYSICS
@@ -153,18 +172,6 @@ void GameLayer::initPhysics() {
 
     _contactListener = new MyContactListener();
     _world->SetContactListener(_contactListener);
-    
-//    m_debugDraw = new GLESDebugDraw( PTM_RATIO );
-//    _world->SetDebugDraw(m_debugDraw);
-
-//    uint32 flags = 0;
-//    flags += b2Draw::e_shapeBit;
-//    flags += b2Draw::e_jointBit;
-//    flags += b2Draw::e_aabbBit;
-//    flags += b2Draw::e_pairBit;
-//    flags += b2Draw::e_centerOfMassBit;
-    //m_debugDraw->SetFlags(flags);
-
 
     // Create Play Ground
     b2BodyDef groundBodyDef;
@@ -172,18 +179,18 @@ void GameLayer::initPhysics() {
     _groundBody = _world->CreateBody(&groundBodyDef);
     
     // Bottom Left
-    this->createEdge(0, 10, 210, 10, 0);
+    this->createEdge(0, 10, w/GOALSIZE_RATIO, 10, 0);
     // Bottom Right
-    this->createEdge(w - 210, 10, w, 10, 0);
+    this->createEdge(w - w/GOALSIZE_RATIO, 10, w, 10, 0);
     // Bottom Center
-    this->createEdge(210, 10, w - 210, 10, -10);
+    this->createEdge(w/GOALSIZE_RATIO, 10, w - w/GOALSIZE_RATIO, 10, -10);
     
     // Top Left
-    this->createEdge(0, h - 10, 210, h - 10, 0);
+    this->createEdge(0, h - 10, w/GOALSIZE_RATIO, h - 10, 0);
     // Top Right
-    this->createEdge(w - 210, h - 10, w, h - 10, 0);
+    this->createEdge(w - w/GOALSIZE_RATIO, h - 10, w, h - 10, 0);
     // Top Center
-    this->createEdge(210, h - 10, w - 210, h - 10, -10);
+    this->createEdge(w/GOALSIZE_RATIO, h - 10, w - w/GOALSIZE_RATIO, h - 10, -10);
         
     // Left
     this->createEdge(10, 0, 10, h, 0);
@@ -242,7 +249,7 @@ void GameLayer::update(float dt) {
         _puck->update(dt);
     }
     
-    if ((_minutes == 0 && _seconds == 0) || _score1 == 1 || _score2 == 1) {
+    if ((_minutes == 0 && _seconds == 0) || _score1 == 3 || _score2 == 3) {
         _playing = false ;
         _isEnd = true;
         _player1->reset();
@@ -254,19 +261,19 @@ void GameLayer::update(float dt) {
 
     // Apply impluse when the puck is near the edges
     if (_puck->getPositionX() <= 15 + _puck->getRadius())
-        _puck->getBody()->ApplyLinearImpulse(b2Vec2(5, 0),
+        _puck->getBody()->ApplyLinearImpulse(b2Vec2(5*SIZE_RATIO, 0),
                                              _puck->getBody()->GetWorldCenter());
 
     if (_puck->getPositionX() >= w - 15 - _puck->getRadius())
-        _puck->getBody()->ApplyLinearImpulse(b2Vec2(-5, 0),
+        _puck->getBody()->ApplyLinearImpulse(b2Vec2(-5*SIZE_RATIO, 0),
                                              _puck->getBody()->GetWorldCenter());
     
-    if (_puck->getPositionX() <= 260 || _puck->getPositionX() >= w - 260) {
+    if (_puck->getPositionX() <= w/GOALSIZE_RATIO || _puck->getPositionX() >= w - w/GOALSIZE_RATIO) {
         if (_puck->getPositionY() >= h - 15 - _puck->getRadius())
-            _puck->getBody()->ApplyLinearImpulse(b2Vec2(0, -5),
+            _puck->getBody()->ApplyLinearImpulse(b2Vec2(0, -5*SIZE_RATIO),
                                              _puck->getBody()->GetWorldCenter());
         if (_puck->getPositionY() <= 15 + _puck->getRadius())
-            _puck->getBody()->ApplyLinearImpulse(b2Vec2(0, 5),
+            _puck->getBody()->ApplyLinearImpulse(b2Vec2(0, 5*SIZE_RATIO),
                                              _puck->getBody()->GetWorldCenter());
     }
     
@@ -340,21 +347,22 @@ void GameLayer::handleProcess() {
 void GameLayer::defenseLeft() {
     this->getStateInfo();
     _player2->getBody()->ApplyLinearImpulse(
-        this->ptm2(15*_level*(w*3/8 - px), 15*_level*(h - pr - 10 - py)),
+        this->ptm2(15*SIZE_RATIO*_level*(w*3/8 - px),
+                   15*SIZE_RATIO*_level*(h - pr - 10 - py)),
         _player2->getBody()->GetWorldCenter());
 }
 
 void GameLayer::defenseRight() {
     this->getStateInfo();
     _player2->getBody()->ApplyLinearImpulse(
-        this->ptm2(15*_level*(w*5/8 - px), 15*_level*(h - pr - 10 - py)),
+        this->ptm2(15*SIZE_RATIO*_level*(w*5/8 - px), 15*SIZE_RATIO*_level*(h - pr - 10 - py)),
         _player2->getBody()->GetWorldCenter());
 }
 
 void GameLayer::defenseCenter() {
     this->getStateInfo();
     _player2->getBody()->ApplyLinearImpulse(
-        this->ptm2(15*_level*(w/2 - px), 15*_level*(h - pr - 10 - py)),
+        this->ptm2(15*SIZE_RATIO*_level*(w/2 - px), 15*SIZE_RATIO*_level*(h - pr - 10 - py)),
         _player2->getBody()->GetWorldCenter());
 }
 
@@ -362,9 +370,9 @@ void GameLayer::attack() {
     float cx = (h - 10 - pr - y)*vx/vy + x;
     if ((cx > w/4 && cx < w*3/4) || (vx < 10 && vy < 10))
         _player2->getBody()->ApplyLinearImpulse(
-            b2Vec2(5*_level*(x - px), 5*_level*(10 + y - py)),
+            b2Vec2(5*SIZE_RATIO*_level*(x - px), 5*SIZE_RATIO*_level*(10 + y - py)),
             _player2->getBody()->GetWorldCenter());
-    else _player2->getBody()->SetLinearVelocity(b2Vec2((x/2 + w/4 - px)/5, 0));
+    else _player2->getBody()->SetLinearVelocity(b2Vec2((x/2 + w/4 - px)*SIZE_RATIO/5, 0));
 
     
 }

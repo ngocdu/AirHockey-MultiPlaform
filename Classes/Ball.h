@@ -13,12 +13,6 @@
 #include "b2Sprite.h"
 
 enum {
-    playerRadius    = 160 / 2,
-    ballRadius      = 85 / 2
-};
-
-
-enum {
     humanPlayer,
     aiPlayer,
     puck
@@ -37,6 +31,11 @@ public:
     virtual void update(float dt);
     
 private:
+    CCSize size;
+    float w, h;
+    float SIZE_RATIO;
+    float SIZE_RATIO_X;
+    float SIZE_RATIO_Y;
     void initBall(const char *pszFileName);
 };
 

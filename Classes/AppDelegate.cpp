@@ -11,7 +11,7 @@
 #include "cocos2d.h"
 #include "SimpleAudioEngine.h"
 #include "RankingScene.h"
-//#include "GetPresent.h"
+
 USING_NS_CC;
 using namespace CocosDenshion;
 
@@ -38,7 +38,6 @@ bool AppDelegate::applicationDidFinishLaunching()
     
     // create a scene. it's an autorelease object
     CCScene *pScene = RankingScene::scene();
-//    CCScene *pScene    = GetPresent::scene();
 
     // run
     pDirector->runWithScene(pScene);

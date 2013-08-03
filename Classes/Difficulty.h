@@ -19,6 +19,9 @@ class Difficulty : public CCLayer, public extension::CCEditBoxDelegate{
 private:
     CCSize size;
     float w, h;
+    float SIZE_RATIO;
+    float SIZE_RATIO_X;
+    float SIZE_RATIO_Y;
     
     extension::CCEditBox  *m_pEditName;
     CCLabelTTF *m_pTTFShowEditReturn;

@@ -7,10 +7,8 @@
 #include "RankingScene.h"
 #include "RewardScene.h"
 #include "cocos2d.h"
-#include <rapidjson/rapidjson.h>
-//#include "rapidjson/rapidjson.h"
-//#include "rapidjson/document.h"
-#include <rapidjson/document.h>
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/document.h"
 #include "GameLayer.h"
 #include "Difficulty.h"
 #include "GameManager.h"
@@ -36,6 +34,10 @@ bool RankingScene::init() {
     size = CCDirector::sharedDirector()->getWinSize();
     w = size.width;
     h = size.height;
+    SIZE_RATIO = (w + h)/(768 + 1024);
+    SIZE_RATIO_X = w/768;
+    SIZE_RATIO_Y = h/1024;
+
     players = new CCArray();
     
     CCSprite *background = CCSprite::create("BackGrounds/BackGround2.png");
@@ -44,21 +46,23 @@ bool RankingScene::init() {
     background->setScaleX(w/background->getContentSize().width);
     this->addChild(background);
     
-    CCSprite *topLine = CCSprite::create("line.png");
-    topLine->setPosition(ccp(w/2, 602));
-    topLine->setOpacity(70);
-    this->addChild(topLine);
-    
-    CCSprite *bottomLine = CCSprite::create("line.png");
-    bottomLine->setPosition(ccp(w/2, 248));
-    bottomLine->setOpacity(70);
-    this->addChild(bottomLine);
+//    CCSprite *topLine = CCSprite::create("line.png");
+//    topLine->setPosition(ccp(w/2, 602));
+//    topLine->setOpacity(70);
+//    this->addChild(topLine);
+//    
+//    CCSprite *bottomLine = CCSprite::create("line.png");
+//    bottomLine->setPosition(ccp(w/2, 248));
+//    bottomLine->setOpacity(70);
+//    this->addChild(bottomLine);
     //-------------- menu getperesent ---------------
     
     
     CCMenuItemImage *reward  =
         CCMenuItemImage::create("Present.png","PresentOnClicked.png",
                                 this, menu_selector(RankingScene::reward));
+    reward->setScaleX(SIZE_RATIO_X);
+    reward->setScaleY(SIZE_RATIO_Y);
     reward->setPosition(ccp(w/5, h/8));
 
     string playerName = GameManager::sharedGameManager()->getName();
@@ -76,11 +80,15 @@ bool RankingScene::init() {
     CCMenuItemImage *playItem =
         CCMenuItemImage::create("Buttons/StartButton.png", "Buttons/StartButtonOnClicked.png",
                                 this, menu_selector(RankingScene::play));
+    playItem->setScaleX(SIZE_RATIO_X);
+    playItem->setScaleY(SIZE_RATIO_Y);
     playItem->setPosition(ccp(w/2, h/8 - 10));
     //create bgmItem
     CCMenuItemImage *bgmItem =
         CCMenuItemImage::create("BgmOn.png", "BgmOn.png",
                                 this, menu_selector(RankingScene::bgm));
+    bgmItem->setScaleX(SIZE_RATIO_X);
+    bgmItem->setScaleY(SIZE_RATIO_Y);
     bgmItem->setPosition(ccp(w*4/5, h/8));
     CCMenu* pMenu = CCMenu::create(playItem, bgmItem, reward, NULL);
     pMenu->setPosition(ccp(0,0));
@@ -88,6 +96,8 @@ bool RankingScene::init() {
     
 
     bgm_off = CCSprite::create("BgmOff.png");
+    bgm_off->setScaleX(SIZE_RATIO_X);
+    bgm_off->setScaleY(SIZE_RATIO_Y);
     bgm_off->setPosition(bgmItem->getPosition());
     bgm_off->setVisible(GameManager::sharedGameManager()->getBgm());
     if (GameManager::sharedGameManager()->getBgm()) {
@@ -119,13 +129,16 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
     
     if (!response->isSucceed()) {
 //        CCLabelTTF *notConnectLabel = CCLabelTTF::create("Can't load Data", "BankGothic Md BT", 20);
-        CCLabelTTF *notConnectLabel = CCLabelTTF::create("Can't load Data", "Fonts/BankGothic Md BT.ttf", 20);
+        CCLabelTTF *notConnectLabel = CCLabelTTF::create("Can't load Data",
+                                                         "Fonts/BankGothic Md BT.ttf",
+                                                         23*SIZE_RATIO);
         notConnectLabel->setPosition(ccp(w/2, h/2));
         
 //        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!", "BankGothic Md BT", 24);
-        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!", "Fonts/BankGothic Md BT.ttf", 24);
-        checkInternetMsg->setPosition(ccp(w/2, h/2 - 40));
-        
+        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!",
+                                                          "Fonts/BankGothic Md BT.ttf",
+                                                          24*SIZE_RATIO);
+        checkInternetMsg->setPosition(ccp(w/2, h/2 - 40*SIZE_RATIO));
         this->addChild(notConnectLabel);
         this->addChild(checkInternetMsg);
         return;
@@ -145,21 +158,28 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
 
     rapidjson::Document document;
     if(data2 != NULL && !document.Parse<0>(data2).HasParseError()) {
+        string username = GameManager::sharedGameManager()->getName();
+        string email = GameManager::sharedGameManager()->getEmail();
         for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
             string name = document[i]["name"].GetString();
             convertName((char*)name.c_str());
-            Player *player = new Player(name,
-                                        document[i]["point"].GetInt());
+            string mail = document[i]["email"].GetString();
+            string time = document[i]["updated_at"].GetString();
+            int p = document[i]["point"].GetInt();
+            int r = document[i]["reward"].GetInt();
+            Player1 *player = new Player1(name,p, mail, time, r);
             players->addObject(player);
+            
         }
     } else {
         CCLog(document.GetParseError());
     }
     d = -1;
-    tableView = CCTableView::create(this, CCSizeMake(700, 350));
+    CCTableView *tableView = CCTableView::create(this, CCSizeMake(700*SIZE_RATIO_X,
+                                                                350*SIZE_RATIO_Y));
     tableView->setDirection(kCCScrollViewDirectionVertical);
     tableView->setAnchorPoint(ccp(0, 0));
-    tableView->setPosition(ccp(w/8, 250));
+    tableView->setPosition(ccp(w/8, 250*SIZE_RATIO_Y));
     tableView->setDelegate(this);
     tableView->setVerticalFillOrder(kCCTableViewFillTopDown);
     this->addChild(tableView, 21);
@@ -190,7 +210,7 @@ void RankingScene::tableCellTouched(CCTableView* table, CCTableViewCell* cell) {
 }
 
 CCSize RankingScene::tableCellSizeForIndex(CCTableView *table, unsigned int idx) {
-    return CCSizeMake(600, 80);
+    return CCSizeMake(600*SIZE_RATIO_X, 80*SIZE_RATIO_Y);
 }
 
 CCTableViewCell* RankingScene::tableCellAtIndex(CCTableView *table, unsigned int idx) {
@@ -202,42 +222,31 @@ CCTableViewCell* RankingScene::tableCellAtIndex(CCTableView *table, unsigned int
     Player * p = (Player*)players->objectAtIndex(idx);
     CCString *string = CCString::createWithFormat("%d",p->getPoint());
 
-    CCLabelTTF *Pointlabel = CCLabelTTF::create(string->getCString(), "Helvetica", 40);
+    CCLabelTTF *Pointlabel = CCLabelTTF::create(string->getCString(),
+                                                "Helvetica",
+                                                35*SIZE_RATIO);
     Pointlabel->setAnchorPoint(ccp(1, 0));
-    Pointlabel->setPosition(ccp(600,0));
+    Pointlabel->setPosition(ccp(550*SIZE_RATIO_X,0));
     Pointlabel->setTag(123);
     cell->addChild(Pointlabel);
     
     // Player Name
     std::string name = p->getName();
-    
-    CCLabelTTF *Namelabel = CCLabelTTF::create(p->getName().c_str(), "Helvetica", 40);
+    CCLabelTTF *Namelabel = CCLabelTTF::create(p->getName().c_str(),
+                                               "Helvetica",
+                                               35*SIZE_RATIO);
     Namelabel->setAnchorPoint(CCPointZero);
-    Namelabel->setPosition(ccp(60, 0));
+    Namelabel->setPosition(ccp(60*SIZE_RATIO_X, 0));
     cell->addChild(Namelabel);
     
     // Player Rank
-    char rankBuf[3];
+    char rankBuf[15];
     sprintf(rankBuf, "Numbers/%i.png", idx+1);
     CCSprite *rank = CCSprite::create(rankBuf);
+    rank->setScale(SIZE_RATIO);
     rank->setAnchorPoint(CCPointZero);
     rank->setPosition(CCPointZero);
-    cell->addChild(rank);
-    
-    if (idx == 0) {
-        int rewardLocal = GameManager::sharedGameManager()->getReward();
-        std::string nameLocal = GameManager::sharedGameManager()->getName();
-        int pointMax = CCUserDefault::sharedUserDefault()->getIntegerForKey("pointMax");
-        if (p->getReward() != 0 && rewardLocal != 0 &&
-            p->getName() == nameLocal && p->getPoint() == pointMax) {
-            CCMenuItemImage *bt_send_email =
-                CCMenuItemImage::create("Present.png","PresentOnClicked.png",
-                                        this, menu_selector(RankingScene::reward));
-            CCMenu * menu = CCMenu::create(bt_send_email, NULL);
-            menu->setPosition(ccp(550, 30));
-            cell->addChild(menu);
-        }
-    }
+    cell->addChild(rank);    
     return cell;
 }
 

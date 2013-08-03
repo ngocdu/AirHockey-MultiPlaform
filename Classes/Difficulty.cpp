@@ -24,6 +24,10 @@ bool Difficulty::init() {
     size = CCDirector::sharedDirector()->getWinSize();
     w = size.width;
     h = size.height;
+    SIZE_RATIO = (w + h)/(768 + 1024);
+    SIZE_RATIO_X = w/768;
+    SIZE_RATIO_Y = h/1024;
+    
     CCSprite *background = CCSprite::create("BackGrounds/BackGround3.png");
     background->setPosition(ccp(w/2, h/2));
     background->setScaleY(h/background->getContentSize().height);
@@ -53,11 +57,12 @@ bool Difficulty::init() {
 //    m_pEditName->setDelegate(this);
 //    this->addChild(m_pEditName);
 
-    CCMenuItemFont *easyMenuItem =
-    CCMenuItemFont::create("EASY", this, menu_selector(Difficulty::menuEasy));
+    CCMenuItemFont *easyMenuItem;
+    easyMenuItem->setFontName("Fonts/SSGrogy-CondensedBold.ttf");
+    easyMenuItem = CCMenuItemFont::create("EASY", this, menu_selector(Difficulty::menuEasy));
     easyMenuItem->setPosition(ccp(w/2, h/2));
-    easyMenuItem->setFontSizeObj(70);
-    easyMenuItem->setFontSize(70);
+    easyMenuItem->setFontSizeObj(70*SIZE_RATIO);
+    easyMenuItem->setFontSize(70*SIZE_RATIO);
 
     CCMenuItemFont *mediumMenuItem =
     CCMenuItemFont::create("MEDIUM", this, menu_selector(Difficulty::menuMedium));
@@ -70,7 +75,8 @@ bool Difficulty::init() {
     CCMenuItemImage *back =
     CCMenuItemImage::create("Buttons/BackButton.png", "Buttons/BackButtonOnClicked.png",
                             this, menu_selector(Difficulty::clickBtBack));
-//    back->setColor(ccc3(235, 154, 39));
+    back->setScaleX(SIZE_RATIO_X);
+    back->setScaleY(SIZE_RATIO_Y);
     back->setPosition(ccp(w/2, h/8));
     
     pMenu = CCMenu::create(easyMenuItem, mediumMenuItem, hardMenuItem, back, NULL);

@@ -18,7 +18,7 @@
 #include "RankingScene.h"
 #include "GetPresent.h"
 
-
+#define GOALSIZE_RATIO 3.8
 
 USING_NS_CC;
 using namespace cocos2d::extension;
@@ -71,6 +71,9 @@ private:
     
     CCSize size;
     float w, h;
+    float SIZE_RATIO;
+    float SIZE_RATIO_X;
+    float SIZE_RATIO_Y;
     
     b2Body *_groundBody;
 
@@ -79,8 +82,6 @@ private:
     CCSprite *_continueButton;
     CCSprite *_restartButton;
     CCSprite *_quitButton;
-    
-//    GLESDebugDraw *m_debugDraw;
     
     Ball *_player1;
     Ball *_player2;

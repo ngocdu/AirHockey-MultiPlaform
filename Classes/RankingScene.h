@@ -36,9 +36,12 @@ class RankingScene : public CCLayer, public CCTableViewDelegate, CCTableViewData
 private:
     CCSize size;
     float w, h;
+    float SIZE_RATIO;
+    float SIZE_RATIO_X;
+    float SIZE_RATIO_Y;
     
     CCSprite *bgm_off;
-    
+    CCMenu *rewardMenu;
     CCTableView *tableView;
     CCArray *players;
 public:

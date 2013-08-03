@@ -37,6 +37,9 @@ class RewardScene : public CCLayer, public CCTableViewDelegate, CCTableViewDataS
 private:
     CCSize size;
     float w, h;
+    float SIZE_RATIO;
+    float SIZE_RATIO_X;
+    float SIZE_RATIO_Y;
     CCMenu * rewardMenu;
     
     CCArray *players;

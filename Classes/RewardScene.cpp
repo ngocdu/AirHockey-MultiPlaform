@@ -33,6 +33,10 @@ bool RewardScene::init() {
     size    = CCDirector::sharedDirector()->getWinSize();
     w       = size.width;
     h       = size.height;
+    SIZE_RATIO = (w + h)/(768 + 1024);
+    SIZE_RATIO_X = w/768;
+    SIZE_RATIO_Y = h/1024;
+
     players = new CCArray();
     
     CCSprite *background = CCSprite::create("BackGrounds/RewardBG.png");
@@ -46,8 +50,11 @@ bool RewardScene::init() {
     if (playerName != "") {
         char nameBuf[50];
         sprintf(nameBuf, "Player Name: %s", playerName.c_str());
+        this->convertName(nameBuf);
 //        CCLabelTTF *playerNameLabel = CCLabelTTF::create(nameBuf, "BankGothic Md BT", 30);
-        CCLabelTTF *playerNameLabel = CCLabelTTF::create(nameBuf, "Fonts/BankGothic Md BT.ttf", 30);
+        CCLabelTTF *playerNameLabel = CCLabelTTF::create(nameBuf,
+                                                         "Fonts/BankGothic Md BT.ttf",
+                                                         30*SIZE_RATIO);
         playerNameLabel->setPosition(ccp(w/2, h*3/4));
         this->addChild(playerNameLabel);
     }
@@ -61,12 +68,13 @@ bool RewardScene::init() {
     request->release();
     
     //create startMenuItem
-    CCMenuItemImage *playItem =
+    CCMenuItemImage *back =
         CCMenuItemImage::create("Buttons/BackButton.png", "Buttons/BackButtonOnClicked.png",
                                 this, menu_selector(RewardScene::back));
-    playItem->setPosition(ccp(w/2, h/8));
+    back->setScale(SIZE_RATIO);
+    back->setPosition(ccp(w/2, h/8));
     
-    CCMenu* pMenu = CCMenu::create(playItem, NULL);
+    CCMenu* pMenu = CCMenu::create(back, NULL);
     pMenu->setPosition(ccp(0,0));
     this->addChild(pMenu);
         
@@ -91,11 +99,15 @@ void RewardScene::onHttpRequestCompleted(CCNode *sender, void *data) {
     
     if (!response->isSucceed()) {
         CCLabelTTF *notConnectLabel =
-        CCLabelTTF::create("Can't load Data", "BankGothic Md BT", 20);
+        CCLabelTTF::create("Can't load Data",
+                           "BankGothic Md BT",
+                           23*SIZE_RATIO);
         notConnectLabel->setPosition(ccp(w/2, h/2));
 //        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!", "BankGothic Md BT", 24);
-        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!", "Fonts/BankGothic Md BT.ttf", 24);
-        checkInternetMsg->setPosition(ccp(w/2, h/2 - 40));
+        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!",
+                                                          "Fonts/BankGothic Md BT.ttf",
+                                                          24*SIZE_RATIO);
+        checkInternetMsg->setPosition(ccp(w/2, h/2 - 40*SIZE_RATIO_Y));
         
         this->addChild(notConnectLabel);
         this->addChild(checkInternetMsg);
@@ -122,24 +134,25 @@ void RewardScene::onHttpRequestCompleted(CCNode *sender, void *data) {
         for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
             string name = document[i]["name"].GetString();
             convertName((char*)name.c_str());
-            if (username == name &&
-                email == document[i]["email"].GetString()){
+//            if (username == name &&
+//                email == document[i]["email"].GetString()){
                 string mail = document[i]["email"].GetString();
                 string time = document[i]["updated_at"].GetString();
                 int p = document[i]["point"].GetInt();
                 int r = document[i]["reward"].GetInt();
                 Player1 *player = new Player1(name,p, mail, time, r);
                 players->addObject(player);
-            }
+//            }
         }
     } else {
         CCLog(document.GetParseError());
     }
     d = -1;
-    CCTableView *tableView=CCTableView::create(this, CCSizeMake(700, 350));
+    CCTableView *tableView=CCTableView::create(this, CCSizeMake(700*SIZE_RATIO_X,
+                                                                350*SIZE_RATIO_Y));
     tableView->setDirection(kCCScrollViewDirectionVertical);
     tableView->setAnchorPoint(ccp(0, 0));
-    tableView->setPosition(ccp(size.width/8, 250));
+    tableView->setPosition(ccp(w/8, 250*SIZE_RATIO_Y));
     tableView->setDelegate(this);
     tableView->setVerticalFillOrder(kCCTableViewFillTopDown);
     this->addChild(tableView, 21);
@@ -180,7 +193,7 @@ void RewardScene::tableCellTouched(CCTableView* table, CCTableViewCell* cell) {
 }
 
 CCSize RewardScene::tableCellSizeForIndex(CCTableView *table, unsigned int idx) {
-    return CCSizeMake(600, 80);
+    return CCSizeMake(600*SIZE_RATIO_X, 80*SIZE_RATIO_Y);
 }
 
 CCTableViewCell* RewardScene::tableCellAtIndex(CCTableView *table, unsigned int idx)
@@ -193,25 +206,34 @@ CCTableViewCell* RewardScene::tableCellAtIndex(CCTableView *table, unsigned int 
     Player1 * p = (Player1*)players->objectAtIndex(idx);
     CCString *string = CCString::createWithFormat("%d",p->getPoint());
 
-    CCLabelTTF *Pointlabel = CCLabelTTF::create(string->getCString(), "Helvetica", 36);
+    CCLabelTTF *Pointlabel = CCLabelTTF::create(string->getCString(),
+                                                "Helvetica",
+                                                30*SIZE_RATIO);
     Pointlabel->setAnchorPoint(ccp(1, 0));
-    Pointlabel->setPosition(ccp(500, 15));
+    Pointlabel->setPosition(ccp(500*SIZE_RATIO_X, 25*SIZE_RATIO_Y));
     Pointlabel->setTag(123);
     cell->addChild(Pointlabel);
     //time
     std::string sttime = p->getTime();
 //    this->convertTime((char*)sttime.c_str());
-    CCLabelTTF *timeLabel = CCLabelTTF::create(sttime.c_str(), "Helvetica", 16);
+    char timeBuf[50];
+    strcpy(timeBuf, sttime.c_str());
+    this->convertTime(timeBuf);
+    CCLabelTTF *timeLabel = CCLabelTTF::create(timeBuf,
+                                               "Helvetica",
+                                               20*SIZE_RATIO);
     timeLabel->setAnchorPoint(CCPointZero);
     timeLabel->setOpacity(90);
-    timeLabel->setPosition(ccp(100, 10));
+    timeLabel->setPosition(ccp(100*SIZE_RATIO_X, 10*SIZE_RATIO_Y));
     cell->addChild(timeLabel);
 
     // Player Name
     std::string name = p->getName();
-    CCLabelTTF *Namelabel = CCLabelTTF::create(p->getName().c_str(), "Helvetica", 36);
+    CCLabelTTF *Namelabel = CCLabelTTF::create(p->getName().c_str(),
+                                               "Helvetica",
+                                               30*SIZE_RATIO);
     Namelabel->setAnchorPoint(CCPointZero);
-    Namelabel->setPosition(ccp(100, 30));
+    Namelabel->setPosition(ccp(100*SIZE_RATIO_X, 30*SIZE_RATIO_Y));
     cell->addChild(Namelabel);
     
     // Player Rank
@@ -219,6 +241,7 @@ CCTableViewCell* RewardScene::tableCellAtIndex(CCTableView *table, unsigned int 
     if (p->getReward() != 0) rank = CCSprite::create("BestScore.png");
     else rank = CCSprite::create("Top10.png");
     rank->setAnchorPoint(CCPointZero);
+    rank->setScale(SIZE_RATIO);
     rank->setPosition(CCPointZero);
     cell->addChild(rank);
     
@@ -230,7 +253,7 @@ CCTableViewCell* RewardScene::tableCellAtIndex(CCTableView *table, unsigned int 
                                     this, menu_selector(RewardScene::clickBtSendEmail));
         bt_send_email->setTag(idx + 100);
         rewardMenu = CCMenu::create(bt_send_email, NULL);
-        rewardMenu->setPosition(ccp(550, 40));
+        rewardMenu->setPosition(ccp(550*SIZE_RATIO_X, 40*SIZE_RATIO_Y));
         cell->addChild(rewardMenu);
     }
     

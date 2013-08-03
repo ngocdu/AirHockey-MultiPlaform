@@ -14,6 +14,9 @@ class GetPresent : public CCLayer, public extension::CCEditBoxDelegate{
 private:
     CCSize size;
     float w, h;
+    float SIZE_RATIO;
+    float SIZE_RATIO_X;
+    float SIZE_RATIO_Y;
     CCLabelTTF *emailFailMsg;
     CCLabelTTF *nameFailMsg;
     extension::CCEditBox* m_pUserEmail;

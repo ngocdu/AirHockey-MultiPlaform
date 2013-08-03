@@ -25,11 +25,17 @@ bool GetPresent::init() {
     size = CCDirector::sharedDirector()->getWinSize();
     w = size.width;
     h = size.height;
-    CCSize editBoxSize = CCSizeMake(w - 100, 60);
+    SIZE_RATIO = (w + h)/(768 + 1024);
+    SIZE_RATIO_X = w/768;
+    SIZE_RATIO_Y = h/1024;
+
+    CCSize editBoxSize = CCSizeMake((w - 100) * SIZE_RATIO, 60 * SIZE_RATIO);
     
     // Congrats 
 //    CCLabelTTF *congrats = CCLabelTTF::create("BEST SCORE !!!", "BankGothic Md BT", 64);
-    CCLabelTTF *congrats = CCLabelTTF::create("BEST SCORE !!!", "Fonts/BankGothic Md BT.ttf", 64);
+    CCLabelTTF *congrats = CCLabelTTF::create("BEST SCORE !!!",
+                                              "Fonts/BankGothic Md BT.ttf",
+                                              64 * SIZE_RATIO);
     congrats->setPosition(ccp(w/2, h*6/8));
     congrats->setColor(ccYELLOW);
     this->addChild(congrats);
@@ -37,24 +43,28 @@ bool GetPresent::init() {
     
     // email
 //    CCLabelTTF *emailLabel1 = CCLabelTTF::create("Please enter your Email", "BankGothic Md BT", 36);
-    CCLabelTTF *emailLabel1 = CCLabelTTF::create("Please enter your Email", "Fonts/BankGothic Md BT.ttf", 36);
+    CCLabelTTF *emailLabel1 = CCLabelTTF::create("Please enter your Email",
+                                                 "Fonts/BankGothic Md BT.ttf",
+                                                 36 * SIZE_RATIO);
     emailLabel1->setPosition(ccp(w/2, h*5/8));
     this->addChild(emailLabel1);
     
 //    CCLabelTTF *emailLabel2 = CCLabelTTF::create("to get Presents:", "BankGothic Md BT", 36);
-    CCLabelTTF *emailLabel2 = CCLabelTTF::create("to get Presents:", "Fonts/BankGothic Md BT.ttf", 36);
-    emailLabel2->setPosition(ccp(w/2, emailLabel1->getPositionY() - 45));
+    CCLabelTTF *emailLabel2 = CCLabelTTF::create("to get Presents:",
+                                                 "Fonts/BankGothic Md BT.ttf",
+                                                 36 * SIZE_RATIO);
+    emailLabel2->setPosition(ccp(w/2, emailLabel1->getPositionY() - 45*SIZE_RATIO));
     this->addChild(emailLabel2);
     
     m_pUserEmail =
     extension::CCEditBox::create(editBoxSize,
                                  extension::CCScale9Sprite::create("WhiteBox.png"));
-    m_pUserEmail->setPosition(ccp(w/2, emailLabel2->getPositionY() - 60));
-    m_pUserEmail->setFontSize(40);
+    m_pUserEmail->setPosition(ccp(w/2, emailLabel2->getPositionY() - 60*SIZE_RATIO));
+    m_pUserEmail->setFontSize(40 * SIZE_RATIO);
     m_pUserEmail->setMaxLength(30);
     m_pUserEmail->setFontColor(ccBLACK);
 
-    m_pUserEmail->setMaxLength(55);
+    m_pUserEmail->setMaxLength(40);
     m_pUserEmail->setReturnType(cocos2d::extension::kKeyboardReturnTypeDone);
     m_pUserEmail->setInputMode(kEditBoxInputModeEmailAddr);
     m_pUserEmail->setDelegate(this);
@@ -63,34 +73,40 @@ bool GetPresent::init() {
     // Email Fail Message
     
 //    emailFailMsg = CCLabelTTF::create("Invalid Email !! Please Try Again !!", "BankGothic Md BT", 24);
-    emailFailMsg = CCLabelTTF::create("Invalid Email !! Please Try Again !!", "Fonts/BankGothic Md BT.ttf", 24);
+    emailFailMsg = CCLabelTTF::create("Invalid Email !! Please Try Again !!",
+                                      "Fonts/BankGothic Md BT.ttf",
+                                      24 * SIZE_RATIO);
     emailFailMsg->setPosition(ccp(m_pUserEmail->getPosition().x,
-                                  m_pUserEmail->getPosition().y - 50));
+                                  m_pUserEmail->getPosition().y - 50*SIZE_RATIO));
     emailFailMsg->setColor(ccRED);
     emailFailMsg->setVisible(false);
     this->addChild(emailFailMsg);
     
     // name
 //    CCLabelTTF *nameLabel = CCLabelTTF::create("please choose your username:","BankGothic Md BT", 36);
-    CCLabelTTF *nameLabel = CCLabelTTF::create("please choose your username:","Fonts/BankGothic Md BT.ttf", 36);
+    CCLabelTTF *nameLabel = CCLabelTTF::create("please choose your username:",
+                                               "Fonts/BankGothic Md BT.ttf",
+                                               36 * SIZE_RATIO);
     nameLabel->setPosition(ccp(w/2, h*3/8));
     this->addChild(nameLabel);
     m_pUserName =
     extension::CCEditBox::create(editBoxSize,
                                  extension::CCScale9Sprite::create("WhiteBox.png"));
-    m_pUserName->setPosition(ccp(w/2, nameLabel->getPositionY() - 60));
-    m_pUserName->setFontSize(40);
+    m_pUserName->setPosition(ccp(w/2, nameLabel->getPositionY() - 60*SIZE_RATIO));
+    m_pUserName->setFontSize(40 * SIZE_RATIO);
     m_pUserName->setFontColor(ccBLACK);
-    m_pUserName->setMaxLength(15);
+    m_pUserName->setMaxLength(10);
     m_pUserName->setReturnType(cocos2d::extension::kKeyboardReturnTypeDone);
     m_pUserName->setInputMode(kEditBoxInputModeAny);
     m_pUserName->setDelegate(this);
     this->addChild(m_pUserName);
     
 //    nameFailMsg = CCLabelTTF::create("please enter your username !!", "BankGothic Md BT", 24);
-    nameFailMsg = CCLabelTTF::create("please enter your username !!", "Fonts/BankGothic Md BT.ttf", 24);
+    nameFailMsg = CCLabelTTF::create("please enter your username !!",
+                                     "Fonts/BankGothic Md BT.ttf",
+                                     24 * SIZE_RATIO);
     nameFailMsg->setPosition(ccp(m_pUserName->getPosition().x,
-                                  m_pUserName->getPosition().y - 50));
+                                  m_pUserName->getPosition().y - 50 * SIZE_RATIO));
     nameFailMsg->setColor(ccRED);
     nameFailMsg->setVisible(false);
     this->addChild(nameFailMsg);
@@ -98,6 +114,7 @@ bool GetPresent::init() {
     CCMenuItemImage *sendMenuItem = CCMenuItemImage::create("Buttons/SubmitButton.png",
                                                             "Buttons/SubmitButtonOnClicked.png",
                                                             this, menu_selector(GetPresent::menuSendEmail));
+    sendMenuItem->setScale(SIZE_RATIO);
     sendMenuItem->setPosition(ccp(w/2, 100));
     
 //    CCMenuItemImage *backMenuItem =
@@ -267,7 +284,9 @@ void GetPresent::onHttpRequestCompleted(CCNode *sender, void *data) {
     
     if (!response->isSucceed()) {
         CCLabelTTF *notConnectLabel =
-        CCLabelTTF::create("Can't load Data", "Time new roman", 20);
+        CCLabelTTF::create("Can't load Data",
+                           "Time new roman",
+                           20 * SIZE_RATIO);
         notConnectLabel->setPosition(ccp(w.width/2, w.height/2));
         this->addChild(notConnectLabel);
         return;

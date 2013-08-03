@@ -32,6 +32,13 @@ Ball * Ball::create(GameLayer *game, int type, const char *pszFileName) {
 }
 
 void Ball::initBall(const char *pszFileName) {
+    size = CCDirector::sharedDirector()->getWinSize();
+    w = size.width;
+    h = size.height;
+    SIZE_RATIO = (w + h)/(768 + 1024);
+    SIZE_RATIO_X = w/768;
+    SIZE_RATIO_Y = h/1024;
+    
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     if (_type == humanPlayer || _type == aiPlayer) {
@@ -58,10 +65,11 @@ void Ball::initBall(const char *pszFileName) {
     }
     
     this->initWithFile(pszFileName);
-    _radius = this->getContentSize().width / 2;
+    _radius = this->getContentSize().width * SIZE_RATIO / 2;
     circle.m_radius = _radius / PTM_RATIO;
     fixtureDef.shape =  &circle;
     _fixture = _body->CreateFixture(&fixtureDef);
+    this->setScale(SIZE_RATIO);
     _body->SetUserData(this);
 }
 
