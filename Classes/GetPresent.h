@@ -6,10 +6,21 @@
 
 #ifndef AirHockey_GetPresent_h
 #define AirHockey_GetPresent_h
-#include <iostream>
-#include "cocos2d.h"
+
+
+#include "AppMacros.h"
 #include "cocos-ext.h"
+#include "Difficulty.h"
+#include "GameManager.h"
+#include "GameLayer.h"
+#include "RankingScene.h"
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/document.h"
+#include "HttpClient.h"
+
 using namespace cocos2d;
+using namespace cocos2d::extension;
+
 class GetPresent : public CCLayer, public extension::CCEditBoxDelegate{
 private:
     CCSize size;

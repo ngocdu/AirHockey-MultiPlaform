@@ -7,12 +7,7 @@
 //
 
 #include "Difficulty.h"
-#include "GameManager.h"
-#include "RankingScene.h"
-#include <string.h>
-#include "GameLayer.h"
 
-using namespace cocos2d;
 CCScene* Difficulty::scene() {
     CCScene *scene = CCScene::create();
     Difficulty *layer = Difficulty::create();
@@ -33,32 +28,9 @@ bool Difficulty::init() {
     background->setScaleY(h/background->getContentSize().height);
     background->setScaleX(w/background->getContentSize().width);
     this->addChild(background);
-    
-//    CCPoint visibleOrigin = CCEGLView::sharedOpenGLView()->getVisibleOrigin();
-//    CCSize visibleSize = CCEGLView::sharedOpenGLView()->getVisibleSize();
-//
-//    CCSize editBoxSize = CCSizeMake(visibleSize.width/2, 60);
-//    
-//    // top
-//    m_pEditName =
-//    extension::CCEditBox::create(editBoxSize,
-//                                 extension::CCScale9Sprite::create("GreenBox.png"));
-//    m_pEditName->setPosition(ccp(visibleOrigin.x + visibleSize.width/2,
-//                                 visibleOrigin.y + visibleSize.height*5/8));
-//    m_pEditName->setFontSize(40);
-//    m_pEditName->setFontColor(ccRED);
-//    string p = GameManager::sharedGameManager()->getName();
-//    if (p == "") m_pEditName->setText("Player");
-//    else m_pEditName->setText(p.c_str());
-//    m_pEditName->setPlaceholderFontColor(ccWHITE);
-//    m_pEditName->setMaxLength(15);
-//    m_pEditName->setReturnType(cocos2d::extension::kKeyboardReturnTypeDone);
-//    
-//    m_pEditName->setDelegate(this);
-//    this->addChild(m_pEditName);
 
     CCMenuItemFont *easyMenuItem;
-    easyMenuItem->setFontName("Fonts/SSGrogy-CondensedBold.ttf");
+    easyMenuItem->setFontName(FONT2);
     easyMenuItem = CCMenuItemFont::create("EASY", this, menu_selector(Difficulty::menuEasy));
     easyMenuItem->setPosition(ccp(w/2, h/2));
     easyMenuItem->setFontSizeObj(70*SIZE_RATIO);

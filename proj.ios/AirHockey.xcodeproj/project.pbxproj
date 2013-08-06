@@ -318,6 +318,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FB0F8AA017B0B0CA00876F78 /* AppMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppMacros.h; sourceTree = "<group>"; };
 		FB2752A817AA44CB00A75ED1 /* AirHockey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirHockey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB2752AB17AA44CB00A75ED1 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		FB2752AD17AA44CB00A75ED1 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -1022,6 +1023,7 @@
 			children = (
 				FB27565E17AA476200A75ED1 /* AppDelegate.cpp */,
 				FB27565F17AA476200A75ED1 /* AppDelegate.h */,
+				FB0F8AA017B0B0CA00876F78 /* AppMacros.h */,
 				FB275A1E17AA591D00A75ED1 /* b2Sprite.cpp */,
 				FB275A1F17AA591D00A75ED1 /* b2Sprite.h */,
 				FB275A2117AA59CB00A75ED1 /* Ball.cpp */,

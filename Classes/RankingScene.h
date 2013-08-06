@@ -7,18 +7,25 @@
 #ifndef __AirHockey__RankingScene__
 #define __AirHockey__RankingScene__
 
-#include <iostream>
-#include "cocos2d.h"
+
+#include "AppMacros.h"
 #include "cocos-ext.h"
 #include "CCTableView.h"
 #include "CCScrollView.h"
 #include "CCTableViewCell.h"
-#include <set>
-#include <vector>
+#include "SimpleAudioEngine.h"
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/document.h"
+
+#include "GameManager.h"
+#include "Difficulty.h"
+#include "RewardScene.h"
+
+
+using namespace std;
 using namespace cocos2d;
 using namespace cocos2d::extension;
-using namespace std;
-
+using namespace CocosDenshion;
 
 class Player : public CCObject {
 private:
@@ -39,6 +46,8 @@ private:
     float SIZE_RATIO;
     float SIZE_RATIO_X;
     float SIZE_RATIO_Y;
+    
+    bool musicPlayed;
     
     CCSprite *bgm_off;
     CCMenu *rewardMenu;

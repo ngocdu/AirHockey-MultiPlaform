@@ -5,27 +5,14 @@
 //
 
 #include "RewardScene.h"
-#include "cocos2d.h"
-#include "rapidjson/rapidjson.h"
-#include "rapidjson/document.h"
-#include "GameLayer.h"
-#include "Difficulty.h"
-#include "GameManager.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
 
 CCScene* RewardScene::scene() {
-    // 'scene' is an autorelease object
     CCScene *scene = CCScene::create();
-    
-    // 'layer' is an autorelease object
     RewardScene *layer1 = RewardScene::create();
-    
-    // add layer as a child to scene
     scene->addChild(layer1);
-    
-    // return the scene
     return scene;
 }
 
@@ -51,10 +38,7 @@ bool RewardScene::init() {
         char nameBuf[50];
         sprintf(nameBuf, "Player Name: %s", playerName.c_str());
         this->convertName(nameBuf);
-//        CCLabelTTF *playerNameLabel = CCLabelTTF::create(nameBuf, "BankGothic Md BT", 30);
-        CCLabelTTF *playerNameLabel = CCLabelTTF::create(nameBuf,
-                                                         "Fonts/BankGothic Md BT.ttf",
-                                                         30*SIZE_RATIO);
+        CCLabelTTF *playerNameLabel = CCLabelTTF::create(nameBuf, FONT, 30*SIZE_RATIO);
         playerNameLabel->setPosition(ccp(w/2, h*3/4));
         this->addChild(playerNameLabel);
     }
@@ -68,9 +52,9 @@ bool RewardScene::init() {
     request->release();
     
     //create startMenuItem
-    CCMenuItemImage *back =
-        CCMenuItemImage::create("Buttons/BackButton.png", "Buttons/BackButtonOnClicked.png",
-                                this, menu_selector(RewardScene::back));
+    CCMenuItemImage *back = CCMenuItemImage::create("Buttons/BackButton.png",
+                                                    "Buttons/BackButtonOnClicked.png",
+                                                    this, menu_selector(RewardScene::back));
     back->setScale(SIZE_RATIO);
     back->setPosition(ccp(w/2, h/8));
     
@@ -99,14 +83,9 @@ void RewardScene::onHttpRequestCompleted(CCNode *sender, void *data) {
     
     if (!response->isSucceed()) {
         CCLabelTTF *notConnectLabel =
-        CCLabelTTF::create("Can't load Data",
-                           "BankGothic Md BT",
-                           23*SIZE_RATIO);
+        CCLabelTTF::create("Can't load Data", FONT, 23*SIZE_RATIO);
         notConnectLabel->setPosition(ccp(w/2, h/2));
-//        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!", "BankGothic Md BT", 24);
-        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!",
-                                                          "Fonts/BankGothic Md BT.ttf",
-                                                          24*SIZE_RATIO);
+        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!", FONT, 24*SIZE_RATIO);
         checkInternetMsg->setPosition(ccp(w/2, h/2 - 40*SIZE_RATIO_Y));
         
         this->addChild(notConnectLabel);
@@ -134,15 +113,15 @@ void RewardScene::onHttpRequestCompleted(CCNode *sender, void *data) {
         for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
             string name = document[i]["name"].GetString();
             convertName((char*)name.c_str());
-//            if (username == name &&
-//                email == document[i]["email"].GetString()){
+            if (username == name &&
+                email == document[i]["email"].GetString()){
                 string mail = document[i]["email"].GetString();
                 string time = document[i]["updated_at"].GetString();
                 int p = document[i]["point"].GetInt();
                 int r = document[i]["reward"].GetInt();
                 Player1 *player = new Player1(name,p, mail, time, r);
                 players->addObject(player);
-//            }
+            }
         }
     } else {
         CCLog(document.GetParseError());
@@ -259,14 +238,13 @@ CCTableViewCell* RewardScene::tableCellAtIndex(CCTableView *table, unsigned int 
     
     return cell;
 }
+
 void RewardScene::convertName(char *str_name) {
     int len = 0;
     int i = 0;
     len=strlen(str_name);
-    for(i=0;i<len;i++)
-    {
-        if(str_name[i] == '_')
-        {
+    for(i=0;i<len;i++) {
+        if(str_name[i] == '_') {
             str_name[i] = ' ';
         }
     }
@@ -275,10 +253,8 @@ void RewardScene::convertName2(char *str_name) {
     int len = 0;
     int i = 0;
     len=strlen(str_name);
-    for(i=0;i<len;i++)
-    {
-        if(str_name[i] == ' ')
-        {
+    for(i=0;i<len;i++) {
+        if(str_name[i] == ' ') {
             str_name[i] = '_';
         }
     }
@@ -287,10 +263,8 @@ void RewardScene::convertTime(char *str_time) {
     int len = 0;
     int i = 0;
     len=strlen(str_time);
-    for(i=0;i<len;i++)
-    {
-        if(str_time[i] == 'T')
-        {
+    for(i=0;i<len;i++) {
+        if(str_time[i] == 'T') {
             str_time[i] = '  ';
         }else if (str_time[i] == 'Z') str_time[i] = '\0';
     }
@@ -300,10 +274,8 @@ void RewardScene::convertTime2(char *str_time) {
     int len = 0;
     int i = 0;
     len=strlen(str_time);
-    for(i=0;i<len;i++)
-    {
-        if(str_time[i] == ' ')
-        {
+    for(i=0;i<len;i++) {
+        if(str_time[i] == ' ') {
             str_time[i] = 'T';
         }
     }

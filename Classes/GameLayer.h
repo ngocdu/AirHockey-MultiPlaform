@@ -8,6 +8,7 @@
 #ifndef __GAME_LAYER_H__
 #define __GAME_LAYER_H__
 
+#include "AppMacros.h"
 #include "Ball.h"
 #include "MyContactListener.h"
 #include "SimpleAudioEngine.h"

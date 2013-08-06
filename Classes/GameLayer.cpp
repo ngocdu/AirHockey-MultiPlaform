@@ -5,7 +5,7 @@
 //  Created by Trung Kien Do on 13/07/09.
 //  Copyright __FRAMGIA__ 2013年. All rights reserved.
 //
-#import <string>
+
 #include "GameLayer.h"
 
 #pragma mark SCENE
@@ -22,9 +22,17 @@ GameLayer::GameLayer() {
     
     setTouchEnabled(true);
     setAccelerometerEnabled(true);
-    SimpleAudioEngine::sharedEngine()->preloadEffect("Sounds/hitPuck.wav");
-    _level = GameManager::sharedGameManager()->getLevel();
     
+    SimpleAudioEngine::sharedEngine()->preloadEffect("Sounds/hitPuck.wav");
+    
+    _level = GameManager::sharedGameManager()->getLevel();
+    if (GameManager::sharedGameManager()->getBgm()) {
+        if (_level == 1 || _level == 2) {
+            SimpleAudioEngine::sharedEngine()->playBackgroundMusic("Sounds/BG.mp3", true);
+        } else {
+            SimpleAudioEngine::sharedEngine()->playBackgroundMusic("Sounds/HardBG.mp3", true);
+        }
+    } 
     size = CCDirector::sharedDirector()->getWinSize();
     w = size.width;
     h = size.height;
@@ -47,6 +55,7 @@ GameLayer::GameLayer() {
 //    this->getCamera()->getCenterXYZ(&x, &y, &z);
 //    this->getCamera()->setCenterXYZ(x, y+0.0000001, z);
 //    this->getCamera()->setEyeXYZ(x, y, 70);
+    
     CCSprite *backGroundImg = CCSprite::create("Court3.png");
     backGroundImg->setPosition(ccp(w/2, h/2));
     backGroundImg->setScaleY(h/backGroundImg->getContentSize().height);
@@ -54,15 +63,9 @@ GameLayer::GameLayer() {
     this->addChild(backGroundImg);
     
     // Score Counter
-//    _scoreLabel1 = CCLabelTTF::create("0", "BankGothic Md BT", 48);
-    _scoreLabel1 = CCLabelTTF::create("0",
-                                      "Fonts/BankGothic Md BT.ttf",
-                                      48 * SIZE_RATIO);
+    _scoreLabel1 = CCLabelTTF::create("0", FONT, 48 * SIZE_RATIO);
     _scoreLabel1->setColor(ccBLACK);
-//    _scoreLabel2 = CCLabelTTF::create("0", "BankGothic Md BT", 48);
-    _scoreLabel2 = CCLabelTTF::create("0",
-                                      "Fonts/BankGothic Md BT.ttf",
-                                      48 * SIZE_RATIO);
+    _scoreLabel2 = CCLabelTTF::create("0", FONT, 48 * SIZE_RATIO);
     _scoreLabel2->setColor(ccBLACK);
     _scoreLabel1->setPosition(ccp(w*0.91, h*3/8 + 10));
     _scoreLabel1->setRotation(90);
@@ -94,14 +97,8 @@ GameLayer::GameLayer() {
     _continueButton = CCSprite::create("Buttons/Continue.png");
     _continueButton->setScale(SIZE_RATIO);
     
-//    _resultLabel    = CCLabelTTF::create("DRAW", "BankGothic Md BT", 60);
-//    _scoreLabel     = CCLabelTTF::create("score: 0", "BankGothic Md BT", 36);
-    _resultLabel    = CCLabelTTF::create("DRAW",
-                                         "Fonts/BankGothic Md BT.ttf",
-                                         60 * SIZE_RATIO);
-    _scoreLabel     = CCLabelTTF::create("score: 0",
-                                         "Fonts/BankGothic Md BT.ttf",
-                                         36 * SIZE_RATIO);
+    _resultLabel    = CCLabelTTF::create("DRAW",FONT, 60 * SIZE_RATIO);
+    _scoreLabel     = CCLabelTTF::create("score: 0", FONT, 36 * SIZE_RATIO);
 
     _quitButton->setPosition(ccp(ew/2, eh/4));
     _restartButton->setPosition(ccp(ew/2, eh/2));
@@ -123,13 +120,8 @@ GameLayer::GameLayer() {
     _playing = false;
     char timeBuf[20] = {0};
 	sprintf(timeBuf, "0%i:0%i", _minutes, _seconds);
-	// Android Font
-    _time = CCLabelTTF::create(timeBuf,
-                               "Fonts/BankGothic Md BT.ttf",
-                               40 * SIZE_RATIO);
-    // iOS Font
-//    _time = CCLabelTTF::create(timeBuf, "BankGothic Md BT", 40);
-    
+
+    _time = CCLabelTTF::create(timeBuf, FONT, 40 * SIZE_RATIO);
     _time->setColor(ccBLACK);
 	_time->setPosition(ccp(w/12.5, h/2));
     _time->setRotation(90);
@@ -596,12 +588,10 @@ void GameLayer::checkHighScore() {
 void GameLayer::onHttpRequestCompleted(CCNode *sender, void *data) {
     CCHttpResponse *response = (CCHttpResponse*)data;
     if (!response) {
-//        CCMessageBox("Cannot get Respond !", "ERROR");
         CCLOG("Error !! Cannot get Respond !");
         return;
     }
     if (!response->isSucceed()) {
-//        CCMessageBox("Respond not succeeded !", "ERROR");
         CCLOG("Error !! Respond not succeeded !");
         return;
     }
@@ -684,8 +674,10 @@ void GameLayer::endGame() {
         if (point == 0) {
             point = _score1 * (_minutes * 60 + _seconds) *
                 pow(10.0, GameManager::sharedGameManager()->getLevel() + 1.0);
+            GameManager::sharedGameManager()->setPoint(point);
             this->checkHighScore();
         }
+        
         _resultLabel->setVisible(true);
         _resultLabel->setString("YOU WIN");
         _resultLabel->runAction(CCBlink::create(2.0f, 5.0f));
@@ -718,7 +710,6 @@ void GameLayer::endGame() {
             }  
         } else {
             this->pauseSchedulerAndActions();
-            GameManager::sharedGameManager()->setPoint(point);
         }
     }
     else if (_score1 == _score2) _resultLabel->setString("DRAW");

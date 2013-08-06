@@ -1,27 +1,18 @@
 #include "GameManager.h" 
 
-using namespace cocos2d;
-//using namespace CocosDenshion;
-
-//All static variables need to be defined in the .cpp file
-//I've added this following line to fix the problem
 GameManager* GameManager::m_mySingleton = NULL;
 
 GameManager::GameManager()
 {
-    this->setIpAddr("192.168.1.114");
+    this->setIpAddr("192.168.1.51");
 }
 
 GameManager* GameManager::sharedGameManager()
 {
-    //If the singleton has no instance yet, create one
     if(NULL == m_mySingleton)
     {
-        //Create an instance to the singleton
         m_mySingleton = new GameManager();
     }
-    
-    //Return the singleton object
     return m_mySingleton;
 }
 void GameManager::setBgm(bool bgm)

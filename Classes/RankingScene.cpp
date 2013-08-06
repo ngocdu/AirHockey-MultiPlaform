@@ -5,32 +5,19 @@
 //
 
 #include "RankingScene.h"
-#include "RewardScene.h"
-#include "cocos2d.h"
-#include "rapidjson/rapidjson.h"
-#include "rapidjson/document.h"
-#include "GameLayer.h"
-#include "Difficulty.h"
-#include "GameManager.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
 
 CCScene* RankingScene::scene() {
-    // 'scene' is an autorelease object
     CCScene *scene = CCScene::create();
-    
-    // 'layer' is an autorelease object
     RankingScene *layer1 = RankingScene::create();
-    
-    // add layer as a child to scene
     scene->addChild(layer1);
-    
-    // return the scene
     return scene;
 }
 
 bool RankingScene::init() {
+    CCLOG(FONT);
     size = CCDirector::sharedDirector()->getWinSize();
     w = size.width;
     h = size.height;
@@ -39,6 +26,8 @@ bool RankingScene::init() {
     SIZE_RATIO_Y = h/1024;
 
     players = new CCArray();
+    if (GameManager::sharedGameManager()->getBgm()) musicPlayed = true;
+    else musicPlayed = false;
     
     CCSprite *background = CCSprite::create("BackGrounds/BackGround2.png");
     background->setPosition(ccp(w/2, h/2));
@@ -46,21 +35,24 @@ bool RankingScene::init() {
     background->setScaleX(w/background->getContentSize().width);
     this->addChild(background);
     
-//    CCSprite *topLine = CCSprite::create("line.png");
-//    topLine->setPosition(ccp(w/2, 602));
-//    topLine->setOpacity(70);
-//    this->addChild(topLine);
-//    
-//    CCSprite *bottomLine = CCSprite::create("line.png");
-//    bottomLine->setPosition(ccp(w/2, 248));
-//    bottomLine->setOpacity(70);
-//    this->addChild(bottomLine);
-    //-------------- menu getperesent ---------------
+    CCSprite *topLine = CCSprite::create("line.png");
+    CCSprite *bottomLine = CCSprite::create("line.png");
     
+    topLine->setScale(SIZE_RATIO);
+    bottomLine->setScale(SIZE_RATIO);
     
-    CCMenuItemImage *reward  =
-        CCMenuItemImage::create("Present.png","PresentOnClicked.png",
-                                this, menu_selector(RankingScene::reward));
+    topLine->setPosition(ccp(w/2, 602*SIZE_RATIO_Y));
+    bottomLine->setPosition(ccp(w/2, 248*SIZE_RATIO_Y));
+    
+    topLine->setOpacity(70);
+    bottomLine->setOpacity(70);
+    
+    this->addChild(topLine);
+    this->addChild(bottomLine);
+    
+    CCMenuItemImage *reward  = CCMenuItemImage::create("Present.png",
+                                                       "PresentOnClicked.png",
+                                                       this, menu_selector(RankingScene::reward));
     reward->setScaleX(SIZE_RATIO_X);
     reward->setScaleY(SIZE_RATIO_Y);
     reward->setPosition(ccp(w/5, h/8));
@@ -99,15 +91,18 @@ bool RankingScene::init() {
     bgm_off->setScaleX(SIZE_RATIO_X);
     bgm_off->setScaleY(SIZE_RATIO_Y);
     bgm_off->setPosition(bgmItem->getPosition());
-    bgm_off->setVisible(GameManager::sharedGameManager()->getBgm());
-    if (GameManager::sharedGameManager()->getBgm()) {
+    CCLOG("bgm: %d", GameManager::sharedGameManager()->getBgm());
+    bgm_off->setVisible(!GameManager::sharedGameManager()->getBgm());
+    
+    if (!GameManager::sharedGameManager()->getBgm()) {
         SimpleAudioEngine::sharedEngine()->setEffectsVolume(0.0f);
+        SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
     } else {
         SimpleAudioEngine::sharedEngine()->setEffectsVolume(1.0f);
+        SimpleAudioEngine::sharedEngine()->playBackgroundMusic("Sounds/StartBG.mp3", true);
     }
-    this->addChild(bgm_off);
     
-        
+    this->addChild(bgm_off);
     return true;
 }
 
@@ -128,16 +123,9 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
             response->getHttpRequest()->getTag());
     
     if (!response->isSucceed()) {
-//        CCLabelTTF *notConnectLabel = CCLabelTTF::create("Can't load Data", "BankGothic Md BT", 20);
-        CCLabelTTF *notConnectLabel = CCLabelTTF::create("Can't load Data",
-                                                         "Fonts/BankGothic Md BT.ttf",
-                                                         23*SIZE_RATIO);
+        CCLabelTTF *notConnectLabel = CCLabelTTF::create("Can't load Data", FONT, 23*SIZE_RATIO);
+        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!", FONT, 24*SIZE_RATIO);
         notConnectLabel->setPosition(ccp(w/2, h/2));
-        
-//        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!", "BankGothic Md BT", 24);
-        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!",
-                                                          "Fonts/BankGothic Md BT.ttf",
-                                                          24*SIZE_RATIO);
         checkInternetMsg->setPosition(ccp(w/2, h/2 - 40*SIZE_RATIO));
         this->addChild(notConnectLabel);
         this->addChild(checkInternetMsg);
@@ -192,12 +180,18 @@ void RankingScene::reward(cocos2d::CCObject *pSender) {
 
 void RankingScene::bgm(CCObject* pSender) {
     GameManager *game = GameManager::sharedGameManager();
-    bgm_off->setVisible(!game->getBgm());
     game->setBgm(!game->getBgm());
-    if (game->getBgm()) {
+    bgm_off->setVisible(!game->getBgm());
+    if (!game->getBgm()) {
         SimpleAudioEngine::sharedEngine()->setEffectsVolume(0.0f);
+        SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
     } else {
         SimpleAudioEngine::sharedEngine()->setEffectsVolume(1.0f);
+        if (musicPlayed) SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+        else {
+            musicPlayed = true;
+            SimpleAudioEngine::sharedEngine()->playBackgroundMusic("Sounds/StartBG.mp3", true);
+        }
     }
 }
 

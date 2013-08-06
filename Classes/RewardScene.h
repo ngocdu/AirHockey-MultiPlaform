@@ -7,18 +7,23 @@
 #ifndef __AirHockey__RewardScene__
 #define __AirHockey__RewardScene__
 
-#include <iostream>
-#include "cocos2d.h"
+#include "AppMacros.h"
 #include "cocos-ext.h"
 #include "CCTableView.h"
 #include "CCScrollView.h"
 #include "CCTableViewCell.h"
-#include <set>
-#include <vector>
+#include "SimpleAudioEngine.h"
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/document.h"
+
+#include "Difficulty.h"
+#include "GameManager.h"
+#include "RankingScene.h"
+
+using namespace std;
 using namespace cocos2d;
 using namespace cocos2d::extension;
-using namespace std;
-
+using namespace CocosDenshion;
 
 class Player1 : public CCObject {
 private:

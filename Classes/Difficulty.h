@@ -9,9 +9,12 @@
 #ifndef __AirHockey__Difficulty__
 #define __AirHockey__Difficulty__
 
-#include <iostream>
+#include "AppMacros.h"
 #include "cocos2d.h"
 #include "cocos-ext.h"
+#include "GameManager.h"
+#include "RankingScene.h"
+#include "GameLayer.h"
 
 using namespace cocos2d;
 
