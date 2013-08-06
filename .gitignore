@@ -13,6 +13,7 @@ xcuserdata/
 # Generated files
 *.o
 *.pyc
+*.o.d
 
 #Python modules
 MANIFEST
