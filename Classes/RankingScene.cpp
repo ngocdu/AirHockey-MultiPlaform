@@ -62,7 +62,9 @@ bool RankingScene::init() {
     
     CCHttpRequest* request = new CCHttpRequest();
     string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+    string url    = ipAddr + ":3000/users/Ngoc_Du.json";
     request->setUrl((ipAddr+":3000/users.json").c_str());
+//    request->setUrl(url.c_str());
     request->setRequestType(CCHttpRequest::kHttpGet);
     request->setResponseCallback(this, callfuncND_selector(RankingScene::onHttpRequestCompleted));
     CCHttpClient::getInstance()->send(request);
