@@ -4,4 +4,5 @@ class User < ActiveRecord::Base
   validates :email, format: {with: VALID_EMAIL_REGEX}
   validates :name, presence: true
   default_scope order: 'users.point DESC'
+  belongs_to :user3
 end

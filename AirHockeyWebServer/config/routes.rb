@@ -1,4 +1,8 @@
 AirHockeyWebService::Application.routes.draw do
+  resources :user3s
+
+  resources :user_send_mails
+
   resources :user_takasus
 
   resources :users
