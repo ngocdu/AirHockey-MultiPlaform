@@ -24,6 +24,7 @@ using namespace cocos2d::extension;
 class GetPresent : public CCLayer, public extension::CCEditBoxDelegate{
 private:
     CCSize size;
+    int dem;
     float w, h;
     float SIZE_RATIO;
     float SIZE_RATIO_X;
@@ -55,6 +56,8 @@ public:
     void standardizeName(char *xau);
     void removeSpace(char *xau);
     void onHttpRequestCompleted(CCNode *sender, void *data);
+    void onHttpRequestCompleted_checkemail(CCNode *sender, void *data);
+    void onHttpRequestCompleted_checkname(CCNode *sender, void *data);
     // a selector callback
     CREATE_FUNC(GetPresent);
 };

@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  integer: MyString
+  point: MyString
+  integer: 
+
+two:
+  integer: MyString
+  point: MyString
+  integer: 
