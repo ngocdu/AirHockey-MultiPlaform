@@ -664,8 +664,7 @@ void GameLayer::onHttpRequestCompleted(CCNode *sender, void *data) {
         CCLog(document.GetParseError());
     }
     
-    d = -1;
-    delete []data2;
+    free(data2);
 }
 
 void GameLayer::endGame() {
@@ -729,7 +728,7 @@ void GameLayer::endGame() {
 
 void GameLayer::addEffect(CCPoint point) {
     CCParticleSystemQuad *pop = new CCParticleSystemQuad;
-    pop = CCParticleGalaxy::create();
+//    pop = CCParticleGalaxy::create();
     pop->setTexture(CCTextureCache::sharedTextureCache()->addImage("Star.png"));
     pop->setPosition(point);
     pop->setGravity(CCPointZero);

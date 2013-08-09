@@ -126,7 +126,7 @@ void RewardScene::onHttpRequestCompleted(CCNode *sender, void *data) {
     } else {
         CCLog(document.GetParseError());
     }
-    d = -1;
+    free(data2);
     CCTableView *tableView=CCTableView::create(this, CCSizeMake(700*SIZE_RATIO_X,
                                                                 350*SIZE_RATIO_Y));
     tableView->setDirection(kCCScrollViewDirectionVertical);

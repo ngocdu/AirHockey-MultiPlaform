@@ -19,7 +19,7 @@
 #define IOS_FONTS  "BankGothic Md BT"
 
 #define FONT2 ANDROID_FONTS2
-#define ANDROID_FONTS2 "Fonts/SSGrogy-CondensedBold.ttf"
-#define IOS_FONTS2  "SS_Grogy"
+#define ANDROID_FONTS2 "Fonts/SS Grogy.ttf"
+#define IOS_FONTS2  "SS Grogy"
 
 #endif
