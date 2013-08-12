@@ -14,6 +14,7 @@ CCScene* GetPresent::scene() {
 }
 
 bool GetPresent::init() {
+    userOK = 1;
     size = CCDirector::sharedDirector()->getWinSize();
     w = size.width;
     h = size.height;
@@ -49,12 +50,21 @@ bool GetPresent::init() {
     this->addChild(m_pUserEmail);
     
     // Email Fail Message
-    emailFailMsg = CCLabelTTF::create("Invalid Email !! Please Try Again !!", FONT, 24 * SIZE_RATIO);
+    emailFailMsg = CCLabelTTF::create("Invalid Email !! Please Try Again !!",
+                                      FONT, 24 * SIZE_RATIO);
     emailFailMsg->setPosition(ccp(m_pUserEmail->getPosition().x,
                                   m_pUserEmail->getPosition().y - 50*SIZE_RATIO));
     emailFailMsg->setColor(ccRED);
     emailFailMsg->setVisible(false);
+    
+    emailExistedMsg = CCLabelTTF::create("Email Existed !! please try again !!",
+                                      FONT, 24 * SIZE_RATIO);
+    emailExistedMsg->setPosition(ccp(m_pUserEmail->getPosition().x,
+                                  m_pUserEmail->getPosition().y - 50*SIZE_RATIO));
+    emailExistedMsg->setColor(ccRED);
+    emailExistedMsg->setVisible(false);
     this->addChild(emailFailMsg);
+    this->addChild(emailExistedMsg);
     
     // name
     CCLabelTTF *nameLabel = CCLabelTTF::create("please choose your username:", FONT, 36 * SIZE_RATIO);
@@ -72,12 +82,21 @@ bool GetPresent::init() {
     m_pUserName->setDelegate(this);
     this->addChild(m_pUserName);
     
-    nameFailMsg = CCLabelTTF::create("please enter your username !!", FONT, 24 * SIZE_RATIO);
+    nameFailMsg = CCLabelTTF::create("please enter your username !!",
+                                     FONT, 24 * SIZE_RATIO);
     nameFailMsg->setPosition(ccp(m_pUserName->getPosition().x,
                                   m_pUserName->getPosition().y - 50 * SIZE_RATIO));
     nameFailMsg->setColor(ccRED);
     nameFailMsg->setVisible(false);
     this->addChild(nameFailMsg);
+    
+    nameExistedMsg = CCLabelTTF::create("username existed!! please try again !!",
+                                        FONT, 24 * SIZE_RATIO);
+    nameExistedMsg->setPosition(ccp(m_pUserName->getPosition().x,
+                                 m_pUserName->getPosition().y - 50 * SIZE_RATIO));
+    nameExistedMsg->setColor(ccRED);
+    nameExistedMsg->setVisible(false);
+    this->addChild(nameExistedMsg);
     
     CCMenuItemImage *sendMenuItem = CCMenuItemImage::create("Buttons/SubmitButton.png",
                                                             "Buttons/SubmitButtonOnClicked.png",
@@ -107,10 +126,29 @@ void GetPresent::editBoxTextChanged(cocos2d::extension::CCEditBox* editBox,
     //CCLog("editBox %p TextChanged, text: %s ", editBox, text.c_str());
 }
 
-void GetPresent::editBoxReturn(cocos2d::extension::CCEditBox* editBox)
-{
-    //CCLog("editBox %p was returned !");
-    GameManager::sharedGameManager()->setEmail(m_pUserEmail->getText());
+void GetPresent::editBoxReturn(cocos2d::extension::CCEditBox* editBox) {
+    if (m_pUserEmail->getText() != "") {
+        CCHttpRequest* request = new CCHttpRequest();
+        string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+        string email = m_pUserEmail->getText();
+        request->setUrl((ipAddr+":3000/user3s/dudu.json?email="+email).c_str());
+        request->setRequestType(CCHttpRequest::kHttpGet);
+        request->setResponseCallback(this, callfuncND_selector(GetPresent::onHttpRequestCompleted_checkemail));
+        CCHttpClient::getInstance()->send(request);
+        request->release();
+    }
+    if (m_pUserName->getText() != "") {
+        CCHttpRequest* request = new CCHttpRequest();
+        string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+        char * name =(char*) m_pUserName->getText();
+        standardizeName(name);
+        removeSpace(name);
+        request->setUrl((ipAddr+":3000/user3s/"+name+".json?name=ngocdu").c_str());
+        request->setRequestType(CCHttpRequest::kHttpGet);
+        request->setResponseCallback(this, callfuncND_selector(GetPresent::onHttpRequestCompleted_checkname));
+        CCHttpClient::getInstance()->send(request);
+        request->release();
+    }
 }
 
 #pragma mark valid Email
@@ -161,11 +199,9 @@ int GetPresent::spc_email_isvalid(const char *address) {
     return (count >= 1);
 }
 
-void GetPresent::menuSendEmail(CCObject *pSender)
-{
+void GetPresent::menuSendEmail(CCObject *pSender) {
     int i = 0;
     int j = 0;
-    
     string email = m_pUserEmail->getText();
     if (!this->isValidEmail(email)) {
         CCFiniteTimeAction *showAction = CCFadeIn::create(0.5f);
@@ -173,7 +209,7 @@ void GetPresent::menuSendEmail(CCObject *pSender)
         emailFailMsg->setVisible(true);
         emailFailMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
     } else i = 1;
-
+    
     if (strcmp(m_pUserName->getText(), "") == 0) {
         CCLOG("wrong username");
         CCFiniteTimeAction *showAction = CCFadeIn::create(0.5f);
@@ -182,11 +218,11 @@ void GetPresent::menuSendEmail(CCObject *pSender)
         nameFailMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
     } else j = 1;
     
-    if (i*j == 1) {
-        char * n =(char*) m_pUserName->getText();
-        standardizeName(n);
-        removeSpace(n);
-        GameManager::sharedGameManager()->setName(n);
+    if (i*j*userOK == 1) {
+        char *name =(char*) m_pUserName->getText();
+        standardizeName(name);
+        removeSpace(name);
+        GameManager::sharedGameManager()->setName(name);
         CCHttpRequest* request = new CCHttpRequest();
         string ipAddr = GameManager::sharedGameManager()->getIpAddr();
         request->setUrl((ipAddr+":3000/users.json").c_str());
@@ -195,6 +231,7 @@ void GetPresent::menuSendEmail(CCObject *pSender)
         CCHttpClient::getInstance()->send(request);
         request->release();
     }
+
 }
 void GetPresent::menuBack(cocos2d::CCObject *pSender) {
     CCDirector::sharedDirector()->replaceScene(RankingScene::scene());
@@ -232,7 +269,7 @@ void GetPresent::removeSpace(char *xau) {
 }
 
 void GetPresent::onHttpRequestCompleted(CCNode *sender, void *data) {
-    CCSize w = CCDirector::sharedDirector()->getWinSize();
+
     CCHttpResponse *response = (CCHttpResponse*)data;
     if (!response) {
         return;
@@ -251,7 +288,7 @@ void GetPresent::onHttpRequestCompleted(CCNode *sender, void *data) {
         CCLabelTTF::create("Can't load Data",
                            "Time new roman",
                            20 * SIZE_RATIO);
-        notConnectLabel->setPosition(ccp(w.width/2, w.height/2));
+        notConnectLabel->setPosition(ccp(w/2, h/2));
         this->addChild(notConnectLabel);
         return;
     }
@@ -289,10 +326,11 @@ void GetPresent::onHttpRequestCompleted(CCNode *sender, void *data) {
     } else {
         CCLog(document.GetParseError());
     }
-    
+    free(data2);
     if (strcmp(m_pUserEmail->getText(), "") != 0 && this->isValidEmail(m_pUserEmail->getText()) &&
         this->spc_email_isvalid(m_pUserEmail->getText())) {
         CCHttpRequest * request = new CCHttpRequest();
+        CCHttpRequest * request3 = new CCHttpRequest();
         string name = GameManager::sharedGameManager()->getName();
         int p = GameManager::sharedGameManager()->getPoint();
         char strP[20] = {0};
@@ -310,7 +348,12 @@ void GetPresent::onHttpRequestCompleted(CCNode *sender, void *data) {
         request->setRequestType(CCHttpRequest::kHttpPost);
         CCHttpClient::getInstance()->send(request);
         request->release();
-        GameManager::sharedGameManager()->setEmail(m_pUserEmail->getText());
+        
+        string url3 = ipAddr + ":3000/user3s?name="+name+"&point="+strP+"&email="+email;
+        request3->setUrl(url3.c_str());
+        request3->setRequestType(CCHttpRequest::kHttpPost);
+        CCHttpClient::getInstance()->send(request3);
+        request3->release();
         
         char * n =(char*) m_pUserName->getText();
         standardizeName(n);
@@ -321,8 +364,128 @@ void GetPresent::onHttpRequestCompleted(CCNode *sender, void *data) {
         CCFiniteTimeAction *hideAction = CCFadeOut::create(0.2f);
         emailFailMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
     }
-    d-=1;
 }
+void GetPresent::onHttpRequestCompleted_checkname(CCNode *sender, void *data) {
+
+    CCHttpResponse *response = (CCHttpResponse*)data;
+    if (!response) {
+        return;
+    }
+    if (0 != strlen(response->getHttpRequest()->getTag())) {
+        CCLog("%s completed", response->getHttpRequest()->getTag());
+    }
+    
+    int statusCode = response->getResponseCode();
+    char statusString[64] = {0};
+    sprintf(statusString, "HTTP Status Code: %d, tag = %s", statusCode,
+            response->getHttpRequest()->getTag());
+    
+    if (!response->isSucceed()) {
+        CCLabelTTF *notConnectLabel = CCLabelTTF::create("Can't load Data",
+                                                         "Time new roman",
+                                                         20 * SIZE_RATIO);
+        notConnectLabel->setPosition(ccp(w/2, h/2));
+        this->addChild(notConnectLabel);
+        return;
+    }
+    // dump data
+    std::vector<char> *buffer = response->getResponseData();
+    char * data2 = (char*)(malloc(buffer->size() *  sizeof(char)));
+    int d = 0;
+    data2[d] = '[';
+    printf("Http Test, dump data: ");
+    for (unsigned int i = 0; i < buffer->size(); i++) {
+        d++ ;
+        data2[d] = (*buffer)[i];
+    }
+    d++;
+    data2[d ] = ']';
+    data2[d + 1] = '\0';
+    CCLOG("data: %s", data2);
+    string name = "";
+    rapidjson::Document document;
+    if(data2 != NULL && !document.Parse<0>(data2).HasParseError()) {
+        for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
+            if (document[i].IsObject()) {
+                CCLOG("is object");
+                name = document[i]["name"].GetString();
+                if (name != "") {
+                    userOK = 0;
+                    CCFiniteTimeAction *showAction = CCFadeIn::create(0.5f);
+                    CCFiniteTimeAction *hideAction = CCFadeOut::create(2.0f);
+                    nameExistedMsg->setVisible(true);
+                    nameExistedMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
+                }
+            }  
+        }
+    } else {
+        CCLog(document.GetParseError());
+    }
+    free(data2);
+    if (name == "") userOK = 1;
+}
+void GetPresent::onHttpRequestCompleted_checkemail(CCNode *sender, void *data) {
+    CCSize w = CCDirector::sharedDirector()->getWinSize();
+    CCHttpResponse *response = (CCHttpResponse*)data;
+    if (!response) {
+        return;
+    }
+    if (0 != strlen(response->getHttpRequest()->getTag())) {
+        CCLog("%s completed", response->getHttpRequest()->getTag());
+    }
+    
+    int statusCode = response->getResponseCode();
+    char statusString[64] = {0};
+    sprintf(statusString, "HTTP Status Code: %d, tag = %s", statusCode,
+            response->getHttpRequest()->getTag());
+    
+    if (!response->isSucceed()) {
+        CCLabelTTF *notConnectLabel =
+        CCLabelTTF::create("Can't load Data",
+                           "Time new roman",
+                           20 * SIZE_RATIO);
+        notConnectLabel->setPosition(ccp(w.width/2, w.height/2));
+        this->addChild(notConnectLabel);
+        return;
+    }
+    // dump data
+    std::vector<char> *buffer = response->getResponseData();
+    char * data2 = (char*)(malloc(buffer->size() *  sizeof(char)));
+    int d = 0;
+    data2[d] = '[';
+    printf("Http Test, dump data: ");
+    for (unsigned int i = 0; i < buffer->size(); i++) {
+        d++ ;
+        data2[d] = (*buffer)[i];
+    }
+    d++;
+    data2[d ] = ']';
+    data2[d + 1] = '\0';
+    string email = "";
+    rapidjson::Document document;
+    if(data2 != NULL && !document.Parse<0>(data2).HasParseError()) {
+        for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
+            if (document[i].IsObject()) {
+                email = document[i]["email"].GetString();
+                if (email != "") {
+                    userOK = 0;
+                    CCFiniteTimeAction *showAction = CCFadeIn::create(0.5f);
+                    CCFiniteTimeAction *hideAction = CCFadeOut::create(2.0f);
+                    nameExistedMsg->setVisible(true);
+                    nameExistedMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
+                }
+            }
+        }
+    } else {
+        CCLog(document.GetParseError());
+    }
+    free(data2);
+    if (email == "") {
+        userOK = 1;
+        GameManager::sharedGameManager()->setEmail(m_pUserEmail->getText());
+    }
+}
+
 bool GetPresent::isValidEmail(std::string email){
     int length = email.length();
     if (length >= 9 && ((email[0] > 64 && email[0] < 91) ||

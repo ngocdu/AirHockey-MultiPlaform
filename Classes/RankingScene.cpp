@@ -61,7 +61,9 @@ bool RankingScene::init() {
     
     CCHttpRequest* request = new CCHttpRequest();
     string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+    string url    = ipAddr + ":3000/users/Ngoc_Du.json";
     request->setUrl((ipAddr+":3000/users.json").c_str());
+//    request->setUrl(url.c_str());
     request->setRequestType(CCHttpRequest::kHttpGet);
     request->setResponseCallback(this, callfuncND_selector(RankingScene::onHttpRequestCompleted));
     CCHttpClient::getInstance()->send(request);
@@ -160,7 +162,7 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
     } else {
         CCLog(document.GetParseError());
     }
-    d = -1;
+    free(data2);
     CCTableView *tableView = CCTableView::create(this, CCSizeMake(700*SIZE_RATIO_X,
                                                                 350*SIZE_RATIO_Y));
     tableView->setDirection(kCCScrollViewDirectionVertical);

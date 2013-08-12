@@ -26,7 +26,6 @@ GameLayer::GameLayer() {
     SimpleAudioEngine::sharedEngine()->preloadEffect("Sounds/hitPuck.wav");
     
     CCAction *playIntro = CCCallFuncN::create(this, callfuncN_selector(GameLayer::playIntro));
-    CCAction *delayTime = CCDelayTime::create(0);
     CCAction *playBGM = CCCallFuncN::create(this, callfuncN_selector(GameLayer::playBGM));
     CCArray *actionList = new CCArray(2);
     actionList->autorelease();
@@ -258,7 +257,7 @@ void GameLayer::update(float dt) {
         _puck->update(dt);
     }
     
-    if ((_minutes == 0 && _seconds == 0) || _score1 == 3 || _score2 == 3) {
+    if ((_minutes == 0 && _seconds == 0) || _score1 == 1 || _score2 == 1) {
         _playing = false ;
         _isEnd = true;
         _player1->reset();
@@ -680,8 +679,7 @@ void GameLayer::onHttpRequestCompleted(CCNode *sender, void *data) {
         CCLog(document.GetParseError());
     }
     
-    d = -1;
-    delete []data2;
+    free(data2);
 }
 
 void GameLayer::endGame() {
@@ -745,7 +743,7 @@ void GameLayer::endGame() {
 
 void GameLayer::addEffect(CCPoint point) {
     CCParticleSystemQuad *pop = new CCParticleSystemQuad;
-    pop = CCParticleGalaxy::create();
+//    pop = CCParticleGalaxy::create();
     pop->setTexture(CCTextureCache::sharedTextureCache()->addImage("Star.png"));
     pop->setPosition(point);
     pop->setGravity(CCPointZero);
