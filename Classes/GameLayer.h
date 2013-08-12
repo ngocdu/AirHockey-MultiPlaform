@@ -39,6 +39,8 @@ public:
     void createEdge(float x1, float y1, float x2, float y2, int groupIndex);
     
     void onStart();
+    void playIntro();
+    void playBGM();
     
     virtual void draw();
     void update(float dt);

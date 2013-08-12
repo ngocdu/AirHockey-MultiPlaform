@@ -17,7 +17,6 @@ CCScene* RankingScene::scene() {
 }
 
 bool RankingScene::init() {
-    CCLOG(FONT);
     size = CCDirector::sharedDirector()->getWinSize();
     w = size.width;
     h = size.height;
@@ -91,7 +90,6 @@ bool RankingScene::init() {
     bgm_off->setScaleX(SIZE_RATIO_X);
     bgm_off->setScaleY(SIZE_RATIO_Y);
     bgm_off->setPosition(bgmItem->getPosition());
-    CCLOG("bgm: %d", GameManager::sharedGameManager()->getBgm());
     bgm_off->setVisible(!GameManager::sharedGameManager()->getBgm());
     
     if (!GameManager::sharedGameManager()->getBgm()) {

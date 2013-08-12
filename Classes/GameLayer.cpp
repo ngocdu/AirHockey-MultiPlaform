@@ -25,14 +25,16 @@ GameLayer::GameLayer() {
     
     SimpleAudioEngine::sharedEngine()->preloadEffect("Sounds/hitPuck.wav");
     
-    _level = GameManager::sharedGameManager()->getLevel();
-    if (GameManager::sharedGameManager()->getBgm()) {
-        if (_level == 1 || _level == 2) {
-            SimpleAudioEngine::sharedEngine()->playBackgroundMusic("Sounds/BG.mp3", true);
-        } else {
-            SimpleAudioEngine::sharedEngine()->playBackgroundMusic("Sounds/HardBG.mp3", true);
-        }
-    } 
+    CCAction *playIntro = CCCallFuncN::create(this, callfuncN_selector(GameLayer::playIntro));
+    CCAction *delayTime = CCDelayTime::create(0);
+    CCAction *playBGM = CCCallFuncN::create(this, callfuncN_selector(GameLayer::playBGM));
+    CCArray *actionList = new CCArray(2);
+    actionList->autorelease();
+    actionList->insertObject(playIntro, 0);
+    actionList->insertObject(playBGM, 1);
+    CCAction *BGM = CCSequence::create(actionList);
+    this->runAction(BGM);
+    
     size = CCDirector::sharedDirector()->getWinSize();
     w = size.width;
     h = size.height;
@@ -150,6 +152,21 @@ GameLayer::GameLayer() {
 GameLayer::~GameLayer() {
     delete _world;
     _world = NULL;
+}
+
+void GameLayer::playIntro() {
+    SimpleAudioEngine::sharedEngine()->playBackgroundMusic("Intro.mp3", false);
+}
+
+void GameLayer::playBGM() {
+    _level = GameManager::sharedGameManager()->getLevel();
+    if (GameManager::sharedGameManager()->getBgm()) {
+        if (_level == 1 || _level == 2) {
+            SimpleAudioEngine::sharedEngine()->playBackgroundMusic("Sounds/BG.mp3", true);
+        } else {
+            SimpleAudioEngine::sharedEngine()->playBackgroundMusic("Sounds/HardBG.mp3", true);
+        }
+    }
 }
 
 #pragma mark INIT PHYSICS
@@ -422,8 +439,7 @@ void GameLayer::ccTouchesBegan(CCSet* touches, CCEvent* event) {
         CCRect continueRect = CCRectMake(p3.x - cw/2, p3.y - ch/2, cw, ch);
         
         CCRect p1Rect = _player1->boundingBox();
-        
-        if (continueRect.containsPoint(tap)) {
+                    if (continueRect.containsPoint(tap)) {
             _playing = true;
             this->resumeSchedulerAndActions();
             _endLayerBg->setVisible(false);
