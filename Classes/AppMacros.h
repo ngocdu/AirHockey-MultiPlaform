@@ -22,5 +22,6 @@
 #define ANDROID_FONTS2 "Fonts/SS_Grogy.ttf"
 #define IOS_FONTS2  "SS_Grogy"
 
+#define MUSICTAG 99
 
 #endif

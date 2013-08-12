@@ -27,6 +27,7 @@ bool RankingScene::init() {
     players = new CCArray();
     if (GameManager::sharedGameManager()->getBgm()) musicPlayed = true;
     else musicPlayed = false;
+    introEnd = false;
     
     CCSprite *background = CCSprite::create("BackGrounds/BackGround2.png");
     background->setPosition(ccp(w/2, h/2));
@@ -45,7 +46,6 @@ bool RankingScene::init() {
     
     topLine->setOpacity(70);
     bottomLine->setOpacity(70);
-    
     this->addChild(topLine);
     this->addChild(bottomLine);
     
@@ -97,13 +97,40 @@ bool RankingScene::init() {
     if (!GameManager::sharedGameManager()->getBgm()) {
         SimpleAudioEngine::sharedEngine()->setEffectsVolume(0.0f);
         SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
+        introEnd=  false;
     } else {
         SimpleAudioEngine::sharedEngine()->setEffectsVolume(1.0f);
-        SimpleAudioEngine::sharedEngine()->playBackgroundMusic("Sounds/StartBG.mp3", true);
+        CCAction *playIntro = CCCallFuncN::create(this, callfuncN_selector(GameLayer::playIntro));
+        CCAction *delayTime = CCDelayTime::create(4.0f);
+        CCAction *playBGM = CCCallFuncN::create(this, callfuncN_selector(GameLayer::playBGM));
+        CCArray *actionList = new CCArray(1);
+        actionList->autorelease();
+        actionList->insertObject(playIntro, 0);
+        actionList->insertObject(delayTime, 1);
+        actionList->insertObject(playBGM, 2);
+        CCAction *BGM = CCSequence::create(actionList);
+        this->runAction(BGM);
     }
     
     this->addChild(bgm_off);
+    this->scheduleUpdate();
     return true;
+}
+
+void RankingScene::playIntro() {
+    if (GameManager::sharedGameManager()->getBgm()) {
+        SimpleAudioEngine::sharedEngine()->playBackgroundMusic("Sounds/StartIntro.mp3");
+    }
+}
+
+void RankingScene::playBGM() {
+    if (GameManager::sharedGameManager()->getBgm()) {
+        SimpleAudioEngine::sharedEngine()->playBackgroundMusic("Sounds/StartBG.mp3", true);
+    }
+}
+
+void RankingScene::update(float dt) {
+
 }
 
 void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {

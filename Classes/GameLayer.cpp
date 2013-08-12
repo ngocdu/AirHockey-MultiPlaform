@@ -23,14 +23,14 @@ GameLayer::GameLayer() {
     setTouchEnabled(true);
     setAccelerometerEnabled(true);
     
-    SimpleAudioEngine::sharedEngine()->preloadEffect("Sounds/hitPuck.wav");
-    
     CCAction *playIntro = CCCallFuncN::create(this, callfuncN_selector(GameLayer::playIntro));
+    CCAction *delayTime = CCDelayTime::create(2.0f);
     CCAction *playBGM = CCCallFuncN::create(this, callfuncN_selector(GameLayer::playBGM));
-    CCArray *actionList = new CCArray(2);
+    CCArray *actionList = new CCArray(1);
     actionList->autorelease();
     actionList->insertObject(playIntro, 0);
-    actionList->insertObject(playBGM, 1);
+    actionList->insertObject(delayTime, 1);
+    actionList->insertObject(playBGM, 2);
     CCAction *BGM = CCSequence::create(actionList);
     this->runAction(BGM);
     
@@ -154,7 +154,9 @@ GameLayer::~GameLayer() {
 }
 
 void GameLayer::playIntro() {
-    SimpleAudioEngine::sharedEngine()->playBackgroundMusic("Intro.mp3", false);
+    if (GameManager::sharedGameManager()->getBgm()) {
+        SimpleAudioEngine::sharedEngine()->playBackgroundMusic("Sounds/PlayIntro.mp3");
+    }
 }
 
 void GameLayer::playBGM() {
@@ -257,7 +259,7 @@ void GameLayer::update(float dt) {
         _puck->update(dt);
     }
     
-    if ((_minutes == 0 && _seconds == 0) || _score1 == 1 || _score2 == 1) {
+    if ((_minutes == 0 && _seconds == 0) || _score1 == 3 || _score2 == 3) {
         _playing = false ;
         _isEnd = true;
         _player1->reset();

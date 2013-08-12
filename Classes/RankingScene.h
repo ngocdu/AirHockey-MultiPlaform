@@ -45,6 +45,8 @@ private:
     float SIZE_RATIO_Y;
     
     bool musicPlayed;
+    bool introEnd;
+    
     
     CCSprite *bgm_off;
     CCMenu *rewardMenu;
@@ -58,6 +60,11 @@ public:
     void play(CCObject* pSender);
     void bgm(CCObject* pSender);
     void reward(CCObject* pSender);
+    
+    void playIntro();
+    void playBGM();
+    
+    void update(float dt);
     
     CREATE_FUNC(RankingScene);
     virtual void scrollViewDidScroll(CCScrollView* view){};

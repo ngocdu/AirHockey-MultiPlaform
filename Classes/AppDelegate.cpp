@@ -29,9 +29,18 @@ bool AppDelegate::applicationDidFinishLaunching()
     // initialize director
     CCDirector *pDirector = CCDirector::sharedDirector();
     pDirector->setOpenGLView(CCEGLView::sharedOpenGLView());
-
+    
     // turn on display FPS
     pDirector->setDisplayStats(false);
+    
+    // Preload music file
+    SimpleAudioEngine::sharedEngine()->preloadEffect("Sounds/hitPuck.wav");
+    SimpleAudioEngine::sharedEngine()->preloadEffect("Sounds/score.wav");
+    SimpleAudioEngine::sharedEngine()->preloadBackgroundMusic("Sounds/StartBG.mp3");
+    SimpleAudioEngine::sharedEngine()->preloadBackgroundMusic("Sounds/BG.mp3");
+    SimpleAudioEngine::sharedEngine()->preloadBackgroundMusic("Sounds/HardBG.mp3");
+    SimpleAudioEngine::sharedEngine()->preloadBackgroundMusic("Sounds/StartBG.mp3");
+    SimpleAudioEngine::sharedEngine()->preloadBackgroundMusic("Sounds/PlayIntro.mp3");
     
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
