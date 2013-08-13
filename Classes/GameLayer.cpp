@@ -23,10 +23,11 @@ GameLayer::GameLayer() {
     setTouchEnabled(true);
     setAccelerometerEnabled(true);
     
+    _level = GameManager::sharedGameManager()->getLevel();
     CCAction *playIntro = CCCallFuncN::create(this, callfuncN_selector(GameLayer::playIntro));
-    CCAction *delayTime = CCDelayTime::create(2.0f);
+    CCAction *delayTime = CCDelayTime::create(1.60f);
     CCAction *playBGM = CCCallFuncN::create(this, callfuncN_selector(GameLayer::playBGM));
-    CCArray *actionList = new CCArray(1);
+    CCArray *actionList = new CCArray(3);
     actionList->autorelease();
     actionList->insertObject(playIntro, 0);
     actionList->insertObject(delayTime, 1);
@@ -160,7 +161,6 @@ void GameLayer::playIntro() {
 }
 
 void GameLayer::playBGM() {
-    _level = GameManager::sharedGameManager()->getLevel();
     if (GameManager::sharedGameManager()->getBgm()) {
         if (_level == 1 || _level == 2) {
             SimpleAudioEngine::sharedEngine()->playBackgroundMusic("Sounds/BG.mp3", true);

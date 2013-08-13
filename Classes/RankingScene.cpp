@@ -100,10 +100,10 @@ bool RankingScene::init() {
         introEnd=  false;
     } else {
         SimpleAudioEngine::sharedEngine()->setEffectsVolume(1.0f);
-        CCAction *playIntro = CCCallFuncN::create(this, callfuncN_selector(GameLayer::playIntro));
-        CCAction *delayTime = CCDelayTime::create(4.0f);
-        CCAction *playBGM = CCCallFuncN::create(this, callfuncN_selector(GameLayer::playBGM));
-        CCArray *actionList = new CCArray(1);
+        CCAction *playIntro = CCCallFuncN::create(this, callfuncN_selector(RankingScene::playIntro));
+        CCAction *delayTime = CCDelayTime::create(3.7f);
+        CCAction *playBGM = CCCallFuncN::create(this, callfuncN_selector(RankingScene::playBGM));
+        CCArray *actionList = new CCArray(3);
         actionList->autorelease();
         actionList->insertObject(playIntro, 0);
         actionList->insertObject(delayTime, 1);
@@ -130,7 +130,11 @@ void RankingScene::playBGM() {
 }
 
 void RankingScene::update(float dt) {
-
+    CCLOG("%d", SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying());
+    if (GameManager::sharedGameManager()->getBgm()) {
+        if (!SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying())
+            scheduleOnce(schedule_selector(RankingScene::playBGM), true);
+    }
 }
 
 void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
@@ -150,11 +154,8 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
             response->getHttpRequest()->getTag());
     
     if (!response->isSucceed()) {
-        CCLabelTTF *notConnectLabel = CCLabelTTF::create("Can't load Data", FONT, 23*SIZE_RATIO);
-        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!", FONT, 24*SIZE_RATIO);
-        notConnectLabel->setPosition(ccp(w/2, h/2));
+        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("「現在ランキングは閉じています」", FONT, 24*SIZE_RATIO);
         checkInternetMsg->setPosition(ccp(w/2, h/2 - 40*SIZE_RATIO));
-        this->addChild(notConnectLabel);
         this->addChild(checkInternetMsg);
         return;
     }
@@ -217,7 +218,16 @@ void RankingScene::bgm(CCObject* pSender) {
         if (musicPlayed) SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
         else {
             musicPlayed = true;
-            SimpleAudioEngine::sharedEngine()->playBackgroundMusic("Sounds/StartBG.mp3", true);
+            CCAction *playIntro = CCCallFuncN::create(this, callfuncN_selector(RankingScene::playIntro));
+            CCAction *delayTime = CCDelayTime::create(3.7f);
+            CCAction *playBGM = CCCallFuncN::create(this, callfuncN_selector(RankingScene::playBGM));
+            CCArray *actionList = new CCArray(3);
+            actionList->autorelease();
+            actionList->insertObject(playIntro, 0);
+            actionList->insertObject(delayTime, 1);
+            actionList->insertObject(playBGM, 2);
+            CCAction *BGM = CCSequence::create(actionList);
+            this->runAction(BGM);
         }
     }
 }

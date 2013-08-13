@@ -38,7 +38,7 @@
 							<tool id="org.eclipse.cdt.build.core.settings.holder.694202469" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
 								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.297521727" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/android-ndk-r8e/platforms/android-14/arch-arm/usr/include"/>
-									<listOptionValue builtIn="false" value="/Users/macbook_018/XcodeProjects/New/AirHockey-MultiPlaform/libs/cocos2dx/include"/>
+									<listOptionValue builtIn="false" value="/Users/kien_metalrock/android/cocos2d-2.1rc0-x-2.1.3/AirHockey/libs/cocos2dx/include"/>
 								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.2072597582" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
@@ -70,8 +70,10 @@
 		</scannerConfigBuildInfo>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope" versionNumber="1">
-		<resource resourceType="PROJECT" workspacePath="/AirHockey"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Default">
+			<resource resourceType="PROJECT" workspacePath="/AirHockey"/>
+		</configuration>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

@@ -82,13 +82,8 @@ void RewardScene::onHttpRequestCompleted(CCNode *sender, void *data) {
             response->getHttpRequest()->getTag());
     
     if (!response->isSucceed()) {
-        CCLabelTTF *notConnectLabel =
-        CCLabelTTF::create("Can't load Data", FONT, 23*SIZE_RATIO);
-        notConnectLabel->setPosition(ccp(w/2, h/2));
-        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("Please check your internet connection !!", FONT, 24*SIZE_RATIO);
+        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("「現在ランキングは閉じています」", FONT, 24*SIZE_RATIO);
         checkInternetMsg->setPosition(ccp(w/2, h/2 - 40*SIZE_RATIO_Y));
-        
-        this->addChild(notConnectLabel);
         this->addChild(checkInternetMsg);
 
         return;
