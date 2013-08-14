@@ -11,7 +11,27 @@
 #pragma mark SCENE
 CCScene* GameLayer::scene() {
     CCScene *scene = CCScene::create();
+    CCSize size = CCDirector::sharedDirector()->getWinSize();
+    float w = size.width;
+    float h = size.height;
+    
+    int _level;
+    if (GameManager::sharedGameManager()->getLevel()) {
+        _level = GameManager::sharedGameManager()->getLevel();
+    } else {
+        _level = 1;
+    }
+    CCSprite *spaceBackground;
+    if (_level == 1) {
+        spaceBackground = CCSprite::create("BackGrounds/Wolverine.jpg");
+    } else if (_level == 2) {
+        spaceBackground = CCSprite::create("BackGrounds/Joker.jpg");
+    } else {
+        spaceBackground = CCSprite::create("BackGrounds/Hulk.jpg");
+    }
+    spaceBackground->setPosition(ccp(w/2,h/2));
     GameLayer *layer = new GameLayer();
+    scene->addChild(spaceBackground, SPACE_BACKGROUND_ZORDER);
     scene->addChild(layer);
     layer->release();
     return scene;
@@ -23,7 +43,12 @@ GameLayer::GameLayer() {
     setTouchEnabled(true);
     setAccelerometerEnabled(true);
     
-    _level = GameManager::sharedGameManager()->getLevel();
+    if (GameManager::sharedGameManager()->getLevel()) {
+        _level = GameManager::sharedGameManager()->getLevel();
+    } else {
+        _level = 1;
+    }
+
     CCAction *playIntro = CCCallFuncN::create(this, callfuncN_selector(GameLayer::playIntro));
     CCAction *delayTime = CCDelayTime::create(1.60f);
     CCAction *playBGM = CCCallFuncN::create(this, callfuncN_selector(GameLayer::playBGM));
@@ -53,26 +78,52 @@ GameLayer::GameLayer() {
     _isPauseClicked = false;
     _isEnd = false;
     
-//    float x=0, y=0, z=0;
+    centerX = 0;
+    centerY = 0;
+    centerZ = 0;
 //    this->getCamera()->getCenterXYZ(&x, &y, &z);
-//    this->getCamera()->setCenterXYZ(x, y+0.0000001, z);
-//    this->getCamera()->setEyeXYZ(x, y, 70);
+//    this->getCamera()->setCenterXYZ(centerX, centerY + 0.0000001, centerZ);
+//    this->getCamera()->getUpXYZ(&x, &y, &z);
+//    this->getCamera()->setUpXYZ(0.0f, 1.0f, 100000.0f);
+//    this->getCamera()->getEyeXYZ(&x, &y, &z);
+//    this->getCamera()->setEyeXYZ(0, -30, 40);
+//    this->getCamera()->getCenterXYZ(&x, &y, &z);
+
+    _controlLayer = new CCLayer();
+//    _controlLayer->setPosition(ccp(w/2, h/2));
+    _controlLayer->getCamera()->setEyeXYZ(0, -7, 10);
+    this->addChild(_controlLayer);
     
-    CCSprite *backGroundImg = CCSprite::create("Court3.png");
+    CCSprite *backGroundImg;
+    if (_level == 1) {
+        backGroundImg = CCSprite::create("BackGrounds/BackGroundLevel1.png");
+    } else if (_level == 2) {
+        backGroundImg = CCSprite::create("BackGrounds/BackGroundLevel2.png");
+    } else {
+        backGroundImg = CCSprite::create("BackGrounds/BackGroundLevel3.png");
+    }
     backGroundImg->setPosition(ccp(w/2, h/2));
     backGroundImg->setScaleY(h/backGroundImg->getContentSize().height);
     backGroundImg->setScaleX(w/backGroundImg->getContentSize().width);
-    this->addChild(backGroundImg);
+    _controlLayer->addChild(backGroundImg);
     
     // Score Counter
+    CCSprite *humanScoreBG = CCSprite::create("BackGrounds/ScoreBG.png");
+    CCSprite *aiScoreBG = CCSprite::create("BackGrounds/ScoreBG.png");
+    
+    humanScoreBG->setPosition(ccp(w - humanScoreBG->getContentSize().width*2 - 20,
+                                  h - humanScoreBG->getContentSize().height/2 - 15));
+    aiScoreBG->setPosition(ccp(w - aiScoreBG->getContentSize().width/2 - 10,
+                                  h - aiScoreBG->getContentSize().height/2 - 15));
+    this->addChild(humanScoreBG);
+    this->addChild(aiScoreBG);
+    
     _scoreLabel1 = CCLabelTTF::create("0", FONT, 48 * SIZE_RATIO);
     _scoreLabel1->setColor(ccBLACK);
     _scoreLabel2 = CCLabelTTF::create("0", FONT, 48 * SIZE_RATIO);
     _scoreLabel2->setColor(ccBLACK);
-    _scoreLabel1->setPosition(ccp(w*0.91, h*3/8 + 10));
-    _scoreLabel1->setRotation(90);
-    _scoreLabel2->setPosition(ccp(w*0.91, h*5/8 - 10));
-    _scoreLabel2->setRotation(90);
+    _scoreLabel1->setPosition(humanScoreBG->getPosition());
+    _scoreLabel2->setPosition(aiScoreBG->getPosition());
     this->addChild(_scoreLabel1);
     this->addChild(_scoreLabel2);
 
@@ -80,7 +131,8 @@ GameLayer::GameLayer() {
     _pauseButton = CCSprite::create("Buttons/PauseButton.png");
     _pauseButton->setScaleX(SIZE_RATIO_X);
     _pauseButton->setScaleY(SIZE_RATIO_Y);
-    _pauseButton->setPosition(ccp(w*0.91, h/2));
+    _pauseButton->setPosition(ccp(w - humanScoreBG->getContentSize().width*5/4 - 15,
+                                  h - humanScoreBG->getContentSize().height/2 - 15));
     this->addChild(_pauseButton);
     
     // End Game
@@ -88,7 +140,7 @@ GameLayer::GameLayer() {
     _endLayerBg->setScaleX(SIZE_RATIO_X);
     _endLayerBg->setScaleY(SIZE_RATIO_Y);
     _endLayerBg->setPosition(ccp(w/2 - 10, h/2));
-    this->addChild(_endLayerBg, 5);
+    this->addChild(_endLayerBg);
     ew = _endLayerBg->getContentSize().width;
     eh = _endLayerBg->getContentSize().height;
     
@@ -117,24 +169,30 @@ GameLayer::GameLayer() {
     _endLayerBg->setVisible(false);
 
     // Timer
+    CCSprite *timerBG = CCSprite::create("BackGrounds/TimerBG.png");
+    timerBG->setPosition(ccp(timerBG->getContentSize().width/2 + 15,
+                             h - timerBG->getContentSize().height/2 - 15));
+    this->addChild(timerBG);
+
     _minutes = 3;
     _seconds = 00;
     _playing = false;
     char timeBuf[20] = {0};
 	sprintf(timeBuf, "0%i:0%i", _minutes, _seconds);
+    
+    _timer = CCLabelTTF::create(timeBuf, FONT, 40 * SIZE_RATIO);
+    _timer->setColor(ccBLACK);
+	_timer->setPosition(timerBG->getPosition());
+	this->addChild(_timer, CONTROL_LAYER_ZORDER);
 
-    _time = CCLabelTTF::create(timeBuf, FONT, 40 * SIZE_RATIO);
-    _time->setColor(ccBLACK);
-	_time->setPosition(ccp(w/12.5, h/2));
-    _time->setRotation(90);
-	this->addChild(_time);
+    
     
     // Physics
     this->initPhysics();
     
     CCSprite *startGame = CCSprite::create("Buttons/OnStart.png");
     startGame->setPosition(ccp(-w/2, h/2));
-    this->addChild(startGame, 9, 1);
+    this->addChild(startGame, 9, 2);
     
     CCFiniteTimeAction *move1  = CCMoveTo::create(1, ccp(w/2, h/2));
     CCFiniteTimeAction *move2  = CCMoveTo::create(1, ccp(w*3/2, h/2));
@@ -213,15 +271,18 @@ void GameLayer::initPhysics() {
     _player1 = Ball::create(this, humanPlayer, "Player/Mallet1_2.png");
     _player1->setStartPos(ccp(w/2, _player1->getRadius()*2));
     _player1->setSpritePosition(_player1->getStartPos());
-    this->addChild(_player1);
+
     _player2 = Ball::create(this, aiPlayer, "Player/Mallet2_2.png");
     _player2->setStartPos(ccp(w/2, h - _player2->getRadius()*2));
     _player2->setSpritePosition(_player2->getStartPos());
-    this->addChild(_player2);
+
     _puck = Ball::create(this, puck, "Player/Puck.png");
     _puck->setStartPos(ccp(w/2, h/2));
     _puck->setSpritePosition(_puck->getStartPos());
-    this->addChild(_puck);
+    
+    _controlLayer->addChild(_player1);
+    _controlLayer->addChild(_player2);
+    _controlLayer->addChild(_puck);
 }
 
 void GameLayer::createEdge(float x1, float y1,
@@ -343,7 +404,7 @@ void GameLayer::getStateInfo() {
 void GameLayer::handleProcess() {
     lastHit+= 25;
     this->getStateInfo();
-        
+    
     if (lastHit >= 1200/_level) {
         if ((y >= h/2 - pr && y <= 3*h/4) ||
             (y > 3*h/4 && x > w/2 && x < 3*w/4)) {
@@ -389,9 +450,10 @@ void GameLayer::attack() {
 
 #pragma mark TOUCHES HANDLE
 void GameLayer::ccTouchesBegan(CCSet* touches, CCEvent* event) {
+
     if (_playing) {
         if (_mouseJoint != NULL) return;
-        CCTouch *touch = (CCTouch *)touches->anyObject();
+        CCTouch *touch = (CCTouch *)touches->anyObject();        
         CCPoint tap = touch->getLocation();
         b2Vec2 target = this->ptm(tap);
         CCRect pauseRect = _pauseButton->boundingBox();
@@ -400,10 +462,11 @@ void GameLayer::ccTouchesBegan(CCSet* touches, CCEvent* event) {
             _isPauseClicked = true;
             _continueButton->setVisible(true);
         } else {
-            if (tap.y < h/2 - _player1->getRadius() &&
-                tap.y > 10 + _player1->getRadius()  &&
-                tap.x > 10 + _player1->getRadius()  &&
-                tap.x < w - _player1->getRadius()) {
+//            if (tap.y < h/2 - _player1->getRadius() &&
+//                tap.y > 10 + _player1->getRadius()  &&
+//                tap.x > 10 + _player1->getRadius()  &&
+//                tap.x < w - _player1->getRadius()) {
+            if (tap.y < h/2 && tap.y > 10 && tap.x > 10  && tap.x < w - 10) {
                 b2MouseJointDef md;
                 md.bodyA =  _groundBody;
                 md.bodyB = _player1->getBody();
@@ -475,16 +538,34 @@ void GameLayer::ccTouchesBegan(CCSet* touches, CCEvent* event) {
 }
 
 void GameLayer::ccTouchesMoved(CCSet* touches, CCEvent* event) {
-    if (_mouseJoint == NULL) return;
     if (_playing) {
-        CCTouch *touch = (CCTouch *)touches->anyObject();
-        CCPoint tap = touch->getLocation();
-        if (tap.y > h/2 || tap.y < 10 ||
-            tap.x > w - 10 || tap.x < 10) {
-            return;
+        if (_mouseJoint == NULL) {
+            CCTouch *touch = (CCTouch *)touches->anyObject();
+            CCPoint tap = touch->getLocation();
+            b2Vec2 target = this->ptm(tap);
+            
+            b2MouseJointDef md;
+            md.bodyA =  _groundBody;
+            md.bodyB = _player1->getBody();
+            md.target = target;
+            md.collideConnected = true;
+            md.maxForce = 1000000.0f * _player1->getBody()->GetMass();
+            md.dampingRatio = 0;
+            md.frequencyHz = 100000;
+            
+            _player1->setSpritePosition(tap);
+            _mouseJoint = (b2MouseJoint *)_world->CreateJoint(&md);
+            _player1->getBody()->SetAwake(true);
+        } else {
+            CCTouch *touch = (CCTouch *)touches->anyObject();
+            CCPoint tap = touch->getLocation();
+            if (tap.y > h/2 || tap.y < 10 ||
+                tap.x > w - 10 || tap.x < 10) {
+                return;
+            }
+            b2Vec2 target = this->ptm(tap);
+            _mouseJoint->SetTarget(target);
         }
-        b2Vec2 target = this->ptm(tap);
-        _mouseJoint->SetTarget(target);
     }
 }
 
@@ -543,7 +624,7 @@ void GameLayer::gameReset() {
 	else if(_minutes < 10 && _seconds >= 10)
         sprintf(timeBuf, "0%i:%i", _minutes, _seconds);
     
-    _time->setString(timeBuf);
+    _timer->setString(timeBuf);
     
     if (_mouseJoint != NULL) {
         _world->DestroyJoint(_mouseJoint);
@@ -587,7 +668,7 @@ void GameLayer::Timer() {
 	else if(_minutes < 10 && _seconds >= 10)
         sprintf(timeBuf, "0%i:%i", _minutes, _seconds);
     
-    _time->setString(timeBuf);
+    _timer->setString(timeBuf);
 }
 
 #pragma mark Check High Score
@@ -716,7 +797,7 @@ void GameLayer::endGame() {
                 else if(_minutes < 10 && _seconds >= 10)
                     sprintf(timeBuf, "0%i:%i", _minutes, _seconds);
                 
-                _time->setString(timeBuf);
+                _timer->setString(timeBuf);
                 
                 pointCal += pointUnit;
                 char scoreBuf[20];

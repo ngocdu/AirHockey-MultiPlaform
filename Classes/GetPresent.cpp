@@ -269,7 +269,6 @@ void GetPresent::removeSpace(char *xau) {
 }
 
 void GetPresent::onHttpRequestCompleted(CCNode *sender, void *data) {
-
     CCHttpResponse *response = (CCHttpResponse*)data;
     if (!response) {
         return;
@@ -284,12 +283,7 @@ void GetPresent::onHttpRequestCompleted(CCNode *sender, void *data) {
             response->getHttpRequest()->getTag());
     
     if (!response->isSucceed()) {
-        CCLabelTTF *notConnectLabel =
-        CCLabelTTF::create("Can't load Data",
-                           "Time new roman",
-                           20 * SIZE_RATIO);
-        notConnectLabel->setPosition(ccp(w/2, h/2));
-        this->addChild(notConnectLabel);
+        CCLOG("Can't load Data");
         return;
     }
     // dump data
@@ -381,11 +375,7 @@ void GetPresent::onHttpRequestCompleted_checkname(CCNode *sender, void *data) {
             response->getHttpRequest()->getTag());
     
     if (!response->isSucceed()) {
-        CCLabelTTF *notConnectLabel = CCLabelTTF::create("Can't load Data",
-                                                         "Time new roman",
-                                                         20 * SIZE_RATIO);
-        notConnectLabel->setPosition(ccp(w/2, h/2));
-        this->addChild(notConnectLabel);
+        CCLOG("Can't Load Data");
         return;
     }
     // dump data
@@ -440,12 +430,7 @@ void GetPresent::onHttpRequestCompleted_checkemail(CCNode *sender, void *data) {
             response->getHttpRequest()->getTag());
     
     if (!response->isSucceed()) {
-        CCLabelTTF *notConnectLabel =
-        CCLabelTTF::create("Can't load Data",
-                           "Time new roman",
-                           20 * SIZE_RATIO);
-        notConnectLabel->setPosition(ccp(w.width/2, w.height/2));
-        this->addChild(notConnectLabel);
+        CCLOG("Can't Load Data");
         return;
     }
     // dump data

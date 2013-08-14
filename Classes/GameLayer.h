@@ -71,7 +71,7 @@ public:
     b2Vec2 ptm(CCPoint point);
     b2Vec2 ptm2(float x, float y);
 private:
-    
+    CCLayer *_controlLayer;
     CCSize size;
     float w, h;
     float SIZE_RATIO;
@@ -106,6 +106,7 @@ private:
     bool _isPauseClicked;
     bool _isEnd;
     
+    float centerX, centerY, centerZ;
     float x, y, px, py;
     float vx, vy, vpx, vpy;
     float pr;
@@ -113,7 +114,7 @@ private:
     
     CCLabelTTF *_scoreLabel1;
     CCLabelTTF *_scoreLabel2;
-    CCLabelTTF *_time;
+    CCLabelTTF *_timer;
     CCLabelTTF *_resultLabel;
     CCLabelTTF *_scoreLabel;
     

@@ -23,5 +23,6 @@
 #define IOS_FONTS2  "SS_Grogy"
 
 #define MUSICTAG 99
-
+#define SPACE_BACKGROUND_ZORDER -2
+#define CONTROL_LAYER_ZORDER 1
 #endif

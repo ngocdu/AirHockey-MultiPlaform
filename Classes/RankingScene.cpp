@@ -130,7 +130,6 @@ void RankingScene::playBGM() {
 }
 
 void RankingScene::update(float dt) {
-    CCLOG("%d", SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying());
     if (GameManager::sharedGameManager()->getBgm()) {
         if (!SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying())
             scheduleOnce(schedule_selector(RankingScene::playBGM), true);
