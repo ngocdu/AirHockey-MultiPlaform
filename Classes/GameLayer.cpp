@@ -103,8 +103,8 @@ GameLayer::GameLayer() {
         backGroundImg = CCSprite::create("BackGrounds/BackGroundLevel3.png");
     }
     backGroundImg->setPosition(ccp(w/2, h/2));
-    backGroundImg->setScaleY(h/backGroundImg->getContentSize().height);
-    backGroundImg->setScaleX(w/backGroundImg->getContentSize().width);
+    backGroundImg->setScaleY(SIZE_RATIO_Y);
+    backGroundImg->setScaleX(SIZE_RATIO_X);
     _controlLayer->addChild(backGroundImg);
     
     // Score Counter

@@ -415,7 +415,6 @@ void GetPresent::onHttpRequestCompleted_checkname(CCNode *sender, void *data) {
     if (name == "") userOK = 1;
 }
 void GetPresent::onHttpRequestCompleted_checkemail(CCNode *sender, void *data) {
-    CCSize w = CCDirector::sharedDirector()->getWinSize();
     CCHttpResponse *response = (CCHttpResponse*)data;
     if (!response) {
         return;

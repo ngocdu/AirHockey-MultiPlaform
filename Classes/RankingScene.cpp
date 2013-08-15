@@ -29,7 +29,7 @@ bool RankingScene::init() {
     else musicPlayed = false;
     introEnd = false;
     
-    CCSprite *background = CCSprite::create("BackGrounds/BackGround2.png");
+    CCSprite *background = CCSprite::create("BackGrounds/RankingBG.png");
     background->setPosition(ccp(w/2, h/2));
     background->setScaleY(h/background->getContentSize().height);
     background->setScaleX(w/background->getContentSize().width);
