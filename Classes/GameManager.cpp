@@ -3,7 +3,7 @@
 GameManager* GameManager::m_mySingleton = NULL;
 
 GameManager::GameManager() {
-    this->setIpAddr("192.168.1.122");
+    this->setIpAddr("192.168.1.51");
 }
 
 GameManager* GameManager::sharedGameManager() {

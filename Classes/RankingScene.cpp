@@ -36,20 +36,6 @@ bool RankingScene::init() {
     background->setScaleX(w/background->getContentSize().width);
     this->addChild(background);
     
-    CCSprite *topLine = CCSprite::create("line.png");
-    CCSprite *bottomLine = CCSprite::create("line.png");
-    
-    topLine->setScale(SIZE_RATIO);
-    bottomLine->setScale(SIZE_RATIO);
-    
-    topLine->setPosition(ccp(w/2, 602*SIZE_RATIO_Y));
-    bottomLine->setPosition(ccp(w/2, 248*SIZE_RATIO_Y));
-    
-    topLine->setOpacity(70);
-    bottomLine->setOpacity(70);
-    this->addChild(topLine);
-    this->addChild(bottomLine);
-    
     CCMenuItemImage *reward  = CCMenuItemImage::create("Present.png",
                                                        "PresentOnClicked.png",
                                                        this, menu_selector(RankingScene::reward));
@@ -75,7 +61,7 @@ bool RankingScene::init() {
                                 this, menu_selector(RankingScene::play));
     playItem->setScaleX(SIZE_RATIO_X);
     playItem->setScaleY(SIZE_RATIO_Y);
-    playItem->setPosition(ccp(w/2, h/8 - 10));
+    playItem->setPosition(ccp(w/2, h/8));
     //create bgmItem
     CCMenuItemImage *bgmItem =
         CCMenuItemImage::create("BgmOn.png", "BgmOn.png",
