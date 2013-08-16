@@ -21,28 +21,69 @@ bool GetPresent::init() {
     SIZE_RATIO = (w + h)/(768 + 1024);
     SIZE_RATIO_X = w/768;
     SIZE_RATIO_Y = h/1024;
-
-    CCSize editBoxSize = CCSizeMake((w - 100) * SIZE_RATIO, 60 * SIZE_RATIO);
+    
+    CCSprite *bg_round = CCSprite::create("BackGrounds/GetPresentBG.png");
+    bg_round->setPosition(ccp(w/2, h/2));
+    bg_round->setScale(SIZE_RATIO);
+    this->addChild(bg_round);
+    
+    CCSize editBoxSize = CCSizeMake((w - (350 * SIZE_RATIO_X)), 50 * SIZE_RATIO_Y);
     
     CCLabelTTF *congrats = CCLabelTTF::create("TOP 10 SCORE !!!", FONT, 64 * SIZE_RATIO);
-    CCLabelTTF *emailLabel1 = CCLabelTTF::create("Please enter your Email", FONT, 36 * SIZE_RATIO);
-    CCLabelTTF *emailLabel2 = CCLabelTTF::create("to get Presents:", FONT, 36 * SIZE_RATIO);
+    CCLabelTTF *emailLabel1 = CCLabelTTF::create("受入メール:", FONT, 30 * SIZE_RATIO);
+    //    CCLabelTTF *emailLabel2 = CCLabelTTF::create("to get Presents:", FONT, 36 * SIZE_RATIO);
     
     congrats->setPosition(ccp(w/2, h*6/8));
     congrats->setColor(ccYELLOW);
-    emailLabel1->setPosition(ccp(w/2, h*5/8));
-    emailLabel2->setPosition(ccp(w/2, emailLabel1->getPositionY() - 45*SIZE_RATIO));
+    
+    // name
+    CCLabelTTF *nameLabel = CCLabelTTF::create("入力するよ:", FONT, 30 * SIZE_RATIO);
+    nameLabel->setPosition(ccp(w/2 - w/5, h*4.6f/8));
+    this->addChild(nameLabel);
+    m_pUserName =
+    extension::CCEditBox::create(editBoxSize,
+                                 extension::CCScale9Sprite::create("WhiteBox.png"));
+    m_pUserName->setPosition(ccp(w/2 - w/14, nameLabel->getPositionY() - 50 * SIZE_RATIO));
+    m_pUserName->setFontSize(40 * SIZE_RATIO);
+    m_pUserName->setFontColor(ccBLACK);
+    m_pUserName->setMaxLength(10);
+    m_pUserName->setPlaceHolder("input username");
+    m_pUserName->setReturnType(cocos2d::extension::kKeyboardReturnTypeDone);    
+    m_pUserName->setInputMode(kEditBoxInputModeAny);
+    m_pUserName->setDelegate(this);
+    this->addChild(m_pUserName);
+    
+    nameFailMsg = CCLabelTTF::create("please enter your username !!",
+                                     FONT, 24 * SIZE_RATIO);
+    nameFailMsg->setPosition(ccp(m_pUserName->getPosition().x - w/12,
+                                 m_pUserName->getPosition().y - 50 * SIZE_RATIO));
+    nameFailMsg->setColor(ccRED);
+    nameFailMsg->setVisible(false);
+    this->addChild(nameFailMsg);
+    
+    nameExistedMsg = CCLabelTTF::create("username existed!! please try again !!",
+                                        FONT, 24 * SIZE_RATIO);
+    nameExistedMsg->setPosition(ccp(m_pUserName->getPosition().x + w/12,
+                                    m_pUserName->getPosition().y - 40 * SIZE_RATIO));
+    nameExistedMsg->setColor(ccRED);
+    nameExistedMsg->setVisible(false);
+    this->addChild(nameExistedMsg);
+    
+    //--------email-----------
+    emailLabel1->setPosition(ccp(w/2 - w/5, h*3.6f/8));
+    //    emailLabel2->setPosition(ccp(w/2, emailLabel1->getPositionY() - 45*SIZE_RATIO));
     
     this->addChild(emailLabel1);
     this->addChild(congrats);
-    this->addChild(emailLabel2);
+    //    this->addChild(emailLabel2);
     
     m_pUserEmail = extension::CCEditBox::create(editBoxSize, extension::CCScale9Sprite::create("WhiteBox.png"));
-    m_pUserEmail->setPosition(ccp(w/2, emailLabel2->getPositionY() - 60*SIZE_RATIO));
+    m_pUserEmail->setPosition(ccp(w/2 - w/14, emailLabel1->getPositionY() - 50*SIZE_RATIO));
     m_pUserEmail->setFontSize(40 * SIZE_RATIO);
     m_pUserEmail->setMaxLength(30);
+    m_pUserEmail->setPlaceHolder("input email");
     m_pUserEmail->setFontColor(ccBLACK);
-
+    
     m_pUserEmail->setMaxLength(40);
     m_pUserEmail->setReturnType(cocos2d::extension::kKeyboardReturnTypeDone);
     m_pUserEmail->setInputMode(kEditBoxInputModeEmailAddr);
@@ -52,57 +93,26 @@ bool GetPresent::init() {
     // Email Fail Message
     emailFailMsg = CCLabelTTF::create("Invalid Email !! Please Try Again !!",
                                       FONT, 24 * SIZE_RATIO);
-    emailFailMsg->setPosition(ccp(m_pUserEmail->getPosition().x,
-                                  m_pUserEmail->getPosition().y - 50*SIZE_RATIO));
+    emailFailMsg->setPosition(ccp(m_pUserEmail->getPosition().x - w/12,
+                                  m_pUserEmail->getPosition().y - 40*SIZE_RATIO));
     emailFailMsg->setColor(ccRED);
     emailFailMsg->setVisible(false);
     
     emailExistedMsg = CCLabelTTF::create("Email Existed !! please try again !!",
-                                      FONT, 24 * SIZE_RATIO);
-    emailExistedMsg->setPosition(ccp(m_pUserEmail->getPosition().x,
-                                  m_pUserEmail->getPosition().y - 50*SIZE_RATIO));
+                                         FONT, 24 * SIZE_RATIO);
+    emailExistedMsg->setPosition(ccp(m_pUserEmail->getPosition().x - w/12,
+                                     m_pUserEmail->getPosition().y - 40*SIZE_RATIO));
     emailExistedMsg->setColor(ccRED);
     emailExistedMsg->setVisible(false);
     this->addChild(emailFailMsg);
     this->addChild(emailExistedMsg);
     
-    // name
-    CCLabelTTF *nameLabel = CCLabelTTF::create("please choose your username:", FONT, 36 * SIZE_RATIO);
-    nameLabel->setPosition(ccp(w/2, h*3/8));
-    this->addChild(nameLabel);
-    m_pUserName =
-    extension::CCEditBox::create(editBoxSize,
-                                 extension::CCScale9Sprite::create("WhiteBox.png"));
-    m_pUserName->setPosition(ccp(w/2, nameLabel->getPositionY() - 60*SIZE_RATIO));
-    m_pUserName->setFontSize(40 * SIZE_RATIO);
-    m_pUserName->setFontColor(ccBLACK);
-    m_pUserName->setMaxLength(10);
-    m_pUserName->setReturnType(cocos2d::extension::kKeyboardReturnTypeDone);
-    m_pUserName->setInputMode(kEditBoxInputModeAny);
-    m_pUserName->setDelegate(this);
-    this->addChild(m_pUserName);
-    
-    nameFailMsg = CCLabelTTF::create("please enter your username !!",
-                                     FONT, 24 * SIZE_RATIO);
-    nameFailMsg->setPosition(ccp(m_pUserName->getPosition().x,
-                                  m_pUserName->getPosition().y - 50 * SIZE_RATIO));
-    nameFailMsg->setColor(ccRED);
-    nameFailMsg->setVisible(false);
-    this->addChild(nameFailMsg);
-    
-    nameExistedMsg = CCLabelTTF::create("username existed!! please try again !!",
-                                        FONT, 24 * SIZE_RATIO);
-    nameExistedMsg->setPosition(ccp(m_pUserName->getPosition().x,
-                                 m_pUserName->getPosition().y - 50 * SIZE_RATIO));
-    nameExistedMsg->setColor(ccRED);
-    nameExistedMsg->setVisible(false);
-    this->addChild(nameExistedMsg);
     
     CCMenuItemImage *sendMenuItem = CCMenuItemImage::create("Buttons/SubmitButton.png",
                                                             "Buttons/SubmitButtonOnClicked.png",
                                                             this, menu_selector(GetPresent::menuSendEmail));
     sendMenuItem->setScale(SIZE_RATIO);
-    sendMenuItem->setPosition(ccp(w/2, 100));
+    sendMenuItem->setPosition(ccp(w/2 , 150 * SIZE_RATIO_Y));
     
     pMenu = CCMenu::create(sendMenuItem, NULL);
     pMenu->setPosition(CCPointZero);
@@ -155,8 +165,8 @@ void GetPresent::editBoxReturn(cocos2d::extension::CCEditBox* editBox) {
 bool GetPresent::is_email(std::string const& address) {
     size_t at_index = address.find_first_of('@', 0);
     return at_index != std::string::npos
-
-      && address.find_first_of('.', at_index) != std::string::npos;
+    
+    && address.find_first_of('.', at_index) != std::string::npos;
     
 }
 int GetPresent::spc_email_isvalid(const char *address) {
@@ -231,7 +241,7 @@ void GetPresent::menuSendEmail(CCObject *pSender) {
         CCHttpClient::getInstance()->send(request);
         request->release();
     }
-
+    
 }
 void GetPresent::menuBack(cocos2d::CCObject *pSender) {
     CCDirector::sharedDirector()->replaceScene(RankingScene::scene());
@@ -263,7 +273,7 @@ void GetPresent::removeSpace(char *xau) {
     {
         if(xau[i] == ' ')
         {
-           xau[i] = '_';
+            xau[i] = '_';
         }
     }
 }
@@ -296,7 +306,7 @@ void GetPresent::onHttpRequestCompleted(CCNode *sender, void *data) {
         data2[d] = (*buffer)[i];
     }
     data2[d + 1] = '\0';
-
+    
     rapidjson::Document document;
     if(data2 != NULL && !document.Parse<0>(data2).HasParseError()) {
         for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
@@ -309,12 +319,12 @@ void GetPresent::onHttpRequestCompleted(CCNode *sender, void *data) {
             removeSpace(n);
             CCLOG("text name : %s", n);
             if (strcmp(n, name.c_str()) == 0) {
-               if(strcmp(m_pUserEmail->getText(), "") != 0 && strcmp(m_pUserEmail->getText(), email_server.c_str()) == 0 ){
-                   CCFiniteTimeAction *showAction = CCFadeIn::create(0.2f);
-                   CCFiniteTimeAction *hideAction = CCFadeOut::create(0.2f);
-                   emailFailMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
-                   return;
-               } 
+                if(strcmp(m_pUserEmail->getText(), "") != 0 && strcmp(m_pUserEmail->getText(), email_server.c_str()) == 0 ){
+                    CCFiniteTimeAction *showAction = CCFadeIn::create(0.2f);
+                    CCFiniteTimeAction *hideAction = CCFadeOut::create(0.2f);
+                    emailFailMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
+                    return;
+                }
             }
         }
     } else {
@@ -360,7 +370,7 @@ void GetPresent::onHttpRequestCompleted(CCNode *sender, void *data) {
     }
 }
 void GetPresent::onHttpRequestCompleted_checkname(CCNode *sender, void *data) {
-
+    
     CCHttpResponse *response = (CCHttpResponse*)data;
     if (!response) {
         return;
@@ -406,7 +416,7 @@ void GetPresent::onHttpRequestCompleted_checkname(CCNode *sender, void *data) {
                     nameExistedMsg->setVisible(true);
                     nameExistedMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
                 }
-            }  
+            }
         }
     } else {
         CCLog(document.GetParseError());
@@ -504,7 +514,7 @@ bool GetPresent::isValidEmail(std::string email){
     } else {
         return false;
     }
-
+    
 }
 
 

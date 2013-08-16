@@ -297,6 +297,7 @@
 		FB275A1D17AA560100A75ED1 /* WhiteBox.png in Resources */ = {isa = PBXBuildFile; fileRef = FB275A0917AA560100A75ED1 /* WhiteBox.png */; };
 		FB275A2017AA591D00A75ED1 /* b2Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB275A1E17AA591D00A75ED1 /* b2Sprite.cpp */; };
 		FB275A2317AA59CB00A75ED1 /* Ball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB275A2117AA59CB00A75ED1 /* Ball.cpp */; };
+		FB5691F117BDCCC500A810A6 /* GameLayer in Resources */ = {isa = PBXBuildFile; fileRef = FB5691F017BDCCC500A810A6 /* GameLayer */; };
 		FBAF557F17AB556C00E8F022 /* Difficulty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBAF557317AB556C00E8F022 /* Difficulty.cpp */; };
 		FBAF558017AB556C00E8F022 /* GameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBAF557517AB556C00E8F022 /* GameManager.cpp */; };
 		FBAF558117AB556C00E8F022 /* GetPresent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBAF557717AB556C00E8F022 /* GetPresent.cpp */; };
@@ -929,6 +930,7 @@
 		FB275A1F17AA591D00A75ED1 /* b2Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2Sprite.h; sourceTree = "<group>"; };
 		FB275A2117AA59CB00A75ED1 /* Ball.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ball.cpp; sourceTree = "<group>"; };
 		FB275A2217AA59CB00A75ED1 /* Ball.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ball.h; sourceTree = "<group>"; };
+		FB5691F017BDCCC500A810A6 /* GameLayer */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GameLayer; sourceTree = "<group>"; };
 		FBAF557317AB556C00E8F022 /* Difficulty.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Difficulty.cpp; sourceTree = "<group>"; };
 		FBAF557417AB556C00E8F022 /* Difficulty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Difficulty.h; sourceTree = "<group>"; };
 		FBAF557517AB556C00E8F022 /* GameManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameManager.cpp; sourceTree = "<group>"; };
@@ -2130,6 +2132,7 @@
 		FB2758D817AA476300A75ED1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FB5691F017BDCCC500A810A6 /* GameLayer */,
 				FB2759F617AA560100A75ED1 /* BackGrounds */,
 				FB2759F717AA560100A75ED1 /* BestScore.png */,
 				FB2759F817AA560100A75ED1 /* BgmOff.png */,
@@ -2251,6 +2254,7 @@
 				FB275A1A17AA560100A75ED1 /* Sounds in Resources */,
 				FB275A1C17AA560100A75ED1 /* Top10.png in Resources */,
 				FB275A1D17AA560100A75ED1 /* WhiteBox.png in Resources */,
+				FB5691F117BDCCC500A810A6 /* GameLayer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    @users = User.all
+    @users = User.first(3)
     respond_to do |format|
       format.html
       format.json { render json: @users }

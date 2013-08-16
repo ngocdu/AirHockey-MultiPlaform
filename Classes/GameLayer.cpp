@@ -91,21 +91,33 @@ GameLayer::GameLayer() {
 
     _controlLayer = new CCLayer();
 //    _controlLayer->setPosition(ccp(w/2, h/2));
-    _controlLayer->getCamera()->setEyeXYZ(0, -7, 10);
+//    _controlLayer->getCamera()->setEyeXYZ(0, -7, 10);
     this->addChild(_controlLayer);
     
     CCSprite *backGroundImg;
     if (_level == 1) {
-        backGroundImg = CCSprite::create("BackGrounds/BackGroundLevel1.png");
+        backGroundImg = CCSprite::create("BackGrounds/BackGround.png");
     } else if (_level == 2) {
-        backGroundImg = CCSprite::create("BackGrounds/BackGroundLevel2.png");
+        backGroundImg = CCSprite::create("BackGrounds/BackGround.png");
     } else {
-        backGroundImg = CCSprite::create("BackGrounds/BackGroundLevel3.png");
+        backGroundImg = CCSprite::create("BackGrounds/BackGround.png");
     }
     backGroundImg->setPosition(ccp(w/2, h/2));
-    backGroundImg->setScaleY(SIZE_RATIO_Y);
-    backGroundImg->setScaleX(SIZE_RATIO_X);
+    backGroundImg->setScaleY(h/backGroundImg->getContentSize().height);
+    backGroundImg->setScaleX(w/backGroundImg->getContentSize().width);
     _controlLayer->addChild(backGroundImg);
+    
+    // Goal
+    CCSprite *humanGoal = CCSprite::create("GameLayer/HumanGoal.png");
+    CCSprite *aiGoal = CCSprite::create("GameLayer/AIGoal.png");
+    humanGoal->setPosition(ccp(w/2, 25*SIZE_RATIO_Y));
+    aiGoal->setPosition(ccp(w/2, h - 25*SIZE_RATIO_Y));
+    humanGoal->setScaleX(w/backGroundImg->getContentSize().width);
+    aiGoal->setScaleX(w/backGroundImg->getContentSize().width);
+    humanGoal->setScaleY(h/backGroundImg->getContentSize().height);
+    aiGoal->setScaleY(h/backGroundImg->getContentSize().height);
+    this->addChild(humanGoal, 2);
+    this->addChild(aiGoal, 2);
     
     // Score Counter
     CCSprite *humanScoreBG = CCSprite::create("BackGrounds/ScoreBG.png");
@@ -247,23 +259,37 @@ void GameLayer::initPhysics() {
     _groundBody = _world->CreateBody(&groundBodyDef);
     
     // Bottom Left
-    this->createEdge(0, 10, w/GOALSIZE_RATIO, 10, 0);
+    this->createEdge(0, BORDER_WIDTH_BOTTOM*SIZE_RATIO_Y,
+                     w/GOALSIZE_RATIO, BORDER_WIDTH_BOTTOM*SIZE_RATIO_Y, 0);
     // Bottom Right
-    this->createEdge(w - w/GOALSIZE_RATIO, 10, w, 10, 0);
+    this->createEdge(w - w/GOALSIZE_RATIO, BORDER_WIDTH_BOTTOM*SIZE_RATIO_Y,
+                     w, BORDER_WIDTH_BOTTOM*SIZE_RATIO_Y, 0);
     // Bottom Center
-    this->createEdge(w/GOALSIZE_RATIO, 10, w - w/GOALSIZE_RATIO, 10, -10);
+    this->createEdge(w/GOALSIZE_RATIO, BORDER_WIDTH_BOTTOM*SIZE_RATIO_Y,
+                     w - w/GOALSIZE_RATIO, BORDER_WIDTH_BOTTOM*SIZE_RATIO_Y, -10);
+    // Bottom goal
+    this->createEdge(w/GOALSIZE_RATIO, 50*SIZE_RATIO_Y,w/GOALSIZE_RATIO, 0, 0);
+    this->createEdge(w - w/GOALSIZE_RATIO, 50*SIZE_RATIO_Y, w - w/GOALSIZE_RATIO, 0, 0);
     
     // Top Left
-    this->createEdge(0, h - 10, w/GOALSIZE_RATIO, h - 10, 0);
+    this->createEdge(0, h - BORDER_WIDTH_TOP*SIZE_RATIO_Y,
+                     w/GOALSIZE_RATIO, h - BORDER_WIDTH_TOP*SIZE_RATIO_Y, 0);
     // Top Right
-    this->createEdge(w - w/GOALSIZE_RATIO, h - 10, w, h - 10, 0);
+    this->createEdge(w - w/GOALSIZE_RATIO, h - BORDER_WIDTH_TOP*SIZE_RATIO_Y,
+                     w, h - BORDER_WIDTH_TOP*SIZE_RATIO_Y, 0);
     // Top Center
-    this->createEdge(w/GOALSIZE_RATIO, h - 10, w - w/GOALSIZE_RATIO, h - 10, -10);
-        
+    this->createEdge(w/GOALSIZE_RATIO, h - BORDER_WIDTH_TOP*SIZE_RATIO_Y,
+                     w - w/GOALSIZE_RATIO, h - BORDER_WIDTH_TOP*SIZE_RATIO_Y, -10);
+    // Top goal
+    this->createEdge(w/GOALSIZE_RATIO, h - 50*SIZE_RATIO_Y,w/GOALSIZE_RATIO, h, 0);
+    this->createEdge(w - w/GOALSIZE_RATIO, h - 50*SIZE_RATIO_Y, w - w/GOALSIZE_RATIO, h, 0);
+    
     // Left
-    this->createEdge(10, 0, 10, h, 0);
+    this->createEdge(BORDER_WIDTH_LEFT*SIZE_RATIO_X,
+                     0, BORDER_WIDTH_LEFT*SIZE_RATIO_X, h, 0);
     // Right
-    this->createEdge(w - 10, h, w - 10, 0, 0);
+    this->createEdge(w - BORDER_WIDTH_RIGHT*SIZE_RATIO_X, h,
+                     w - BORDER_WIDTH_RIGHT*SIZE_RATIO_X, 0, 0);
     // Center
     this->createEdge(0, h/2, w, h/2, -10);
     
@@ -299,7 +325,6 @@ void GameLayer::createEdge(float x1, float y1,
 
 void GameLayer::onStart() {
     _playing = true;
-    this->removeChildByTag(1);
 }
 
 #pragma mark DRAW
@@ -809,12 +834,17 @@ void GameLayer::endGame() {
             this->pauseSchedulerAndActions();
         }
     }
-    else if (_score1 == _score2) _resultLabel->setString("DRAW");
+    else if (_score1 == _score2) {
+        _resultLabel->setString("DRAW");
+        this->pauseSchedulerAndActions();
+    }
+    
     else {
+        
         _scoreLabel->setString("score: 0");
         _scoreLabel->setColor(ccWHITE);
-        
         _resultLabel->setString("YOU LOSE");
+        this->pauseSchedulerAndActions();
     }
     
     _endLayerBg->setVisible(true);
