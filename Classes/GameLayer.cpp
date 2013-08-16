@@ -7,7 +7,6 @@
 //
 
 #include "GameLayer.h"
-
 #pragma mark SCENE
 CCScene* GameLayer::scene() {
     CCScene *scene = CCScene::create();
@@ -797,6 +796,9 @@ void GameLayer::endGame() {
             point = _score1 * (_minutes * 60 + _seconds) *
                 pow(10.0, GameManager::sharedGameManager()->getLevel() + 1.0);
             GameManager::sharedGameManager()->setPoint(point);
+            if (point >= GameManager::sharedGameManager()->getBestScore()) {
+                GameManager::sharedGameManager()->setBestScore(point);
+            }
             this->checkHighScore();
         }
         

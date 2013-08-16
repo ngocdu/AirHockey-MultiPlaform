@@ -23,6 +23,7 @@ bool RankingScene::init() {
     SIZE_RATIO = (w + h)/(768 + 1024);
     SIZE_RATIO_X = w/768;
     SIZE_RATIO_Y = h/1024;
+    CCLOG("%f     %f        %f", SIZE_RATIO_X, SIZE_RATIO_Y, SIZE_RATIO);
 
     players = new CCArray();
     if (GameManager::sharedGameManager()->getBgm()) musicPlayed = true;
@@ -63,7 +64,6 @@ bool RankingScene::init() {
     string ipAddr = GameManager::sharedGameManager()->getIpAddr();
     string url    = ipAddr + ":3000/users/Ngoc_Du.json";
     request->setUrl((ipAddr+":3000/users.json").c_str());
-//    request->setUrl(url.c_str());
     request->setRequestType(CCHttpRequest::kHttpGet);
     request->setResponseCallback(this, callfuncND_selector(RankingScene::onHttpRequestCompleted));
     CCHttpClient::getInstance()->send(request);
@@ -184,21 +184,35 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
             int r = document[i]["reward"].GetInt();
             Player1 *player = new Player1(name,p, mail, time, r);
             players->addObject(player);
+            CCString *string = CCString::createWithFormat("%d",player->getPoint());
+            CCLabelTTF *Pointlabel = CCLabelTTF::create(string->getCString(),
+                                                        "Helvetica",
+                                                        35 * SIZE_RATIO);
+            Pointlabel->setAnchorPoint(ccp(1, 0));
+            Pointlabel->setPosition(ccp(650 * SIZE_RATIO_X, (550 - 100 * (players->count() - 1)) * SIZE_RATIO_Y));
+            Pointlabel->setTag(123);
+            this->addChild(Pointlabel);
             
+            CCLabelTTF *Namelabel = CCLabelTTF::create(player->getName().c_str(),
+                                                       "Helvetica",
+                                                       30 * SIZE_RATIO);
+            Namelabel->setAnchorPoint(CCPointZero);
+            Namelabel->setPosition(ccp(100 * SIZE_RATIO_X, (550 - 100 * (players->count() - 1)) * SIZE_RATIO_Y));
+            this->addChild(Namelabel);
+
         }
     } else {
         CCLog(document.GetParseError());
     }
     free(data2);
-    CCTableView *tableView = CCTableView::create(this, CCSizeMake(700*SIZE_RATIO_X,
-                                                                350*SIZE_RATIO_Y));
-    tableView->setDirection(kCCScrollViewDirectionVertical);
-    tableView->setAnchorPoint(ccp(0, 0));
-    tableView->setPosition(ccp(w/8, 250*SIZE_RATIO_Y));
-    tableView->setDelegate(this);
-    tableView->setVerticalFillOrder(kCCTableViewFillTopDown);
-    this->addChild(tableView, 21);
-    tableView->reloadData();
+    CCString *bestScore =
+    CCString::createWithFormat("%d", GameManager::sharedGameManager()->getBestScore());
+    CCLabelTTF *bestScoreLabel = CCLabelTTF::create(bestScore->getCString(),
+                                                    "Helvetica",
+                                                    45 * SIZE_RATIO);
+    bestScoreLabel->setAnchorPoint(ccp(1, 0));
+    bestScoreLabel->setPosition(ccp(650 * SIZE_RATIO_X, (550 - 100 * (players->count())) * SIZE_RATIO_Y));
+    this->addChild(bestScoreLabel);
 }
 
 void RankingScene::reward(cocos2d::CCObject *pSender) {
@@ -233,55 +247,6 @@ void RankingScene::bgm(CCObject* pSender) {
 
 void RankingScene::play(CCObject* pSender) {
     CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f, Difficulty::scene()));
-}
-
-void RankingScene::tableCellTouched(CCTableView* table, CCTableViewCell* cell) {
-    CCLOG("cell touched at index: %i", cell->getIdx());
-}
-
-CCSize RankingScene::tableCellSizeForIndex(CCTableView *table, unsigned int idx) {
-    return CCSizeMake(600*SIZE_RATIO_X, 80*SIZE_RATIO_Y);
-}
-
-CCTableViewCell* RankingScene::tableCellAtIndex(CCTableView *table, unsigned int idx) {
-    CCTableViewCell *cell = table->dequeueCell();
-    cell = new CCTableViewCell();
-    cell->autorelease();
-    
-    // Player Point
-    Player * p = (Player*)players->objectAtIndex(idx);
-    CCString *string = CCString::createWithFormat("%d",p->getPoint());
-
-    CCLabelTTF *Pointlabel = CCLabelTTF::create(string->getCString(),
-                                                "Helvetica",
-                                                35*SIZE_RATIO);
-    Pointlabel->setAnchorPoint(ccp(1, 0));
-    Pointlabel->setPosition(ccp(550*SIZE_RATIO_X,0));
-    Pointlabel->setTag(123);
-    cell->addChild(Pointlabel);
-    
-    // Player Name
-    std::string name = p->getName();
-    CCLabelTTF *Namelabel = CCLabelTTF::create(p->getName().c_str(),
-                                               "Helvetica",
-                                               35*SIZE_RATIO);
-    Namelabel->setAnchorPoint(CCPointZero);
-    Namelabel->setPosition(ccp(60*SIZE_RATIO_X, 0));
-    cell->addChild(Namelabel);
-    
-    // Player Rank
-    char rankBuf[15];
-    sprintf(rankBuf, "Numbers/%i.png", idx+1);
-    CCSprite *rank = CCSprite::create(rankBuf);
-    rank->setScale(SIZE_RATIO);
-    rank->setAnchorPoint(CCPointZero);
-    rank->setPosition(CCPointZero);
-    cell->addChild(rank);    
-    return cell;
-}
-
-unsigned int RankingScene::numberOfCellsInTableView(CCTableView *table) {
-    return players->count();
 }
 void RankingScene::convertName(char *str_name) {
     int len = 0;
