@@ -5,6 +5,7 @@
 //
 
 #include "RankingScene.h"
+#include "string"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -170,22 +171,33 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
             int r = document[i]["reward"].GetInt();
             Player1 *player = new Player1(name,p, mail, time, r);
             players->addObject(player);
-            CCString *string = CCString::createWithFormat("%d",player->getPoint());
-            CCLabelTTF *Pointlabel = CCLabelTTF::create(string->getCString(),
-                                                        "Helvetica",
+            CCString *point = CCString::createWithFormat("%d",player->getPoint());
+            string s = RankingScene::scoreFormat(point->getCString());
+            CCLabelTTF *Pointlabel = CCLabelTTF::create(s.c_str(),
+                                                        "Fonts/BankGothic Md BT",
                                                         35 * SIZE_RATIO);
-            Pointlabel->setAnchorPoint(ccp(1, 0));
-            Pointlabel->setPosition(ccp(650 * SIZE_RATIO_X, (550 - 100 * (players->count() - 1)) * SIZE_RATIO_Y));
+            Pointlabel->setAnchorPoint(CCPointZero);
+            Pointlabel->setPosition(ccp(300 * SIZE_RATIO_X,
+                                        (570 - 100 * (players->count() - 1)) * SIZE_RATIO_Y));
             Pointlabel->setTag(123);
             this->addChild(Pointlabel);
             
             CCLabelTTF *Namelabel = CCLabelTTF::create(player->getName().c_str(),
-                                                       "Helvetica",
+                                                       "Fonts/BankGothic Lt BT",
                                                        30 * SIZE_RATIO);
             Namelabel->setAnchorPoint(CCPointZero);
-            Namelabel->setPosition(ccp(100 * SIZE_RATIO_X, (550 - 100 * (players->count() - 1)) * SIZE_RATIO_Y));
+            Namelabel->setPosition(ccp(300 * SIZE_RATIO_X,
+                                       (600 - 100 * (players->count() - 1)) * SIZE_RATIO_Y));
             this->addChild(Namelabel);
-
+            
+            char rankBuf[15];
+            sprintf(rankBuf, "Numbers/%i.png", players->count());
+            CCSprite *rank = CCSprite::create(rankBuf);
+            rank->setScale(SIZE_RATIO);
+            rank->setAnchorPoint(CCPointZero);
+            rank->setPosition(ccp(100 * SIZE_RATIO_X,
+                                  (570 - 100 * (players->count() - 1)) * SIZE_RATIO_Y));
+            this->addChild(rank);
         }
     } else {
         CCLog(document.GetParseError());
@@ -193,12 +205,26 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
     free(data2);
     CCString *bestScore =
     CCString::createWithFormat("%d", GameManager::sharedGameManager()->getBestScore());
-    CCLabelTTF *bestScoreLabel = CCLabelTTF::create(bestScore->getCString(),
-                                                    "Helvetica",
+    string s = RankingScene::scoreFormat(bestScore->getCString());
+    CCLabelTTF *bestScoreLabel = CCLabelTTF::create(s.c_str(),
+                                                    "Fonts/BankGothic Md BT",
                                                     45 * SIZE_RATIO);
-    bestScoreLabel->setAnchorPoint(ccp(1, 0));
-    bestScoreLabel->setPosition(ccp(650 * SIZE_RATIO_X, (550 - 100 * (players->count())) * SIZE_RATIO_Y));
+    bestScoreLabel->setAnchorPoint(CCPointZero);
+    bestScoreLabel->setPosition(ccp(300 * SIZE_RATIO_X,
+                                    (520 - 100 * (players->count())) * SIZE_RATIO_Y));
     this->addChild(bestScoreLabel);
+    
+    string name = GameManager::sharedGameManager()->getName();
+    if (name.compare("") == 0) {
+        name = "you";
+    }
+    CCLabelTTF *nameLabel = CCLabelTTF::create(name.c_str(),
+                                               "Fonts/BankGothic Lt BT",
+                                               30 * SIZE_RATIO);
+    nameLabel->setAnchorPoint(CCPointZero);
+    nameLabel->setPosition(ccp(300 * SIZE_RATIO_X,
+                               (560 - 100 * (players->count())) * SIZE_RATIO_Y));
+    this->addChild(nameLabel);
 }
 
 void RankingScene::reward(cocos2d::CCObject *pSender) {
@@ -217,9 +243,11 @@ void RankingScene::bgm(CCObject* pSender) {
         if (musicPlayed) SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
         else {
             musicPlayed = true;
-            CCAction *playIntro = CCCallFuncN::create(this, callfuncN_selector(RankingScene::playIntro));
+            CCAction *playIntro =
+            CCCallFuncN::create(this, callfuncN_selector(RankingScene::playIntro));
             CCAction *delayTime = CCDelayTime::create(3.7f);
-            CCAction *playBGM = CCCallFuncN::create(this, callfuncN_selector(RankingScene::playBGM));
+            CCAction *playBGM =
+            CCCallFuncN::create(this, callfuncN_selector(RankingScene::playBGM));
             CCArray *actionList = new CCArray(3);
             actionList->autorelease();
             actionList->insertObject(playIntro, 0);
@@ -245,6 +273,16 @@ void RankingScene::convertName(char *str_name) {
             str_name[i] = ' ';
         }
     }
+}
+
+string RankingScene::scoreFormat(string score){
+    string s = score;
+    int i = 1;
+    while ( (i * 3) < score.length()) {
+        s.insert(score.length() - i * 3, ",");
+        i++;
+    }
+    return s;
 }
 Player::Player(string name, int point) {
     this->_point = point;
