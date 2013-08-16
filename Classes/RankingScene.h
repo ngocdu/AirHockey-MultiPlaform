@@ -8,9 +8,6 @@
 #define __AirHockey__RankingScene__
 #include "AppMacros.h"
 #include "cocos-ext.h"
-#include "CCTableView.h"
-#include "CCScrollView.h"
-#include "CCTableViewCell.h"
 #include "SimpleAudioEngine.h"
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/document.h"
@@ -36,7 +33,7 @@ public:
 };
 
 
-class RankingScene : public CCLayer, public CCTableViewDelegate, CCTableViewDataSource {
+class RankingScene : public CCLayer {
 private:
     CCSize size;
     float w, h;
@@ -50,7 +47,6 @@ private:
     
     CCSprite *bgm_off;
     CCMenu *rewardMenu;
-    CCTableView *tableView;
     CCArray *players;
 public:
     virtual bool init();
@@ -67,12 +63,6 @@ public:
     void update(float dt);
     
     CREATE_FUNC(RankingScene);
-    virtual void scrollViewDidScroll(CCScrollView* view){};
-    virtual void scrollViewDidZoom(CCScrollView* view){}
-    virtual void tableCellTouched(CCTableView* table, CCTableViewCell* cell);
-    virtual CCSize tableCellSizeForIndex(CCTableView *table, unsigned int idx);
-    virtual CCTableViewCell* tableCellAtIndex(CCTableView *table, unsigned int idx);
-    virtual unsigned int numberOfCellsInTableView(CCTableView *table);
     void convertName(char *str_name);
 };
 #endif /* defined(__AirHockey__RankingScene__) */

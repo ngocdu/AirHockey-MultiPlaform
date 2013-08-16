@@ -16,6 +16,7 @@ private:
     int point;
     string ipAddr;
     int reward;
+    int bestScore;
     
     //Constructor
     GameManager();
@@ -40,6 +41,8 @@ public:
     void setIpAddr(string ipAddr);
     int getReward();
     void setReward(int reward);
+    int getBestScore();
+    void setBestScore(int bestScore);
 };
 
 #endif
