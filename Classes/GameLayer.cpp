@@ -118,33 +118,40 @@ GameLayer::GameLayer() {
     this->addChild(humanGoal, 2);
     this->addChild(aiGoal, 2);
     
+    GOAL_RADIUS = humanGoal->getContentSize().width*SIZE_RATIO_X/2;
+ 
+    // Pause Button
+    _pauseButton = CCSprite::create("Buttons/PauseButton.png");
+    _pauseButton->setScaleX(SIZE_RATIO_X);
+    _pauseButton->setScaleY(SIZE_RATIO_Y);
+    _pauseButton->setPosition(ccp(w - _pauseButton->getContentSize().width/2 - 25,
+                                  h/2));
+    this->addChild(_pauseButton);
+    
     // Score Counter
     CCSprite *humanScoreBG = CCSprite::create("BackGrounds/ScoreBG.png");
     CCSprite *aiScoreBG = CCSprite::create("BackGrounds/ScoreBG.png");
     
-    humanScoreBG->setPosition(ccp(w - humanScoreBG->getContentSize().width*2 - 20,
-                                  h - humanScoreBG->getContentSize().height/2 - 15));
-    aiScoreBG->setPosition(ccp(w - aiScoreBG->getContentSize().width/2 - 10,
-                                  h - aiScoreBG->getContentSize().height/2 - 15));
+    humanScoreBG->setRotation(-90);
+    aiScoreBG->setRotation(-90);
+    
+    humanScoreBG->setPosition(ccp(_pauseButton->getPosition().x,
+                                  h/2 - humanScoreBG->getContentSize().width/2 - _pauseButton->getContentSize().width));
+    aiScoreBG->setPosition(ccp(_pauseButton->getPosition().x,
+                               h/2 + aiScoreBG->getContentSize().width/2 + _pauseButton->getContentSize().width));
     this->addChild(humanScoreBG);
     this->addChild(aiScoreBG);
-    
+
     _scoreLabel1 = CCLabelTTF::create("0", FONT, 48 * SIZE_RATIO);
-    _scoreLabel1->setColor(ccBLACK);
     _scoreLabel2 = CCLabelTTF::create("0", FONT, 48 * SIZE_RATIO);
-    _scoreLabel2->setColor(ccBLACK);
+    _scoreLabel1->setRotation(-90);
+    _scoreLabel2->setRotation(-90);
     _scoreLabel1->setPosition(humanScoreBG->getPosition());
     _scoreLabel2->setPosition(aiScoreBG->getPosition());
     this->addChild(_scoreLabel1);
     this->addChild(_scoreLabel2);
 
-    // Pause Button
-    _pauseButton = CCSprite::create("Buttons/PauseButton.png");
-    _pauseButton->setScaleX(SIZE_RATIO_X);
-    _pauseButton->setScaleY(SIZE_RATIO_Y);
-    _pauseButton->setPosition(ccp(w - humanScoreBG->getContentSize().width*5/4 - 15,
-                                  h - humanScoreBG->getContentSize().height/2 - 15));
-    this->addChild(_pauseButton);
+
     
     // End Game
     _endLayerBg = CCSprite::create("BackGrounds/EndGameBG.png");
@@ -181,8 +188,8 @@ GameLayer::GameLayer() {
 
     // Timer
     CCSprite *timerBG = CCSprite::create("BackGrounds/TimerBG.png");
-    timerBG->setPosition(ccp(timerBG->getContentSize().width/2 + 15,
-                             h - timerBG->getContentSize().height/2 - 15));
+    timerBG->setRotation(90);
+    timerBG->setPosition(ccp(timerBG->getContentSize().height/2 + 15, h/2));
     this->addChild(timerBG);
 
     _minutes = 3;
@@ -191,8 +198,8 @@ GameLayer::GameLayer() {
     char timeBuf[20] = {0};
 	sprintf(timeBuf, "0%i:0%i", _minutes, _seconds);
     
-    _timer = CCLabelTTF::create(timeBuf, FONT, 40 * SIZE_RATIO);
-    _timer->setColor(ccBLACK);
+    _timer = CCLabelTTF::create(timeBuf, FONT, 36 * SIZE_RATIO);
+    _timer->setRotation(90);
 	_timer->setPosition(timerBG->getPosition());
 	this->addChild(_timer, CONTROL_LAYER_ZORDER);
 
@@ -257,31 +264,33 @@ void GameLayer::initPhysics() {
     groundBodyDef.position.Set(0, 0);
     _groundBody = _world->CreateBody(&groundBodyDef);
     
+    
+    
     // Bottom Left
     this->createEdge(0, BORDER_WIDTH_BOTTOM*SIZE_RATIO_Y,
-                     w/GOALSIZE_RATIO, BORDER_WIDTH_BOTTOM*SIZE_RATIO_Y, 0);
+                     w/2 - GOAL_RADIUS, BORDER_WIDTH_BOTTOM*SIZE_RATIO_Y, 0);
     // Bottom Right
-    this->createEdge(w - w/GOALSIZE_RATIO, BORDER_WIDTH_BOTTOM*SIZE_RATIO_Y,
+    this->createEdge(w/2 + GOAL_RADIUS, BORDER_WIDTH_BOTTOM*SIZE_RATIO_Y,
                      w, BORDER_WIDTH_BOTTOM*SIZE_RATIO_Y, 0);
     // Bottom Center
-    this->createEdge(w/GOALSIZE_RATIO, BORDER_WIDTH_BOTTOM*SIZE_RATIO_Y,
-                     w - w/GOALSIZE_RATIO, BORDER_WIDTH_BOTTOM*SIZE_RATIO_Y, -10);
+    this->createEdge(w/2 - GOAL_RADIUS, BORDER_WIDTH_BOTTOM*SIZE_RATIO_Y,
+                     w/2 + GOAL_RADIUS, BORDER_WIDTH_BOTTOM*SIZE_RATIO_Y, -10);
     // Bottom goal
-    this->createEdge(w/GOALSIZE_RATIO, 50*SIZE_RATIO_Y,w/GOALSIZE_RATIO, 0, 0);
-    this->createEdge(w - w/GOALSIZE_RATIO, 50*SIZE_RATIO_Y, w - w/GOALSIZE_RATIO, 0, 0);
+    this->createEdge(w/2 - GOAL_RADIUS, 45*SIZE_RATIO_Y, w/2 - GOAL_RADIUS, 0, 0);
+    this->createEdge(w/2 + GOAL_RADIUS, 45*SIZE_RATIO_Y, w/2 + GOAL_RADIUS, 0, 0);
     
     // Top Left
     this->createEdge(0, h - BORDER_WIDTH_TOP*SIZE_RATIO_Y,
-                     w/GOALSIZE_RATIO, h - BORDER_WIDTH_TOP*SIZE_RATIO_Y, 0);
+                     w/2 - GOAL_RADIUS, h - BORDER_WIDTH_TOP*SIZE_RATIO_Y, 0);
     // Top Right
-    this->createEdge(w - w/GOALSIZE_RATIO, h - BORDER_WIDTH_TOP*SIZE_RATIO_Y,
+    this->createEdge(w/2 + GOAL_RADIUS, h - BORDER_WIDTH_TOP*SIZE_RATIO_Y,
                      w, h - BORDER_WIDTH_TOP*SIZE_RATIO_Y, 0);
     // Top Center
-    this->createEdge(w/GOALSIZE_RATIO, h - BORDER_WIDTH_TOP*SIZE_RATIO_Y,
-                     w - w/GOALSIZE_RATIO, h - BORDER_WIDTH_TOP*SIZE_RATIO_Y, -10);
+    this->createEdge(w/2 - GOAL_RADIUS, h - BORDER_WIDTH_TOP*SIZE_RATIO_Y,
+                     w/2 + GOAL_RADIUS, h - BORDER_WIDTH_TOP*SIZE_RATIO_Y, -10);
     // Top goal
-    this->createEdge(w/GOALSIZE_RATIO, h - 50*SIZE_RATIO_Y,w/GOALSIZE_RATIO, h, 0);
-    this->createEdge(w - w/GOALSIZE_RATIO, h - 50*SIZE_RATIO_Y, w - w/GOALSIZE_RATIO, h, 0);
+    this->createEdge(w/2 - GOAL_RADIUS, h - 45*SIZE_RATIO_Y, w/2 - GOAL_RADIUS, h, 0);
+    this->createEdge(w/2 + GOAL_RADIUS, h - 45*SIZE_RATIO_Y, w/2 + GOAL_RADIUS, h, 0);
     
     // Left
     this->createEdge(BORDER_WIDTH_LEFT*SIZE_RATIO_X,
@@ -305,9 +314,9 @@ void GameLayer::initPhysics() {
     _puck->setStartPos(ccp(w/2, h/2));
     _puck->setSpritePosition(_puck->getStartPos());
     
-    _controlLayer->addChild(_player1);
-    _controlLayer->addChild(_player2);
-    _controlLayer->addChild(_puck);
+    _controlLayer->addChild(_player1, 2);
+    _controlLayer->addChild(_player2, 2);
+    _controlLayer->addChild(_puck, 2);
 }
 
 void GameLayer::createEdge(float x1, float y1,
@@ -490,7 +499,8 @@ void GameLayer::ccTouchesBegan(CCSet* touches, CCEvent* event) {
 //                tap.y > 10 + _player1->getRadius()  &&
 //                tap.x > 10 + _player1->getRadius()  &&
 //                tap.x < w - _player1->getRadius()) {
-            if (tap.y < h/2 && tap.y > 10 && tap.x > 10  && tap.x < w - 10) {
+            if (tap.y < h/2 && tap.y > BORDER_WIDTH_BOTTOM &&
+                tap.x > BORDER_WIDTH_LEFT  && tap.x < w - BORDER_WIDTH_RIGHT) {
                 b2MouseJointDef md;
                 md.bodyA =  _groundBody;
                 md.bodyB = _player1->getBody();
@@ -567,7 +577,8 @@ void GameLayer::ccTouchesMoved(CCSet* touches, CCEvent* event) {
             CCTouch *touch = (CCTouch *)touches->anyObject();
             CCPoint tap = touch->getLocation();
             b2Vec2 target = this->ptm(tap);
-            
+            if (tap.y < h/2 && tap.y > BORDER_WIDTH_BOTTOM &&
+                tap.x > BORDER_WIDTH_LEFT  && tap.x < w - BORDER_WIDTH_RIGHT){
             b2MouseJointDef md;
             md.bodyA =  _groundBody;
             md.bodyB = _player1->getBody();
@@ -580,6 +591,7 @@ void GameLayer::ccTouchesMoved(CCSet* touches, CCEvent* event) {
             _player1->setSpritePosition(tap);
             _mouseJoint = (b2MouseJoint *)_world->CreateJoint(&md);
             _player1->getBody()->SetAwake(true);
+            }
         } else {
             CCTouch *touch = (CCTouch *)touches->anyObject();
             CCPoint tap = touch->getLocation();

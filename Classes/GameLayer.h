@@ -77,6 +77,8 @@ private:
     float SIZE_RATIO;
     float SIZE_RATIO_X;
     float SIZE_RATIO_Y;
+    float GOAL_RADIUS;
+    
     
     b2Body *_groundBody;
 
