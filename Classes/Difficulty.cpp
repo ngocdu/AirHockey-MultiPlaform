@@ -23,7 +23,7 @@ bool Difficulty::init() {
     SIZE_RATIO_X = w/768;
     SIZE_RATIO_Y = h/1024;
     
-    CCSprite *background = CCSprite::create("BackGrounds/BackGround3.png");
+    CCSprite *background = CCSprite::create("BackGrounds/DifficultyBG.png");
     background->setPosition(ccp(w/2, h/2));
     background->setScaleY(h/background->getContentSize().height);
     background->setScaleX(w/background->getContentSize().width);

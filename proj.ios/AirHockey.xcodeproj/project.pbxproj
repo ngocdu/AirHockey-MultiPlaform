@@ -285,7 +285,6 @@
 		FB275A0F17AA560100A75ED1 /* Court3.png in Resources */ = {isa = PBXBuildFile; fileRef = FB2759FB17AA560100A75ED1 /* Court3.png */; };
 		FB275A1017AA560100A75ED1 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = FB2759FC17AA560100A75ED1 /* Default.png */; };
 		FB275A1117AA560100A75ED1 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = FB2759FD17AA560100A75ED1 /* Fonts */; };
-		FB275A1217AA560100A75ED1 /* GreenBox.png in Resources */ = {isa = PBXBuildFile; fileRef = FB2759FE17AA560100A75ED1 /* GreenBox.png */; };
 		FB275A1317AA560100A75ED1 /* Icons in Resources */ = {isa = PBXBuildFile; fileRef = FB2759FF17AA560100A75ED1 /* Icons */; };
 		FB275A1417AA560100A75ED1 /* line.png in Resources */ = {isa = PBXBuildFile; fileRef = FB275A0017AA560100A75ED1 /* line.png */; };
 		FB275A1517AA560100A75ED1 /* Numbers in Resources */ = {isa = PBXBuildFile; fileRef = FB275A0117AA560100A75ED1 /* Numbers */; };
@@ -294,7 +293,6 @@
 		FB275A1817AA560100A75ED1 /* Present.png in Resources */ = {isa = PBXBuildFile; fileRef = FB275A0417AA560100A75ED1 /* Present.png */; };
 		FB275A1917AA560100A75ED1 /* PresentOnClicked.png in Resources */ = {isa = PBXBuildFile; fileRef = FB275A0517AA560100A75ED1 /* PresentOnClicked.png */; };
 		FB275A1A17AA560100A75ED1 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = FB275A0617AA560100A75ED1 /* Sounds */; };
-		FB275A1B17AA560100A75ED1 /* Star.png in Resources */ = {isa = PBXBuildFile; fileRef = FB275A0717AA560100A75ED1 /* Star.png */; };
 		FB275A1C17AA560100A75ED1 /* Top10.png in Resources */ = {isa = PBXBuildFile; fileRef = FB275A0817AA560100A75ED1 /* Top10.png */; };
 		FB275A1D17AA560100A75ED1 /* WhiteBox.png in Resources */ = {isa = PBXBuildFile; fileRef = FB275A0917AA560100A75ED1 /* WhiteBox.png */; };
 		FB275A2017AA591D00A75ED1 /* b2Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB275A1E17AA591D00A75ED1 /* b2Sprite.cpp */; };
@@ -917,7 +915,6 @@
 		FB2759FB17AA560100A75ED1 /* Court3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Court3.png; sourceTree = "<group>"; };
 		FB2759FC17AA560100A75ED1 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		FB2759FD17AA560100A75ED1 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
-		FB2759FE17AA560100A75ED1 /* GreenBox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GreenBox.png; sourceTree = "<group>"; };
 		FB2759FF17AA560100A75ED1 /* Icons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Icons; sourceTree = "<group>"; };
 		FB275A0017AA560100A75ED1 /* line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = line.png; sourceTree = "<group>"; };
 		FB275A0117AA560100A75ED1 /* Numbers */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Numbers; sourceTree = "<group>"; };
@@ -926,7 +923,6 @@
 		FB275A0417AA560100A75ED1 /* Present.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Present.png; sourceTree = "<group>"; };
 		FB275A0517AA560100A75ED1 /* PresentOnClicked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PresentOnClicked.png; sourceTree = "<group>"; };
 		FB275A0617AA560100A75ED1 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sounds; sourceTree = "<group>"; };
-		FB275A0717AA560100A75ED1 /* Star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Star.png; sourceTree = "<group>"; };
 		FB275A0817AA560100A75ED1 /* Top10.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Top10.png; sourceTree = "<group>"; };
 		FB275A0917AA560100A75ED1 /* WhiteBox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WhiteBox.png; sourceTree = "<group>"; };
 		FB275A1E17AA591D00A75ED1 /* b2Sprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2Sprite.cpp; sourceTree = "<group>"; };
@@ -2142,7 +2138,6 @@
 				FB2759FB17AA560100A75ED1 /* Court3.png */,
 				FB2759FC17AA560100A75ED1 /* Default.png */,
 				FB2759FD17AA560100A75ED1 /* Fonts */,
-				FB2759FE17AA560100A75ED1 /* GreenBox.png */,
 				FB2759FF17AA560100A75ED1 /* Icons */,
 				FB275A0017AA560100A75ED1 /* line.png */,
 				FB275A0117AA560100A75ED1 /* Numbers */,
@@ -2151,7 +2146,6 @@
 				FB275A0417AA560100A75ED1 /* Present.png */,
 				FB275A0517AA560100A75ED1 /* PresentOnClicked.png */,
 				FB275A0617AA560100A75ED1 /* Sounds */,
-				FB275A0717AA560100A75ED1 /* Star.png */,
 				FB275A0817AA560100A75ED1 /* Top10.png */,
 				FB275A0917AA560100A75ED1 /* WhiteBox.png */,
 				FB2759E217AA48D900A75ED1 /* Icon-72.png */,
@@ -2247,7 +2241,6 @@
 				FB275A0F17AA560100A75ED1 /* Court3.png in Resources */,
 				FB275A1017AA560100A75ED1 /* Default.png in Resources */,
 				FB275A1117AA560100A75ED1 /* Fonts in Resources */,
-				FB275A1217AA560100A75ED1 /* GreenBox.png in Resources */,
 				FB275A1317AA560100A75ED1 /* Icons in Resources */,
 				FB275A1417AA560100A75ED1 /* line.png in Resources */,
 				FB275A1517AA560100A75ED1 /* Numbers in Resources */,
@@ -2256,7 +2249,6 @@
 				FB275A1817AA560100A75ED1 /* Present.png in Resources */,
 				FB275A1917AA560100A75ED1 /* PresentOnClicked.png in Resources */,
 				FB275A1A17AA560100A75ED1 /* Sounds in Resources */,
-				FB275A1B17AA560100A75ED1 /* Star.png in Resources */,
 				FB275A1C17AA560100A75ED1 /* Top10.png in Resources */,
 				FB275A1D17AA560100A75ED1 /* WhiteBox.png in Resources */,
 			);
