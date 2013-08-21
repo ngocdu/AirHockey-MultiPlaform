@@ -15,6 +15,7 @@
 #include "GameManager.h"
 #include "Difficulty.h"
 #include "RewardScene.h"
+#include "curl.h"
 
 using namespace std;
 using namespace cocos2d;
@@ -44,6 +45,7 @@ private:
     bool musicPlayed;
     bool introEnd;
     
+    string dataBuf;
     
     CCSprite *bgm_off;
     CCMenu *rewardMenu;
@@ -51,7 +53,6 @@ private:
 public:
     virtual bool init();
     static CCScene* scene();
-    void onHttpRequestCompleted(CCNode *sender, void *data);
     
     void play(CCObject* pSender);
     void bgm(CCObject* pSender);
@@ -60,7 +61,9 @@ public:
     void playIntro();
     void playBGM();
     
-    void update(float dt);
+    void upBestScore();
+    void getRanking();
+    void displayRanking();
     
     CREATE_FUNC(RankingScene);
     void convertName(char *str_name);

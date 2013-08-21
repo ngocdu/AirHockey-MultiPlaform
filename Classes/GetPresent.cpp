@@ -145,7 +145,7 @@ void GetPresent::editBoxTextChanged(cocos2d::extension::CCEditBox* editBox,
 }
 
 void GetPresent::editBoxReturn(cocos2d::extension::CCEditBox* editBox) {
-    if (m_pUserEmail->getText() != "") {
+    if (strcmp(m_pUserEmail->getText(),"") != 0) {
         CCHttpRequest* request = new CCHttpRequest();
         string ipAddr = GameManager::sharedGameManager()->getIpAddr();
         string email = m_pUserEmail->getText();
@@ -155,7 +155,7 @@ void GetPresent::editBoxReturn(cocos2d::extension::CCEditBox* editBox) {
         CCHttpClient::getInstance()->send(request);
         request->release();
     }
-    if (m_pUserName->getText() != "") {
+    if (strcmp(m_pUserName->getText(), "") != 0) {
         CCHttpRequest* request = new CCHttpRequest();
         string ipAddr = GameManager::sharedGameManager()->getIpAddr();
         char * name =(char*) m_pUserName->getText();

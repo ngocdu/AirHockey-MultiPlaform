@@ -10,6 +10,20 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
+int rewardWriter(char *data, size_t size, size_t nmemb, string *buffer)
+{
+    int result = 0;
+    
+    if (buffer != NULL)
+    {
+        //バッファ追記
+        buffer->append(data, size * nmemb);
+        result = size * nmemb;
+    }
+    
+    return result;
+}
+
 CCScene* RankingScene::scene() {
     CCScene *scene = CCScene::create();
     RankingScene *layer1 = RankingScene::create();
@@ -46,15 +60,6 @@ bool RankingScene::init() {
 
     string playerName = GameManager::sharedGameManager()->getName();
     if (playerName == "") reward->setVisible(false);
-    
-    CCHttpRequest* request = new CCHttpRequest();
-    string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-    string url    = ipAddr + "/users/Ngoc_Du.json";
-    request->setUrl((ipAddr+"/users.json").c_str());
-    request->setRequestType(CCHttpRequest::kHttpGet);
-    request->setResponseCallback(this, callfuncND_selector(RankingScene::onHttpRequestCompleted));
-    CCHttpClient::getInstance()->send(request);
-    request->release();
     
     //create startMenuItem
     CCMenuItemImage *playItem =
@@ -98,9 +103,9 @@ bool RankingScene::init() {
         CCAction *BGM = CCSequence::create(actionList);
         this->runAction(BGM);
     }
-    
     this->addChild(bgm_off);
-    this->scheduleUpdate();
+    this->displayRanking();
+    
     return true;
 }
 
@@ -116,53 +121,80 @@ void RankingScene::playBGM() {
     }
 }
 
-void RankingScene::update(float dt) {
-    if (GameManager::sharedGameManager()->getBgm()) {
-        if (!SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying())
-            scheduleOnce(schedule_selector(RankingScene::playBGM), true);
+void RankingScene::upBestScore() {
+    string username = GameManager::sharedGameManager()->getName();
+    if (!username.empty()) {
+        int bestScore = GameManager::sharedGameManager()->getBestScore();
+        char bestScoreString[20] = {0};
+        sprintf(bestScoreString, "%i", bestScore);
+        string email  = GameManager::sharedGameManager()->getEmail();
+        string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+        string url = ipAddr + "/users?name="+username+"&point="+bestScoreString+"&email="+email;
+        CURL *curl;
+        CURLcode res;
+        curl = curl_easy_init();
+        if (curl) {
+            //133.242.203.251
+            //http://Pe4L60aeke:dhWLtJ8F1w@takasuapp.com
+            
+            curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+            curl_easy_setopt(curl, CURLOPT_USERNAME, "Pe4L60aeke");
+            curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "account=kienbg");
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+            //        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+            curl_easy_setopt(curl, CURLOPT_NOPROGRESS ,1);
+            curl_easy_setopt(curl, CURLOPT_POST, true);
+            
+            res = curl_easy_perform(curl);
+            curl_easy_cleanup(curl);
+            
+            if (res == 0) {
+                CCLOG("0 response OK");
+            } else {
+                CCLog("code: %i",res);
+            }
+        }
     }
 }
 
-void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
-    CCHttpResponse *response = (CCHttpResponse*)data;
-    
-    if (!response) {
-        return;
+void RankingScene::getRanking() {
+    CURL *curl;
+    CURLcode res;
+    curl = curl_easy_init();
+    if (curl) {
+        //133.242.203.251
+        //http://Pe4L60aeke:dhWLtJ8F1w@takasuapp.com
+        
+        string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+        string url = ipAddr + "/users.json";
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_USERNAME, "Pe4L60aeke");
+        curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+        curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, rewardWriter);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &dataBuf);
+        res = curl_easy_perform(curl);
+        
+        curl_easy_cleanup(curl);
+        if (res == 0) {
+            CCLOG("0 response OK\n");
+        } else {
+            CCLabelTTF *checkInternetMsg = CCLabelTTF::create("現在ランキングは閉じています", FONT, 30*SIZE_RATIO);
+            checkInternetMsg->setPosition(ccp(w/2, h/2 - 30*SIZE_RATIO));
+            checkInternetMsg->setColor(ccYELLOW);
+            this->addChild(checkInternetMsg);
+        }
+    } else {
+        CCLOG("no curl\n");
     }
+}
 
-    if (0 != strlen(response->getHttpRequest()->getTag())) {
-        CCLog("%s completed", response->getHttpRequest()->getTag());
-    }
-    
-    int statusCode = response->getResponseCode();
-    char statusString[64] = {0};
-    sprintf(statusString, "HTTP Status Code: %d, tag = %s", statusCode,
-            response->getHttpRequest()->getTag());
-    
-    if (!response->isSucceed()) {
-        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("現在ランキングは閉じています", FONT, 30*SIZE_RATIO);
-        checkInternetMsg->setPosition(ccp(w/2, h/2 - 40*SIZE_RATIO));
-        checkInternetMsg->setColor(ccYELLOW);
-        this->addChild(checkInternetMsg);
-        return;
-    }
-    
-    // dump data
-    std::vector<char> *buffer = response->getResponseData();
-    char * data2 = (char*)(malloc(buffer->size() *  sizeof(char)));
-    int d = -1;
-    for (unsigned int i = 0; i < buffer->size(); i++) {
-        d++ ;
-        data2[d] = (*buffer)[i];
-    }
-    data2[d + 1] = '\0';
-    CCLOG("%s", data2);
-    //-----------------------
-
+void RankingScene::displayRanking() {
+    this->getRanking();
     rapidjson::Document document;
-    if(data2 != NULL && !document.Parse<0>(data2).HasParseError()) {
-        string username = GameManager::sharedGameManager()->getName();
-        string email = GameManager::sharedGameManager()->getEmail();
+    if(dataBuf.c_str() != NULL && !document.Parse<0>(dataBuf.c_str()).HasParseError()) {
         for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
             string name = document[i]["name"].GetString();
             convertName((char*)name.c_str());
@@ -170,26 +202,25 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
             string time = document[i]["updated_at"].GetString();
             int p = document[i]["point"].GetInt();
             int r = document[i]["reward"].GetInt();
-            Player1 *player = new Player1(name,p, mail, time, r);
+            
+            Player1 *player = new Player1(name, p, mail, time, r);
             players->addObject(player);
             CCString *point = CCString::createWithFormat("%d",player->getPoint());
             string s = RankingScene::scoreFormat(point->getCString());
-            CCLabelTTF *Pointlabel = CCLabelTTF::create(s.c_str(),
-                                                        FONT,
-                                                        35 * SIZE_RATIO);
-            Pointlabel->setAnchorPoint(CCPointZero);
-            Pointlabel->setPosition(ccp(250 * SIZE_RATIO_X,
+            CCLabelTTF *pointLabel = CCLabelTTF::create(s.c_str(),
+                                                        FONT, 35 * SIZE_RATIO);
+            pointLabel->setAnchorPoint(CCPointZero);
+            pointLabel->setPosition(ccp(250 * SIZE_RATIO_X,
                                         (560 - 100 * (players->count() - 1)) * SIZE_RATIO_Y));
-            Pointlabel->setTag(123);
-            this->addChild(Pointlabel);
+            pointLabel->setTag(123);
+            this->addChild(pointLabel);
             
-            CCLabelTTF *Namelabel = CCLabelTTF::create(player->getName().c_str(),
-                                                       FONT,
-                                                       30 * SIZE_RATIO);
-            Namelabel->setAnchorPoint(CCPointZero);
-            Namelabel->setPosition(ccp(250 * SIZE_RATIO_X,
+            CCLabelTTF *nameLabel = CCLabelTTF::create(player->getName().c_str(),
+                                                       FONT, 30 * SIZE_RATIO);
+            nameLabel->setAnchorPoint(CCPointZero);
+            nameLabel->setPosition(ccp(250 * SIZE_RATIO_X,
                                        (590 - 100 * (players->count() - 1)) * SIZE_RATIO_Y));
-            this->addChild(Namelabel);
+            this->addChild(nameLabel);
             
             char rankBuf[15];
             sprintf(rankBuf, "Numbers/%i.png", players->count());
@@ -209,25 +240,23 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
     } else {
         CCLog(document.GetParseError());
     }
-    free(data2);
+    
     CCString *bestScore =
     CCString::createWithFormat("%d", GameManager::sharedGameManager()->getBestScore());
     string s = RankingScene::scoreFormat(bestScore->getCString());
     CCLabelTTF *bestScoreLabel = CCLabelTTF::create(s.c_str(),
-                                                    FONT,
-                                                    45 * SIZE_RATIO);
+                                                    FONT, 45 * SIZE_RATIO);
     bestScoreLabel->setAnchorPoint(CCPointZero);
     bestScoreLabel->setPosition(ccp(250 * SIZE_RATIO_X,
                                     220 * SIZE_RATIO_Y));
     this->addChild(bestScoreLabel);
     
-    string name = GameManager::sharedGameManager()->getName();
-    if (name.compare("") == 0) {
-        name = "you";
+    string username = GameManager::sharedGameManager()->getName();
+    if (username.empty()) {
+        username = "YOU";
     }
-    CCLabelTTF *nameLabel = CCLabelTTF::create(name.c_str(),
-                                               FONT,
-                                               30 * SIZE_RATIO);
+    CCLabelTTF *nameLabel = CCLabelTTF::create(username.c_str(),
+                                               FONT, 30 * SIZE_RATIO);
     nameLabel->setAnchorPoint(CCPointZero);
     nameLabel->setPosition(ccp(250 * SIZE_RATIO_X,
                                260 * SIZE_RATIO_Y));
@@ -273,10 +302,8 @@ void RankingScene::convertName(char *str_name) {
     int len = 0;
     int i = 0;
     len=strlen(str_name);
-    for(i=0;i<len;i++)
-    {
-        if(str_name[i] == '_')
-        {
+    for(i=0;i<len;i++) {
+        if(str_name[i] == '_') {
             str_name[i] = ' ';
         }
     }
@@ -285,12 +312,13 @@ void RankingScene::convertName(char *str_name) {
 string RankingScene::scoreFormat(string score){
     string s = score;
     int i = 1;
-    while ( (i * 3) < score.length()) {
+    while ((i * 3) < score.length()) {
         s.insert(score.length() - i * 3, ",");
         i++;
     }
     return s;
 }
+
 Player::Player(string name, int point) {
     this->_point = point;
     this->_name = name;

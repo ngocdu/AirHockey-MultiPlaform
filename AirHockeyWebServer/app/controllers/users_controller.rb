@@ -92,13 +92,11 @@ class UsersController < ApplicationController
           @user = User.new(name: params[:name], point: params[:point],
                            email: params[:email], reward: 0)
           @user.save
-          User3.create!(user_id: @user.id, point: params[:point])
       end
     else
-      @user = User.new(name: params[:name], point: params[:point], email: params[:email], reward: 1)
+      @user = User.new(name: params[:name], point: params[:point], email: params[:email], reward: 0)
         respond_to do |format|
           if @user.save
-            User3.create!(user_id: @user.id, point: params[:point])
             format.html { redirect_to @users, notice: 'User was successfully created.' }
             format.json { render json: @users, status: :created, location: @user }
           else
