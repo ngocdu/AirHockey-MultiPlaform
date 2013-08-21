@@ -51,6 +51,7 @@ void Ball::initBall(const char *pszFileName) {
     
     b2CircleShape circle;
     b2FixtureDef fixtureDef;
+    this->initWithFile(pszFileName);
     
     if (_type == humanPlayer || _type == aiPlayer) {
         fixtureDef.filter.groupIndex = 0;
@@ -64,7 +65,6 @@ void Ball::initBall(const char *pszFileName) {
         fixtureDef.restitution = 0.7;
     }
     
-    this->initWithFile(pszFileName);
     _radius = this->getContentSize().width * SIZE_RATIO / 2;
     circle.m_radius = _radius / PTM_RATIO;
     fixtureDef.shape =  &circle;
@@ -88,6 +88,7 @@ void Ball::update(float dt) {
     if (_body && isVisible()) {
         setPositionX(_body->GetPosition().x * PTM_RATIO);
         setPositionY(_body->GetPosition().y * PTM_RATIO);
+        _body->SetFixedRotation(false);
     }
 }
 

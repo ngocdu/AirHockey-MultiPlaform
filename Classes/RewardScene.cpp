@@ -45,7 +45,7 @@ bool RewardScene::init() {
     
     CCHttpRequest* request = new CCHttpRequest();
     string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-    request->setUrl((ipAddr+":3000/users.json").c_str());
+    request->setUrl((ipAddr+"/users.json").c_str());
     request->setRequestType(CCHttpRequest::kHttpGet);
     request->setResponseCallback(this, callfuncND_selector(RewardScene::onHttpRequestCompleted));
     CCHttpClient::getInstance()->send(request);
@@ -146,7 +146,7 @@ void RewardScene::clickBtSendEmail(cocos2d::CCObject *pSender) {
     sprintf(strP, "%i", point);
     string email  = GameManager::sharedGameManager()->getEmail();
     string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-    string url    = ipAddr + ":3000/users?name="+name+"&point="+strP+"&email="+email+"&reward=abc&time="+p->getTime();
+    string url    = ipAddr + "/users?name="+name+"&point="+strP+"&email="+email+"&reward=abc&time="+p->getTime();
     request->setUrl(url.c_str());
     request->setRequestType(CCHttpRequest::kHttpPost);
     CCHttpClient::getInstance()->send(request);
@@ -181,7 +181,7 @@ CCTableViewCell* RewardScene::tableCellAtIndex(CCTableView *table, unsigned int 
     CCString *string = CCString::createWithFormat("%d",p->getPoint());
 
     CCLabelTTF *Pointlabel = CCLabelTTF::create(string->getCString(),
-                                                "Helvetica",
+                                                FONT,
                                                 30*SIZE_RATIO);
     Pointlabel->setAnchorPoint(ccp(1, 0));
     Pointlabel->setPosition(ccp(500*SIZE_RATIO_X, 25*SIZE_RATIO_Y));
@@ -204,7 +204,7 @@ CCTableViewCell* RewardScene::tableCellAtIndex(CCTableView *table, unsigned int 
     // Player Name
     std::string name = p->getName();
     CCLabelTTF *Namelabel = CCLabelTTF::create(p->getName().c_str(),
-                                               "Helvetica",
+                                               FONT,
                                                30*SIZE_RATIO);
     Namelabel->setAnchorPoint(CCPointZero);
     Namelabel->setPosition(ccp(100*SIZE_RATIO_X, 30*SIZE_RATIO_Y));

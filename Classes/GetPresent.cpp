@@ -30,14 +30,14 @@ bool GetPresent::init() {
     CCSize editBoxSize = CCSizeMake((w - (350 * SIZE_RATIO_X)), 50 * SIZE_RATIO_Y);
     
     CCLabelTTF *congrats = CCLabelTTF::create("TOP 10 SCORE !!!", FONT, 64 * SIZE_RATIO);
-    CCLabelTTF *emailLabel1 = CCLabelTTF::create("受入メール:", FONT, 30 * SIZE_RATIO);
+    CCLabelTTF *emailLabel1 = CCLabelTTF::create("メールアドレス:", FONT, 30 * SIZE_RATIO);
     //    CCLabelTTF *emailLabel2 = CCLabelTTF::create("to get Presents:", FONT, 36 * SIZE_RATIO);
     
     congrats->setPosition(ccp(w/2, h*6/8));
     congrats->setColor(ccYELLOW);
     
     // name
-    CCLabelTTF *nameLabel = CCLabelTTF::create("入力するよ:", FONT, 30 * SIZE_RATIO);
+    CCLabelTTF *nameLabel = CCLabelTTF::create("ニックネーム:", FONT, 30 * SIZE_RATIO);
     nameLabel->setPosition(ccp(w/2 - w/5, h*4.6f/8));
     this->addChild(nameLabel);
     m_pUserName =
@@ -55,7 +55,9 @@ bool GetPresent::init() {
     
     nameFailMsg = CCLabelTTF::create("please enter your username !!",
                                      FONT, 24 * SIZE_RATIO);
-    nameFailMsg->setPosition(ccp(m_pUserName->getPosition().x - w/12,
+    nameFailMsg->setAnchorPoint(CCPointZero);
+    nameFailMsg->setPosition(ccp(m_pUserName->getPosition().x -
+                                 m_pUserName->getContentSize().width/2,  
                                  m_pUserName->getPosition().y - 50 * SIZE_RATIO));
     nameFailMsg->setColor(ccRED);
     nameFailMsg->setVisible(false);
@@ -63,8 +65,10 @@ bool GetPresent::init() {
     
     nameExistedMsg = CCLabelTTF::create("username existed!! please try again !!",
                                         FONT, 24 * SIZE_RATIO);
-    nameExistedMsg->setPosition(ccp(m_pUserName->getPosition().x + w/12,
-                                    m_pUserName->getPosition().y - 40 * SIZE_RATIO));
+    nameExistedMsg->setAnchorPoint(CCPointZero);
+    nameExistedMsg->setPosition(ccp(m_pUserName->getPosition().x -
+                                    m_pUserName->getContentSize().width/2,
+                                    m_pUserName->getPosition().y - 50 * SIZE_RATIO));
     nameExistedMsg->setColor(ccRED);
     nameExistedMsg->setVisible(false);
     this->addChild(nameExistedMsg);
@@ -93,15 +97,19 @@ bool GetPresent::init() {
     // Email Fail Message
     emailFailMsg = CCLabelTTF::create("Invalid Email !! Please Try Again !!",
                                       FONT, 24 * SIZE_RATIO);
-    emailFailMsg->setPosition(ccp(m_pUserEmail->getPosition().x - w/12,
-                                  m_pUserEmail->getPosition().y - 40*SIZE_RATIO));
+    emailFailMsg->setAnchorPoint(CCPointZero);
+    emailFailMsg->setPosition(ccp(m_pUserEmail->getPosition().x -
+                                  m_pUserEmail->getContentSize().width/2,
+                                  m_pUserEmail->getPosition().y - 50*SIZE_RATIO));
     emailFailMsg->setColor(ccRED);
     emailFailMsg->setVisible(false);
     
     emailExistedMsg = CCLabelTTF::create("Email Existed !! please try again !!",
                                          FONT, 24 * SIZE_RATIO);
-    emailExistedMsg->setPosition(ccp(m_pUserEmail->getPosition().x - w/12,
-                                     m_pUserEmail->getPosition().y - 40*SIZE_RATIO));
+    emailExistedMsg->setAnchorPoint(CCPointZero);
+    emailExistedMsg->setPosition(ccp(m_pUserEmail->getPosition().x -
+                                     m_pUserEmail->getContentSize().width/2,
+                                     m_pUserEmail->getPosition().y - 50*SIZE_RATIO));
     emailExistedMsg->setColor(ccRED);
     emailExistedMsg->setVisible(false);
     this->addChild(emailFailMsg);
@@ -141,7 +149,7 @@ void GetPresent::editBoxReturn(cocos2d::extension::CCEditBox* editBox) {
         CCHttpRequest* request = new CCHttpRequest();
         string ipAddr = GameManager::sharedGameManager()->getIpAddr();
         string email = m_pUserEmail->getText();
-        request->setUrl((ipAddr+":3000/user3s/dudu.json?email="+email).c_str());
+        request->setUrl((ipAddr+"/user3s/dudu.json?email="+email).c_str());
         request->setRequestType(CCHttpRequest::kHttpGet);
         request->setResponseCallback(this, callfuncND_selector(GetPresent::onHttpRequestCompleted_checkemail));
         CCHttpClient::getInstance()->send(request);
@@ -153,7 +161,7 @@ void GetPresent::editBoxReturn(cocos2d::extension::CCEditBox* editBox) {
         char * name =(char*) m_pUserName->getText();
         standardizeName(name);
         removeSpace(name);
-        request->setUrl((ipAddr+":3000/user3s/"+name+".json?name=ngocdu").c_str());
+        request->setUrl((ipAddr+"/user3s/"+name+".json?name=ngocdu").c_str());
         request->setRequestType(CCHttpRequest::kHttpGet);
         request->setResponseCallback(this, callfuncND_selector(GetPresent::onHttpRequestCompleted_checkname));
         CCHttpClient::getInstance()->send(request);
@@ -235,7 +243,7 @@ void GetPresent::menuSendEmail(CCObject *pSender) {
         GameManager::sharedGameManager()->setName(name);
         CCHttpRequest* request = new CCHttpRequest();
         string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-        request->setUrl((ipAddr+":3000/users.json").c_str());
+        request->setUrl((ipAddr+"/users.json").c_str());
         request->setRequestType(CCHttpRequest::kHttpGet);
         request->setResponseCallback(this, callfuncND_selector(GetPresent::onHttpRequestCompleted));
         CCHttpClient::getInstance()->send(request);
@@ -344,16 +352,16 @@ void GetPresent::onHttpRequestCompleted(CCNode *sender, void *data) {
         int reward    = GameManager::sharedGameManager()->getReward();
         string url;
         if (reward != 0) {
-            url    = ipAddr + ":3000/users?name="+name+"&point="+strP+"&email="+email;
+            url    = ipAddr + "/users?name="+name+"&point="+strP+"&email="+email;
         } else {
-            url    = ipAddr + ":3000/users?name="+name+"&point="+strP+"&email="+email;
+            url    = ipAddr + "/users?name="+name+"&point="+strP+"&email="+email;
         }
         request->setUrl(url.c_str());
         request->setRequestType(CCHttpRequest::kHttpPost);
         CCHttpClient::getInstance()->send(request);
         request->release();
         
-        string url3 = ipAddr + ":3000/user3s?name="+name+"&point="+strP+"&email="+email;
+        string url3 = ipAddr + "/user3s?name="+name+"&point="+strP+"&email="+email;
         request3->setUrl(url3.c_str());
         request3->setRequestType(CCHttpRequest::kHttpPost);
         CCHttpClient::getInstance()->send(request3);

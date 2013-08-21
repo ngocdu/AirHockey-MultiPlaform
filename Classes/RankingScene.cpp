@@ -49,8 +49,8 @@ bool RankingScene::init() {
     
     CCHttpRequest* request = new CCHttpRequest();
     string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-    string url    = ipAddr + ":3000/users/Ngoc_Du.json";
-    request->setUrl((ipAddr+":3000/users.json").c_str());
+    string url    = ipAddr + "/users/Ngoc_Du.json";
+    request->setUrl((ipAddr+"/users.json").c_str());
     request->setRequestType(CCHttpRequest::kHttpGet);
     request->setResponseCallback(this, callfuncND_selector(RankingScene::onHttpRequestCompleted));
     CCHttpClient::getInstance()->send(request);
@@ -140,8 +140,9 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
             response->getHttpRequest()->getTag());
     
     if (!response->isSucceed()) {
-        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("「現在ランキングは閉じています」", FONT, 24*SIZE_RATIO);
+        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("現在ランキングは閉じています", FONT, 30*SIZE_RATIO);
         checkInternetMsg->setPosition(ccp(w/2, h/2 - 40*SIZE_RATIO));
+        checkInternetMsg->setColor(ccYELLOW);
         this->addChild(checkInternetMsg);
         return;
     }
@@ -150,12 +151,12 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
     std::vector<char> *buffer = response->getResponseData();
     char * data2 = (char*)(malloc(buffer->size() *  sizeof(char)));
     int d = -1;
-    printf("Http Test, dump data: ");
     for (unsigned int i = 0; i < buffer->size(); i++) {
         d++ ;
         data2[d] = (*buffer)[i];
     }
     data2[d + 1] = '\0';
+    CCLOG("%s", data2);
     //-----------------------
 
     rapidjson::Document document;
@@ -174,20 +175,20 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
             CCString *point = CCString::createWithFormat("%d",player->getPoint());
             string s = RankingScene::scoreFormat(point->getCString());
             CCLabelTTF *Pointlabel = CCLabelTTF::create(s.c_str(),
-                                                        "Fonts/BankGothic Md BT",
+                                                        FONT,
                                                         35 * SIZE_RATIO);
             Pointlabel->setAnchorPoint(CCPointZero);
-            Pointlabel->setPosition(ccp(300 * SIZE_RATIO_X,
-                                        (570 - 100 * (players->count() - 1)) * SIZE_RATIO_Y));
+            Pointlabel->setPosition(ccp(250 * SIZE_RATIO_X,
+                                        (560 - 100 * (players->count() - 1)) * SIZE_RATIO_Y));
             Pointlabel->setTag(123);
             this->addChild(Pointlabel);
             
             CCLabelTTF *Namelabel = CCLabelTTF::create(player->getName().c_str(),
-                                                       "Fonts/BankGothic Lt BT",
+                                                       FONT,
                                                        30 * SIZE_RATIO);
             Namelabel->setAnchorPoint(CCPointZero);
-            Namelabel->setPosition(ccp(300 * SIZE_RATIO_X,
-                                       (600 - 100 * (players->count() - 1)) * SIZE_RATIO_Y));
+            Namelabel->setPosition(ccp(250 * SIZE_RATIO_X,
+                                       (590 - 100 * (players->count() - 1)) * SIZE_RATIO_Y));
             this->addChild(Namelabel);
             
             char rankBuf[15];
@@ -196,8 +197,14 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
             rank->setScale(SIZE_RATIO);
             rank->setAnchorPoint(CCPointZero);
             rank->setPosition(ccp(100 * SIZE_RATIO_X,
-                                  (570 - 100 * (players->count() - 1)) * SIZE_RATIO_Y));
+                                  (550 - 100 * (players->count() - 1)) * SIZE_RATIO_Y));
             this->addChild(rank);
+            
+            CCSprite *line = CCSprite::create("line.png");
+            line->setScaleX(SIZE_RATIO_X);
+            line->setScaleY(SIZE_RATIO_Y);
+            line->setPosition(ccp(w/2, (540- 100 * (players->count() - 1)) * SIZE_RATIO_Y));
+            this->addChild(line);
         }
     } else {
         CCLog(document.GetParseError());
@@ -207,11 +214,11 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
     CCString::createWithFormat("%d", GameManager::sharedGameManager()->getBestScore());
     string s = RankingScene::scoreFormat(bestScore->getCString());
     CCLabelTTF *bestScoreLabel = CCLabelTTF::create(s.c_str(),
-                                                    "Fonts/BankGothic Md BT",
+                                                    FONT,
                                                     45 * SIZE_RATIO);
     bestScoreLabel->setAnchorPoint(CCPointZero);
-    bestScoreLabel->setPosition(ccp(300 * SIZE_RATIO_X,
-                                    (520 - 100 * (players->count())) * SIZE_RATIO_Y));
+    bestScoreLabel->setPosition(ccp(250 * SIZE_RATIO_X,
+                                    220 * SIZE_RATIO_Y));
     this->addChild(bestScoreLabel);
     
     string name = GameManager::sharedGameManager()->getName();
@@ -219,11 +226,11 @@ void RankingScene::onHttpRequestCompleted(CCNode *sender, void *data) {
         name = "you";
     }
     CCLabelTTF *nameLabel = CCLabelTTF::create(name.c_str(),
-                                               "Fonts/BankGothic Lt BT",
+                                               FONT,
                                                30 * SIZE_RATIO);
     nameLabel->setAnchorPoint(CCPointZero);
-    nameLabel->setPosition(ccp(300 * SIZE_RATIO_X,
-                               (560 - 100 * (players->count())) * SIZE_RATIO_Y));
+    nameLabel->setPosition(ccp(250 * SIZE_RATIO_X,
+                               260 * SIZE_RATIO_Y));
     this->addChild(nameLabel);
 }
 

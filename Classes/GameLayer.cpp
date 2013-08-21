@@ -90,7 +90,7 @@ GameLayer::GameLayer() {
 
     _controlLayer = new CCLayer();
 //    _controlLayer->setPosition(ccp(w/2, h/2));
-//    _controlLayer->getCamera()->setEyeXYZ(0, -7, 10);
+    _controlLayer->getCamera()->setEyeXYZ(0, -7, 10);
     this->addChild(_controlLayer);
     
     CCSprite *backGroundImg;
@@ -115,8 +115,8 @@ GameLayer::GameLayer() {
     aiGoal->setScaleX(w/backGroundImg->getContentSize().width);
     humanGoal->setScaleY(h/backGroundImg->getContentSize().height);
     aiGoal->setScaleY(h/backGroundImg->getContentSize().height);
-    this->addChild(humanGoal, 2);
-    this->addChild(aiGoal, 2);
+    _controlLayer->addChild(humanGoal, 2);
+    _controlLayer->addChild(aiGoal, 2);
     
     GOAL_RADIUS = humanGoal->getContentSize().width*SIZE_RATIO_X/2;
  
@@ -144,8 +144,8 @@ GameLayer::GameLayer() {
 
     _scoreLabel1 = CCLabelTTF::create("0", FONT, 48 * SIZE_RATIO);
     _scoreLabel2 = CCLabelTTF::create("0", FONT, 48 * SIZE_RATIO);
-    _scoreLabel1->setRotation(-90);
-    _scoreLabel2->setRotation(-90);
+    _scoreLabel1->setRotation(90);
+    _scoreLabel2->setRotation(90);
     _scoreLabel1->setPosition(humanScoreBG->getPosition());
     _scoreLabel2->setPosition(aiScoreBG->getPosition());
     this->addChild(_scoreLabel1);
@@ -302,21 +302,32 @@ void GameLayer::initPhysics() {
     this->createEdge(0, h/2, w, h/2, -10);
     
     // Create 2 Player and Puck
-    _player1 = Ball::create(this, humanPlayer, "Player/Mallet1_2.png");
+    _player1 = Ball::create(this, humanPlayer, "GameLayer/Mallet2.png");
     _player1->setStartPos(ccp(w/2, _player1->getRadius()*2));
+    _player1->setOpacity(0);
     _player1->setSpritePosition(_player1->getStartPos());
-
-    _player2 = Ball::create(this, aiPlayer, "Player/Mallet2_2.png");
+    human = CCSprite::create("GameLayer/Human.png");
+    human->setAnchorPoint(ccp(_player1->getContentSize().width/2/human->getContentSize().width,
+                              _player1->getContentSize().height/2/human->getContentSize().height));
+    human->setPosition(_player1->getPosition());
+    _controlLayer->addChild(human, 3);
+    
+    _player2 = Ball::create(this, aiPlayer, "GameLayer/Mallet2.png");
     _player2->setStartPos(ccp(w/2, h - _player2->getRadius()*2));
+    _player2->setOpacity(0);
     _player2->setSpritePosition(_player2->getStartPos());
-
+    ai = CCSprite::create("GameLayer/AI.png");
+    ai->setPosition(ccp(_player2->getPosition().x - 25*SIZE_RATIO_X,
+                        _player2->getPosition().y + 100*SIZE_RATIO_Y));
+    _controlLayer->addChild(ai, 2);
+    
     _puck = Ball::create(this, puck, "Player/Puck.png");
     _puck->setStartPos(ccp(w/2, h/2));
     _puck->setSpritePosition(_puck->getStartPos());
     
-    _controlLayer->addChild(_player1, 2);
-    _controlLayer->addChild(_player2, 2);
-    _controlLayer->addChild(_puck, 2);
+    _controlLayer->addChild(_player1);
+    _controlLayer->addChild(_player2);
+    _controlLayer->addChild(_puck);
 }
 
 void GameLayer::createEdge(float x1, float y1,
@@ -351,6 +362,9 @@ void GameLayer::update(float dt) {
         _player1->update(dt);
         _player2->update(dt);
         _puck->update(dt);
+        human->setPosition(_player1->getPosition());
+        ai->setPosition(ccp(_player2->getPosition().x - 25*SIZE_RATIO_X,
+                            _player2->getPosition().y + 100*SIZE_RATIO_Y));
     }
     
     if ((_minutes == 0 && _seconds == 0) || _score1 == 3 || _score2 == 3) {
@@ -358,6 +372,9 @@ void GameLayer::update(float dt) {
         _isEnd = true;
         _player1->reset();
         _player2->reset();
+        human->setPosition(_player1->getPosition());
+        ai->setPosition(ccp(_player2->getPosition().x - 25*SIZE_RATIO_X,
+                            _player2->getPosition().y + 100*SIZE_RATIO_Y));
         _puck->reset();
 //        this->pauseSchedulerAndActions();
         this->endGame();
@@ -711,7 +728,7 @@ void GameLayer::Timer() {
 void GameLayer::checkHighScore() {
     CCHttpRequest* request = new CCHttpRequest();
     string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-    request->setUrl((ipAddr + ":3000/users.json").c_str());
+    request->setUrl((ipAddr + "/users.json").c_str());
     request->setRequestType(CCHttpRequest::kHttpGet);
     request->setResponseCallback(this, callfuncND_selector(GameLayer::onHttpRequestCompleted));
     CCHttpClient::getInstance()->send(request);
@@ -762,7 +779,7 @@ void GameLayer::onHttpRequestCompleted(CCNode *sender, void *data) {
                 string ipAddr = GameManager::sharedGameManager()->getIpAddr();
                 char strP[20] = {0};
                 sprintf(strP, "%i", point);
-                string url    = ipAddr + ":3000/users?name="+name+"&point="+strP+"&email="+email;
+                string url    = ipAddr + "/users?name="+name+"&point="+strP+"&email="+email;
                 request->setUrl(url.c_str());
                 request->setRequestType(CCHttpRequest::kHttpPost);
                 CCHttpClient::getInstance()->send(request);
@@ -784,7 +801,7 @@ void GameLayer::onHttpRequestCompleted(CCNode *sender, void *data) {
                         sprintf(strP, "%i", point);
                         string email  = GameManager::sharedGameManager()->getEmail();
                         string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-                        string url    = ipAddr + ":3000/users?name="+name+"&point="+strP+"&email="+email;
+                        string url    = ipAddr + "/users?name="+name+"&point="+strP+"&email="+email;
                         request->setUrl(url.c_str());
                         request->setRequestType(CCHttpRequest::kHttpPost);
                         CCHttpClient::getInstance()->send(request);

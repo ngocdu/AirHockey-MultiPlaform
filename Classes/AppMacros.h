@@ -14,7 +14,7 @@
 
 #define PTM_RATIO 32.0
 #define GOAL_SIZE_RATIO 3.8
-#define FONT ANDROID_FONTS
+#define FONT IOS_FONTS
 #define ANDROID_FONTS "Fonts/BankGothic Md BT.ttf"
 #define IOS_FONTS  "BankGothic Md BT"
 

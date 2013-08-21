@@ -36,6 +36,7 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Fonts/BankGothic Md BT.ttf</string>
+		<string>Fonts/BankGothic Lt BT.ttf</string>
 		<string>Fonts/SS_Grogy.ttf</string>
 	</array>
 	<key>UIPrerenderedIcon</key>

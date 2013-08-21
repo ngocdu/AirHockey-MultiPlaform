@@ -87,6 +87,8 @@ private:
     CCSprite *_continueButton;
     CCSprite *_restartButton;
     CCSprite *_quitButton;
+    CCSprite *human;
+    CCSprite *ai;
     
     Ball *_player1;
     Ball *_player2;
