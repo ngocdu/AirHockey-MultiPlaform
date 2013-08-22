@@ -5,6 +5,17 @@
 //
 
 #include "GetPresent.h"
+int getPresentWriter(char *data, size_t size, size_t nmemb, string *buffer)
+{
+    int result = 0;
+    if (buffer != NULL)
+    {
+        //バッファ追記
+        buffer->append(data, size * nmemb);
+        result = size * nmemb;
+    }
+    return result;
+}
 
 CCScene* GetPresent::scene() {
     CCScene *scene = CCScene::create();
@@ -15,6 +26,8 @@ CCScene* GetPresent::scene() {
 
 bool GetPresent::init() {
     userOK = 1;
+    userOKName = 1;
+    userOKMail = 1;
     size = CCDirector::sharedDirector()->getWinSize();
     w = size.width;
     h = size.height;
@@ -130,42 +143,26 @@ bool GetPresent::init() {
 }
 void GetPresent::editBoxEditingDidBegin(cocos2d::extension::CCEditBox* editBox)
 {
-    //CCLog("editBox %p DidBegin !", editBox);
+    CCLog("editBox %p DidBegin !", editBox);
 }
 
 void GetPresent::editBoxEditingDidEnd(cocos2d::extension::CCEditBox* editBox)
 {
-    //CCLog("editBox %p DidEnd !", editBox);
+    CCLog("editBox %p DidEnd !", editBox);
 }
 
 void GetPresent::editBoxTextChanged(cocos2d::extension::CCEditBox* editBox,
                                     const std::string& text)
 {
-    //CCLog("editBox %p TextChanged, text: %s ", editBox, text.c_str());
+    CCLog("editBox %p TextChanged, text: %s ", editBox, text.c_str());
 }
 
 void GetPresent::editBoxReturn(cocos2d::extension::CCEditBox* editBox) {
     if (strcmp(m_pUserEmail->getText(),"") != 0) {
-        CCHttpRequest* request = new CCHttpRequest();
-        string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-        string email = m_pUserEmail->getText();
-        request->setUrl((ipAddr+"/user3s/dudu.json?email="+email).c_str());
-        request->setRequestType(CCHttpRequest::kHttpGet);
-        request->setResponseCallback(this, callfuncND_selector(GetPresent::onHttpRequestCompleted_checkemail));
-        CCHttpClient::getInstance()->send(request);
-        request->release();
+        this->checkEmail();
     }
     if (strcmp(m_pUserName->getText(), "") != 0) {
-        CCHttpRequest* request = new CCHttpRequest();
-        string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-        char * name =(char*) m_pUserName->getText();
-        standardizeName(name);
-        removeSpace(name);
-        request->setUrl((ipAddr+"/user3s/"+name+".json?name=ngocdu").c_str());
-        request->setRequestType(CCHttpRequest::kHttpGet);
-        request->setResponseCallback(this, callfuncND_selector(GetPresent::onHttpRequestCompleted_checkname));
-        CCHttpClient::getInstance()->send(request);
-        request->release();
+        this->checkName();
     }
 }
 
@@ -236,18 +233,28 @@ void GetPresent::menuSendEmail(CCObject *pSender) {
         nameFailMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
     } else j = 1;
     
-    if (i*j*userOK == 1) {
+    if (i * j * userOKName * userOKMail == 1) {
         char *name =(char*) m_pUserName->getText();
         standardizeName(name);
         removeSpace(name);
         GameManager::sharedGameManager()->setName(name);
-        CCHttpRequest* request = new CCHttpRequest();
         string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-        request->setUrl((ipAddr+"/users.json").c_str());
-        request->setRequestType(CCHttpRequest::kHttpGet);
-        request->setResponseCallback(this, callfuncND_selector(GetPresent::onHttpRequestCompleted));
-        CCHttpClient::getInstance()->send(request);
-        request->release();
+        string url = ipAddr +"/users.json";
+        this->postUrl(url);
+        this->sendMail();
+    }else {
+        if (userOKName == 0) {
+            CCFiniteTimeAction *showAction = CCFadeIn::create(0.5f);
+            CCFiniteTimeAction *hideAction = CCFadeOut::create(2.0f);
+            nameExistedMsg->setVisible(true);
+            nameExistedMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
+        }
+        if (userOKMail == 0) {
+            CCFiniteTimeAction *showAction = CCFadeIn::create(0.5f);
+            CCFiniteTimeAction *hideAction = CCFadeOut::create(2.0f);
+            emailExistedMsg->setVisible(true);
+            emailExistedMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
+        }
     }
     
 }
@@ -316,208 +323,6 @@ void GetPresent::sendInfo() {
     }
 }
 
-void GetPresent::onHttpRequestCompleted(CCNode *sender, void *data) {
-    CCHttpResponse *response = (CCHttpResponse*)data;
-    if (!response) {
-        return;
-    }
-    if (0 != strlen(response->getHttpRequest()->getTag())) {
-        CCLog("%s completed", response->getHttpRequest()->getTag());
-    }
-    
-    int statusCode = response->getResponseCode();
-    char statusString[64] = {0};
-    sprintf(statusString, "HTTP Status Code: %d, tag = %s", statusCode,
-            response->getHttpRequest()->getTag());
-    
-    if (!response->isSucceed()) {
-        CCLOG("Can't load Data");
-        return;
-    }
-    // dump data
-    std::vector<char> *buffer = response->getResponseData();
-    char * data2 = (char*)(malloc(buffer->size() *  sizeof(char)));
-    int d = -1;
-    printf("Http Test, dump data: ");
-    for (unsigned int i = 0; i < buffer->size(); i++) {
-        d++ ;
-        data2[d] = (*buffer)[i];
-    }
-    data2[d + 1] = '\0';
-    
-    rapidjson::Document document;
-    if(data2 != NULL && !document.Parse<0>(data2).HasParseError()) {
-        for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
-            string name = document[i]["name"].GetString();
-            string email_server = document[i]["email"].GetString();
-            CCLOG("%s", name.c_str());
-            CCLOG("%s", m_pUserName->getText());
-            char * n =(char*) m_pUserName->getText();
-            standardizeName(n);
-            removeSpace(n);
-            CCLOG("text name : %s", n);
-            if (strcmp(n, name.c_str()) == 0) {
-                if(strcmp(m_pUserEmail->getText(), "") != 0 && strcmp(m_pUserEmail->getText(), email_server.c_str()) == 0 ){
-                    CCFiniteTimeAction *showAction = CCFadeIn::create(0.2f);
-                    CCFiniteTimeAction *hideAction = CCFadeOut::create(0.2f);
-                    emailFailMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
-                    return;
-                }
-            }
-        }
-    } else {
-        CCLog(document.GetParseError());
-    }
-    free(data2);
-    if (strcmp(m_pUserEmail->getText(), "") != 0 && this->isValidEmail(m_pUserEmail->getText()) &&
-        this->spc_email_isvalid(m_pUserEmail->getText())) {
-        CCHttpRequest * request = new CCHttpRequest();
-        CCHttpRequest * request3 = new CCHttpRequest();
-        string name = GameManager::sharedGameManager()->getName();
-        int p = GameManager::sharedGameManager()->getPoint();
-        char strP[20] = {0};
-        sprintf(strP, "%i", p);
-        string email  = GameManager::sharedGameManager()->getEmail();
-        string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-        int reward    = GameManager::sharedGameManager()->getReward();
-        string url;
-        if (reward != 0) {
-            url    = ipAddr + "/users?name="+name+"&point="+strP+"&email="+email;
-        } else {
-            url    = ipAddr + "/users?name="+name+"&point="+strP+"&email="+email;
-        }
-        request->setUrl(url.c_str());
-        request->setRequestType(CCHttpRequest::kHttpPost);
-        CCHttpClient::getInstance()->send(request);
-        request->release();
-        
-        string url3 = ipAddr + "/user3s?name="+name+"&point="+strP+"&email="+email;
-        request3->setUrl(url3.c_str());
-        request3->setRequestType(CCHttpRequest::kHttpPost);
-        CCHttpClient::getInstance()->send(request3);
-        request3->release();
-        
-        char * n =(char*) m_pUserName->getText();
-        standardizeName(n);
-        GameManager::sharedGameManager()->setName(n);
-        CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5f, RankingScene::scene()));
-    } else {
-        CCFiniteTimeAction *showAction = CCFadeIn::create(0.2f);
-        CCFiniteTimeAction *hideAction = CCFadeOut::create(0.2f);
-        emailFailMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
-    }
-}
-void GetPresent::onHttpRequestCompleted_checkname(CCNode *sender, void *data) {
-    
-    CCHttpResponse *response = (CCHttpResponse*)data;
-    if (!response) {
-        return;
-    }
-    if (0 != strlen(response->getHttpRequest()->getTag())) {
-        CCLog("%s completed", response->getHttpRequest()->getTag());
-    }
-    
-    int statusCode = response->getResponseCode();
-    char statusString[64] = {0};
-    sprintf(statusString, "HTTP Status Code: %d, tag = %s", statusCode,
-            response->getHttpRequest()->getTag());
-    
-    if (!response->isSucceed()) {
-        CCLOG("Can't Load Data");
-        return;
-    }
-    // dump data
-    std::vector<char> *buffer = response->getResponseData();
-    char * data2 = (char*)(malloc(buffer->size() *  sizeof(char)));
-    int d = 0;
-    data2[d] = '[';
-    printf("Http Test, dump data: ");
-    for (unsigned int i = 0; i < buffer->size(); i++) {
-        d++ ;
-        data2[d] = (*buffer)[i];
-    }
-    d++;
-    data2[d ] = ']';
-    data2[d + 1] = '\0';
-    CCLOG("data: %s", data2);
-    string name = "";
-    rapidjson::Document document;
-    if(data2 != NULL && !document.Parse<0>(data2).HasParseError()) {
-        for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
-            if (document[i].IsObject()) {
-                CCLOG("is object");
-                name = document[i]["name"].GetString();
-                if (name != "") {
-                    userOK = 0;
-                    CCFiniteTimeAction *showAction = CCFadeIn::create(0.5f);
-                    CCFiniteTimeAction *hideAction = CCFadeOut::create(2.0f);
-                    nameExistedMsg->setVisible(true);
-                    nameExistedMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
-                }
-            }
-        }
-    } else {
-        CCLog(document.GetParseError());
-    }
-    free(data2);
-    if (name == "") userOK = 1;
-}
-void GetPresent::onHttpRequestCompleted_checkemail(CCNode *sender, void *data) {
-    CCHttpResponse *response = (CCHttpResponse*)data;
-    if (!response) {
-        return;
-    }
-    if (0 != strlen(response->getHttpRequest()->getTag())) {
-        CCLog("%s completed", response->getHttpRequest()->getTag());
-    }
-    
-    int statusCode = response->getResponseCode();
-    char statusString[64] = {0};
-    sprintf(statusString, "HTTP Status Code: %d, tag = %s", statusCode,
-            response->getHttpRequest()->getTag());
-    
-    if (!response->isSucceed()) {
-        CCLOG("Can't Load Data");
-        return;
-    }
-    // dump data
-    std::vector<char> *buffer = response->getResponseData();
-    char * data2 = (char*)(malloc(buffer->size() *  sizeof(char)));
-    int d = 0;
-    data2[d] = '[';
-    printf("Http Test, dump data: ");
-    for (unsigned int i = 0; i < buffer->size(); i++) {
-        d++ ;
-        data2[d] = (*buffer)[i];
-    }
-    d++;
-    data2[d ] = ']';
-    data2[d + 1] = '\0';
-    string email = "";
-    rapidjson::Document document;
-    if(data2 != NULL && !document.Parse<0>(data2).HasParseError()) {
-        for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
-            if (document[i].IsObject()) {
-                email = document[i]["email"].GetString();
-                if (email != "") {
-                    userOK = 0;
-                    CCFiniteTimeAction *showAction = CCFadeIn::create(0.5f);
-                    CCFiniteTimeAction *hideAction = CCFadeOut::create(2.0f);
-                    nameExistedMsg->setVisible(true);
-                    nameExistedMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
-                }
-            }
-        }
-    } else {
-        CCLog(document.GetParseError());
-    }
-    free(data2);
-    if (email == "") {
-        userOK = 1;
-        GameManager::sharedGameManager()->setEmail(m_pUserEmail->getText());
-    }
-}
-
 bool GetPresent::isValidEmail(std::string email){
     int length = email.length();
     if (length >= 9 && ((email[0] > 64 && email[0] < 91) ||
@@ -554,5 +359,247 @@ bool GetPresent::isValidEmail(std::string email){
     }
     
 }
-
-
+#pragma mark CURL
+void GetPresent::getData() {
+    CURL *curl;
+    CURLcode res;
+    curl = curl_easy_init();
+    if (curl) {
+        //133.242.203.251
+        //http://Pe4L60aeke:dhWLtJ8F1w@takasuapp.com
+        char * name =(char*) m_pUserName->getText();
+        standardizeName(name);
+        removeSpace(name);
+        string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+        //        string url = ipAddr + "/users.json";
+        string url = ipAddr+"/users.json";
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_USERNAME, "Pe4L60aeke");
+        curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+        curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, getPresentWriter);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &dataBuf);
+        res = curl_easy_perform(curl);
+        
+        curl_easy_cleanup(curl);
+        if (res == 0) {
+            CCLOG("0 response OK\n");
+        } else {
+            CCLabelTTF *checkInternetMsg = CCLabelTTF::create("現在ランキングは閉じています", FONT, 30*SIZE_RATIO);
+            checkInternetMsg->setPosition(ccp(w/2, h/2 - 30*SIZE_RATIO));
+            checkInternetMsg->setColor(ccYELLOW);
+            this->addChild(checkInternetMsg);
+        }
+    } else {
+        CCLOG("no curl\n");
+    }
+}
+void GetPresent::postUrl(string url) {
+    string username = GameManager::sharedGameManager()->getName();
+    if (!username.empty()) {
+        CURL *curl;
+        CURLcode res;
+        curl = curl_easy_init();
+        if (curl) {
+            //133.242.203.251
+            //http://Pe4L60aeke:dhWLtJ8F1w@takasuapp.com
+            
+            curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+            curl_easy_setopt(curl, CURLOPT_USERNAME, "Pe4L60aeke");
+            curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "account=kienbg");
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+            //        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+            curl_easy_setopt(curl, CURLOPT_NOPROGRESS ,1);
+            curl_easy_setopt(curl, CURLOPT_POST, true);
+            
+            res = curl_easy_perform(curl);
+            curl_easy_cleanup(curl);
+            
+            if (res == 0) {
+                CCLOG("0 response OK");
+            } else {
+                CCLog("code: %i",res);
+            }
+        }
+    }
+}
+void GetPresent::getDataName() {
+    CURL *curl;
+    CURLcode res;
+    curl = curl_easy_init();
+    if (curl) {
+        //133.242.203.251
+        //http://Pe4L60aeke:dhWLtJ8F1w@takasuapp.com
+        char * name =(char*) m_pUserName->getText();
+        standardizeName(name);
+        removeSpace(name);
+        string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+        //        string url = ipAddr + "/users.json";
+        string url = ipAddr+"/user3s/"+name+".json?name=ngocdu";
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_USERNAME, "Pe4L60aeke");
+        curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+        curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, getPresentWriter);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &dataBufName);
+        res = curl_easy_perform(curl);
+        
+        curl_easy_cleanup(curl);
+        if (res == 0) {
+            CCLOG("0 response OK\n");
+        } else {
+            CCLabelTTF *checkInternetMsg = CCLabelTTF::create("現在ランキングは閉じています", FONT, 30*SIZE_RATIO);
+            checkInternetMsg->setPosition(ccp(w/2, h/2 - 30*SIZE_RATIO));
+            checkInternetMsg->setColor(ccYELLOW);
+            this->addChild(checkInternetMsg);
+        }
+    } else {
+        CCLOG("no curl\n");
+    }
+}
+void GetPresent::checkName() {
+    this->getDataName();
+    string name = "";
+    rapidjson::Document document;
+    string data = "["+dataBufName+"]";
+    if(dataBufName.c_str() != NULL && !document.Parse<0>(data.c_str()).HasParseError()) {
+        for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
+            if (document[i].IsObject()) {
+                CCLOG("is object");
+                name = document[i]["name"].GetString();
+                if (name != "") {
+                    userOK = 0;
+                    userOKName = 0;
+                    CCFiniteTimeAction *showAction = CCFadeIn::create(0.5f);
+                    CCFiniteTimeAction *hideAction = CCFadeOut::create(2.0f);
+                    nameExistedMsg->setVisible(true);
+                    nameExistedMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
+                }
+            }
+        }
+    } else {
+        CCLog(document.GetParseError());
+    }
+    dataBufName = "";
+    if (name == ""){
+        userOKName = 1;
+    }
+}
+void GetPresent::getDataEmail() {
+    CURL *curl;
+    CURLcode res;
+    curl = curl_easy_init();
+    if (curl) {
+        //133.242.203.251
+        //http://Pe4L60aeke:dhWLtJ8F1w@takasuapp.com
+        string email = m_pUserEmail->getText();
+        string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+        //        string url = ipAddr + "/users.json";
+        string url = ipAddr+"/user3s/dudu.json?email="+email;
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_USERNAME, "Pe4L60aeke");
+        curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+        curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, getPresentWriter);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &dataBufEmail);
+        res = curl_easy_perform(curl);
+        
+        curl_easy_cleanup(curl);
+        if (res == 0) {
+            CCLOG("0 response OK\n");
+        } else {
+            CCLabelTTF *checkInternetMsg = CCLabelTTF::create("現在ランキングは閉じています", FONT, 30*SIZE_RATIO);
+            checkInternetMsg->setPosition(ccp(w/2, h/2 - 30*SIZE_RATIO));
+            checkInternetMsg->setColor(ccYELLOW);
+            this->addChild(checkInternetMsg);
+        }
+    } else {
+        CCLOG("no curl\n");
+    }
+}
+void GetPresent::checkEmail() {
+    this->getDataEmail();
+    string email = "";
+    string data2 = "["+dataBufEmail+"]";
+    rapidjson::Document document;
+    if(dataBufEmail.c_str() != NULL && !document.Parse<0>(data2.c_str()).HasParseError()) {
+        for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
+            if (document[i].IsObject()) {
+                email = document[i]["email"].GetString();
+                if (email != "") {
+                    userOK = 0;
+                    userOKMail = 0;
+                    CCFiniteTimeAction *showAction = CCFadeIn::create(0.5f);
+                    CCFiniteTimeAction *hideAction = CCFadeOut::create(2.0f);
+                    emailExistedMsg->setVisible(true);
+                    emailExistedMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
+                }
+            }
+        }
+    } else {
+        CCLog(document.GetParseError());
+    }
+    if (email == "") {
+        userOKMail = 1;
+        GameManager::sharedGameManager()->setEmail(m_pUserEmail->getText());
+    }
+    dataBufEmail = "";
+}
+void GetPresent::sendMail() {
+    rapidjson::Document document;
+    if(dataBuf.c_str() != NULL && !document.Parse<0>(dataBuf.c_str()).HasParseError()) {
+        for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
+            string name = document[i]["name"].GetString();
+            string email_server = document[i]["email"].GetString();
+            CCLOG("%s", name.c_str());
+            CCLOG("%s", m_pUserName->getText());
+            char * n =(char*) m_pUserName->getText();
+            standardizeName(n);
+            removeSpace(n);
+            CCLOG("text name : %s", n);
+            if (strcmp(n, name.c_str()) == 0) {
+                if(strcmp(m_pUserEmail->getText(), "") != 0 && strcmp(m_pUserEmail->getText(), email_server.c_str()) == 0 ){
+                    CCFiniteTimeAction *showAction = CCFadeIn::create(0.2f);
+                    CCFiniteTimeAction *hideAction = CCFadeOut::create(0.2f);
+                    emailFailMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
+                    return;
+                }
+            }
+        }
+    } else {
+        CCLog(document.GetParseError());
+    }
+    
+    if (strcmp(m_pUserEmail->getText(), "") != 0 && this->isValidEmail(m_pUserEmail->getText()) &&
+        this->spc_email_isvalid(m_pUserEmail->getText())) {
+        string name = GameManager::sharedGameManager()->getName();
+        int p = GameManager::sharedGameManager()->getPoint();
+        char strP[20] = {0};
+        sprintf(strP, "%i", p);
+        string email  = GameManager::sharedGameManager()->getEmail();
+        string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+        int reward    = GameManager::sharedGameManager()->getReward();
+        string url;
+        if (reward != 0) {
+            url    = ipAddr + "/users?name="+name+"&point="+strP+"&email="+email;
+        } else {
+            url    = ipAddr + "/users?name="+name+"&point="+strP+"&email="+email;
+        }
+        this->postUrl(url);
+        string url3 = ipAddr + "/user3s?name="+name+"&point="+strP+"&email="+email;
+        this->postUrl(url3);
+        char * n =(char*) m_pUserName->getText();
+        standardizeName(n);
+        GameManager::sharedGameManager()->setName(n);
+        CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5f, RankingScene::scene()));
+    } else {
+        CCFiniteTimeAction *showAction = CCFadeIn::create(0.2f);
+        CCFiniteTimeAction *hideAction = CCFadeOut::create(0.2f);
+        emailFailMsg->runAction(CCSequence::create(showAction, hideAction, NULL));
+    }
+    dataBuf = "";
+}
