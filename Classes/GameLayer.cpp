@@ -7,6 +7,17 @@
 //
 
 #include "GameLayer.h"
+
+int gameWriter(char *data, size_t size, size_t nmemb, string *buffer) {
+    int result = 0;
+    if (buffer != NULL) {
+        buffer->append(data, size * nmemb);
+        result = size * nmemb;
+    }
+    return result;
+}
+
+
 #pragma mark SCENE
 CCScene* GameLayer::scene() {
     CCScene *scene = CCScene::create();
@@ -40,6 +51,7 @@ CCScene* GameLayer::scene() {
 GameLayer::GameLayer() {
     
     setTouchEnabled(true);
+    CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);
     setAccelerometerEnabled(true);
     
     if (GameManager::sharedGameManager()->getLevel()) {
@@ -151,7 +163,35 @@ GameLayer::GameLayer() {
     this->addChild(_scoreLabel1);
     this->addChild(_scoreLabel2);
 
-
+//    // Pause Menu
+//    CCMenuItemImage *pauseMenuBG = CCMenuItemImage::create("BackGrounds/EndGameBG.png",
+//                                                           "BackGrounds/EndGameBG.png");
+//    pauseMenuBG->setScale(SIZE_RATIO);
+//    pauseMenuBG->setPosition(ccp(w/2, h/2));
+//    CCMenuItemImage *quitButton = CCMenuItemImage::create("Buttons/QuitButton.png",
+//                                                          "Buttons/RestartButton.png",
+//                                                          this, menu_selector(GameLayer::onQuitClick));
+//    quitButton->setScale(SIZE_RATIO);
+//    quitButton->setPosition(ccp(w/2, h*4/10));
+//    quitButton->setZOrder(pauseMenuBG->getZOrder()+1);
+//    CCMenuItemImage *restartButton = CCMenuItemImage::create("Buttons/RestartButton.png",
+//                                                             "Buttons/RestartButtonOnClicked.png",
+//                                                             this, menu_selector(GameLayer::onRestartClick));
+//    restartButton->setScale(SIZE_RATIO);
+//    restartButton->setPosition(ccp(w/2, h/2));
+//    restartButton->setZOrder(pauseMenuBG->getZOrder()+1);
+//    CCMenuItemImage *continueButton = CCMenuItemImage::create("Buttons/ContinueButton.png",
+//                                                              "Buttons/ContinueButtonOnClicked.png",
+//                                                              this, menu_selector(GameLayer::onContinueClick));
+//    continueButton->setScale(SIZE_RATIO);
+//    continueButton->setPosition(ccp(w/2, h*6/10));
+//    continueButton->setZOrder(pauseMenuBG->getZOrder()+1);
+//    CCMenu *pauseMenu = CCMenu::create(pauseMenuBG,
+//                                       quitButton,
+//                                       restartButton,
+//                                       continueButton, NULL);
+//    pauseMenu->setPosition(CCPointZero);
+//    this->addChild(pauseMenu);
     
     // End Game
     _endLayerBg = CCSprite::create("BackGrounds/EndGameBG.png");
@@ -228,6 +268,18 @@ GameLayer::GameLayer() {
 GameLayer::~GameLayer() {
     delete _world;
     _world = NULL;
+}
+
+void GameLayer::onQuitClick() {
+    
+}
+
+void GameLayer::onRestartClick() {
+    
+}
+
+void GameLayer::onContinueClick() {
+    
 }
 
 void GameLayer::playIntro() {
@@ -499,11 +551,10 @@ void GameLayer::attack() {
 }
 
 #pragma mark TOUCHES HANDLE
-void GameLayer::ccTouchesBegan(CCSet* touches, CCEvent* event) {
+bool GameLayer::ccTouchBegan(CCTouch* touch, CCEvent* event) {
 
     if (_playing) {
-        if (_mouseJoint != NULL) return;
-        CCTouch *touch = (CCTouch *)touches->anyObject();        
+        if (_mouseJoint != NULL) return false;
         CCPoint tap = touch->getLocation();
         b2Vec2 target = this->ptm(tap);
         CCRect pauseRect = _pauseButton->boundingBox();
@@ -533,7 +584,6 @@ void GameLayer::ccTouchesBegan(CCSet* touches, CCEvent* event) {
             }
         }
     } else {
-        CCTouch *touch = (CCTouch *)touches->anyObject();
         CCPoint tap = touch->getLocation();
         
         CCPoint p1 = _endLayerBg->convertToWorldSpace(_restartButton->getPosition());
@@ -586,12 +636,12 @@ void GameLayer::ccTouchesBegan(CCSet* touches, CCEvent* event) {
             _player1->getBody()->SetAwake(true);
         }
     }
+    return true;
 }
 
-void GameLayer::ccTouchesMoved(CCSet* touches, CCEvent* event) {
+void GameLayer::ccTouchMoved(CCTouch* touch, CCEvent* event) {
     if (_playing) {
         if (_mouseJoint == NULL) {
-            CCTouch *touch = (CCTouch *)touches->anyObject();
             CCPoint tap = touch->getLocation();
             b2Vec2 target = this->ptm(tap);
             if (tap.y < h/2 && tap.y > BORDER_WIDTH_BOTTOM &&
@@ -610,7 +660,6 @@ void GameLayer::ccTouchesMoved(CCSet* touches, CCEvent* event) {
             _player1->getBody()->SetAwake(true);
             }
         } else {
-            CCTouch *touch = (CCTouch *)touches->anyObject();
             CCPoint tap = touch->getLocation();
             if (tap.y > h/2 || tap.y < 10 ||
                 tap.x > w - 10 || tap.x < 10) {
@@ -622,9 +671,8 @@ void GameLayer::ccTouchesMoved(CCSet* touches, CCEvent* event) {
     }
 }
 
-void GameLayer::ccTouchesEnded(CCSet* touches, CCEvent* event) {
+void GameLayer::ccTouchEnded(CCTouch* touch, CCEvent* event) {
     if (_isPauseClicked) {
-        CCTouch *touch = (CCTouch *)touches->anyObject();
         CCPoint tap = touch->getLocation();
         CCRect pauseRect = _pauseButton->boundingBox();
         
@@ -735,6 +783,107 @@ void GameLayer::checkHighScore() {
     request->release();
 }
 
+void GameLayer::upScore(int score) {
+    string username = GameManager::sharedGameManager()->getName();
+    if (!username.empty()) {
+        char scoreString[20] = {0};
+        sprintf(scoreString, "%i", score);
+        string email  = GameManager::sharedGameManager()->getEmail();
+        string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+        string url = ipAddr + "/users?name="+username+"&point="+scoreString+"&email="+email;
+        CURL *curl;
+        CURLcode res;
+        curl = curl_easy_init();
+        if (curl) {
+            curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+            curl_easy_setopt(curl, CURLOPT_USERNAME, "Pe4L60aeke");
+            curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "account=kienbg");
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+            curl_easy_setopt(curl, CURLOPT_NOPROGRESS ,1);
+            curl_easy_setopt(curl, CURLOPT_POST, true);
+            
+            res = curl_easy_perform(curl);
+            curl_easy_cleanup(curl);
+            
+            if (res == 0) {
+                CCLOG("0 response OK");
+            } else {
+                CCLog("code: %i",res);
+            }
+        }
+    }
+}
+
+
+void GameLayer::getTopRankingList(){
+    CURL *curl;
+    CURLcode res;
+    curl = curl_easy_init();
+    if (curl) {
+        string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+        string url = ipAddr + "/users.json";
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_USERNAME, "Pe4L60aeke");
+        curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+        curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, gameWriter);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &dataBuf);
+        res = curl_easy_perform(curl);
+        
+        curl_easy_cleanup(curl);
+        if (res == 0) {
+            CCLOG("0 response OK\n");
+        } else {
+            CCLOG("GET DATA FAILED");
+        }
+    }
+}
+
+
+void GameLayer::checkScore(int score) {
+    this->getTopRankingList();
+    rapidjson::Document document;
+    if(dataBuf.c_str() != NULL && !document.Parse<0>(dataBuf.c_str()).HasParseError()) {
+        string name = GameManager::sharedGameManager()->getName();
+        convertName((char*)name.c_str());
+        if (document.Size() == 0) {
+            int r = GameManager::sharedGameManager()->getReward();
+            GameManager::sharedGameManager()->setReward(r + 1);
+            if (name.empty()) CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5f, GetPresent::scene()));
+            else this->upScore(score);
+        } else if (document.Size() <= 9) {
+            if (score >= document[rapidjson::SizeType(0)]["point"].GetInt()) {
+                int r = GameManager::sharedGameManager()->getReward();
+                GameManager::sharedGameManager()->setReward(r + 1);
+            }
+            if (name.empty())
+                CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5f, GetPresent::scene()));
+            else {
+                this->upScore(score);
+            }
+        } else {
+            for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
+                if (score >= document[i]["point"].GetInt()) {
+                    if (i == 0) {
+                        int r = GameManager::sharedGameManager()->getReward();
+                        GameManager::sharedGameManager()->setReward(r + 1);
+                    }
+                    if (name == "") {
+                        CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5f, GetPresent::scene()));
+                        break;
+                    } else {
+                        this->upScore(score);
+                    }
+                }
+            }
+        }
+    } else {
+        CCLog(document.GetParseError());
+    }
+}
+
 #pragma mark HTTP REQUEST
 void GameLayer::onHttpRequestCompleted(CCNode *sender, void *data) {
     CCHttpResponse *response = (CCHttpResponse*)data;
@@ -755,6 +904,7 @@ void GameLayer::onHttpRequestCompleted(CCNode *sender, void *data) {
         data2[d] = (*buffer)[i];
     }
     data2[d + 1] = '\0';
+    this->getTopRankingList();
     //-----------------------
     rapidjson::Document document;
     if(data2 != NULL && !document.Parse<0>(data2).HasParseError()) {
@@ -828,7 +978,8 @@ void GameLayer::endGame() {
             if (point >= GameManager::sharedGameManager()->getBestScore()) {
                 GameManager::sharedGameManager()->setBestScore(point);
             }
-            this->checkHighScore();
+//            this->checkHighScore();
+            this->checkScore(point);
         }
         
         _resultLabel->setVisible(true);

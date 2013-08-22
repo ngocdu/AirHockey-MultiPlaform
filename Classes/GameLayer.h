@@ -52,15 +52,24 @@ public:
     void defenseRight();
     void attack();
     
-    virtual void ccTouchesBegan(CCSet* touches, CCEvent* event);
-    virtual void ccTouchesMoved(CCSet* touches, CCEvent* event);
-    virtual void ccTouchesEnded(CCSet* touches, CCEvent* event);
+    void onQuitClick();
+    void onRestartClick();
+    void onContinueClick();
+    
+    virtual bool ccTouchBegan(CCTouch* touch, CCEvent* event);
+    virtual void ccTouchMoved(CCTouch* touch, CCEvent* event);
+    virtual void ccTouchEnded(CCTouch* touch, CCEvent* event);
     
     void newTurn();
     void gameReset();
     void scoreCounter(int player);
     
     void Timer();
+    
+    void upScore(int score);
+    void getTopRankingList();
+    void checkScore(int score);
+    
     void checkHighScore();
     void onHttpRequestCompleted(CCNode *sender, void *data);
     
@@ -115,6 +124,8 @@ private:
     float vx, vy, vpx, vpy;
     float pr;
     float ew, eh;
+    
+    string dataBuf;
     
     CCLabelTTF *_scoreLabel1;
     CCLabelTTF *_scoreLabel2;

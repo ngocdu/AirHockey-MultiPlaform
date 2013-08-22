@@ -53,9 +53,13 @@ public:
     virtual void editBoxReturn(extension::CCEditBox* editBox);
     void menuSendEmail(CCObject *pSender);
     void menuBack(CCObject *pSender);
+    
     bool is_email(std::string const& address);
     bool isValidEmail(std::string str);
     int spc_email_isvalid(const char *address);
+    
+    void sendInfo();
+    
     void insertChar(char *xau,int index);
     void standardizeName(char *xau);
     void removeSpace(char *xau);

@@ -10,7 +10,7 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
-int rewardWriter(char *data, size_t size, size_t nmemb, string *buffer)
+int rankingWriter(char *data, size_t size, size_t nmemb, string *buffer)
 {
     int result = 0;
     
@@ -173,7 +173,7 @@ void RankingScene::getRanking() {
         curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, rewardWriter);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, rankingWriter);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &dataBuf);
         res = curl_easy_perform(curl);
         
