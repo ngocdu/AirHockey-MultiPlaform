@@ -85,9 +85,9 @@ GameLayer::GameLayer() {
     pointCal = 0;
     pointUnit = 0;
     
-    _playing = false;
-    _isPauseClicked = false;
-    _isEnd = false;
+    _isPlaying = false;
+    _isPaused = false;
+    _isEnded = false;
     
     centerX = 0;
     centerY = 0;
@@ -162,70 +162,7 @@ GameLayer::GameLayer() {
     _scoreLabel2->setPosition(aiScoreBG->getPosition());
     this->addChild(_scoreLabel1);
     this->addChild(_scoreLabel2);
-
-//    // Pause Menu
-//    CCMenuItemImage *pauseMenuBG = CCMenuItemImage::create("BackGrounds/EndGameBG.png",
-//                                                           "BackGrounds/EndGameBG.png");
-//    pauseMenuBG->setScale(SIZE_RATIO);
-//    pauseMenuBG->setPosition(ccp(w/2, h/2));
-//    CCMenuItemImage *quitButton = CCMenuItemImage::create("Buttons/QuitButton.png",
-//                                                          "Buttons/RestartButton.png",
-//                                                          this, menu_selector(GameLayer::onQuitClick));
-//    quitButton->setScale(SIZE_RATIO);
-//    quitButton->setPosition(ccp(w/2, h*4/10));
-//    quitButton->setZOrder(pauseMenuBG->getZOrder()+1);
-//    CCMenuItemImage *restartButton = CCMenuItemImage::create("Buttons/RestartButton.png",
-//                                                             "Buttons/RestartButtonOnClicked.png",
-//                                                             this, menu_selector(GameLayer::onRestartClick));
-//    restartButton->setScale(SIZE_RATIO);
-//    restartButton->setPosition(ccp(w/2, h/2));
-//    restartButton->setZOrder(pauseMenuBG->getZOrder()+1);
-//    CCMenuItemImage *continueButton = CCMenuItemImage::create("Buttons/ContinueButton.png",
-//                                                              "Buttons/ContinueButtonOnClicked.png",
-//                                                              this, menu_selector(GameLayer::onContinueClick));
-//    continueButton->setScale(SIZE_RATIO);
-//    continueButton->setPosition(ccp(w/2, h*6/10));
-//    continueButton->setZOrder(pauseMenuBG->getZOrder()+1);
-//    CCMenu *pauseMenu = CCMenu::create(pauseMenuBG,
-//                                       quitButton,
-//                                       restartButton,
-//                                       continueButton, NULL);
-//    pauseMenu->setPosition(CCPointZero);
-//    this->addChild(pauseMenu);
     
-    // End Game
-    _endLayerBg = CCSprite::create("BackGrounds/EndGameBG.png");
-    _endLayerBg->setScaleX(SIZE_RATIO_X);
-    _endLayerBg->setScaleY(SIZE_RATIO_Y);
-    _endLayerBg->setPosition(ccp(w/2 - 10, h/2));
-    this->addChild(_endLayerBg);
-    ew = _endLayerBg->getContentSize().width;
-    eh = _endLayerBg->getContentSize().height;
-    
-    _quitButton     = CCSprite::create("Buttons/Quit.png");
-    _quitButton->setScale(SIZE_RATIO);
-    _restartButton  = CCSprite::create("Buttons/Restart.png");
-    _restartButton->setScale(SIZE_RATIO);
-    _continueButton = CCSprite::create("Buttons/Continue.png");
-    _continueButton->setScale(SIZE_RATIO);
-    
-    _resultLabel    = CCLabelTTF::create("DRAW",FONT, 60 * SIZE_RATIO);
-    _scoreLabel     = CCLabelTTF::create("score: 0", FONT, 36 * SIZE_RATIO);
-
-    _quitButton->setPosition(ccp(ew/2, eh/4));
-    _restartButton->setPosition(ccp(ew/2, eh/2));
-    _continueButton->setPosition(ccp(ew/2, eh*3/4));
-    _resultLabel->setPosition(ccp(ew/2, eh - 50));
-    _scoreLabel->setPosition(ccp(ew/2, eh*3/4 - 15));
-    
-    _endLayerBg->addChild(_quitButton);
-    _endLayerBg->addChild(_restartButton);
-    _endLayerBg->addChild(_continueButton);
-    _endLayerBg->addChild(_resultLabel);
-    _endLayerBg->addChild(_scoreLabel);
-    
-    _endLayerBg->setVisible(false);
-
     // Timer
     CCSprite *timerBG = CCSprite::create("BackGrounds/TimerBG.png");
     timerBG->setRotation(90);
@@ -234,7 +171,7 @@ GameLayer::GameLayer() {
 
     _minutes = 3;
     _seconds = 00;
-    _playing = false;
+    _isPlaying = false;
     char timeBuf[20] = {0};
 	sprintf(timeBuf, "0%i:0%i", _minutes, _seconds);
     
@@ -243,7 +180,17 @@ GameLayer::GameLayer() {
 	_timer->setPosition(timerBG->getPosition());
 	this->addChild(_timer, CONTROL_LAYER_ZORDER);
 
+    CCMenuItemImage *pauseButton = CCMenuItemImage::create("Buttons/PauseButton.png",
+                                                          "Buttons/PauseButtonOnClicked.png",
+                                                          this, menu_selector(GameLayer::onPauseClick));
+    pauseButton->setScaleX(SIZE_RATIO_X);
+    pauseButton->setScaleY(SIZE_RATIO_Y);
+    pauseButton->setPosition(ccp(w - _pauseButton->getContentSize().width/2 - 25,
+                                  h/2));
     
+    CCMenu *pause = CCMenu::create(pauseButton, NULL);
+    pause->setPosition(CCPointZero);
+    this->addChild(pause, 5);
     
     // Physics
     this->initPhysics();
@@ -258,6 +205,67 @@ GameLayer::GameLayer() {
     CCFiniteTimeAction *start = CCCallFuncN::create(this, callfuncN_selector(GameLayer::onStart));
     startGame->runAction(CCSequence::create(move1, delay, move2, start, NULL));
     
+    
+    // Pause Layer
+    _pauseLayer = CCSprite::create("BackGrounds/EndGameBG.png");
+    _pauseLayer->setScale(SIZE_RATIO);
+    _pauseLayer->setPosition(ccp(w/2, h/2));
+    CCMenuItemImage *quitButton = CCMenuItemImage::create("Buttons/QuitButton.png",
+                                                          "Buttons/QuitButtonOnClicked.png",
+                                                          this, menu_selector(GameLayer::onQuitClick));
+    quitButton->setScale(SIZE_RATIO);
+    quitButton->setPosition(_pauseLayer->convertToNodeSpace(ccp(w/2, h*4/10)));
+    CCMenuItemImage *restartButton = CCMenuItemImage::create("Buttons/RestartButton.png",
+                                                             "Buttons/RestartButtonOnClicked.png",
+                                                             this, menu_selector(GameLayer::onRestartClick));
+    restartButton->setScale(SIZE_RATIO);
+    restartButton->setPosition(_pauseLayer->convertToNodeSpace(ccp(w/2, h/2)));
+    CCMenuItemImage *continueButton = CCMenuItemImage::create("Buttons/ContinueButton.png",
+                                                              "Buttons/ContinueButtonOnClicked.png",
+                                                              this, menu_selector(GameLayer::onContinueClick));
+    continueButton->setScale(SIZE_RATIO);
+    continueButton->setPosition(_pauseLayer->convertToNodeSpace(ccp(w/2, h*6/10)));
+    
+    CCMenu *pauseMenu = CCMenu::create(quitButton,
+                               restartButton, continueButton, NULL);
+    pauseMenu->setPosition(ccp(0, 0));
+    _pauseLayer->addChild(pauseMenu);
+    this->addChild(_pauseLayer);
+    _pauseLayer->setVisible(false);
+    
+    
+    // EndGame Layer
+    _endLayer = CCSprite::create("BackGrounds/EndGameBG.png");
+    _endLayer->setPosition(ccp(w/2, h/2));
+    _endLayer->setScale(SIZE_RATIO);
+    this->addChild(_endLayer);
+    
+    _resultLabel    = CCLabelTTF::create("DRAW",FONT, 60 * SIZE_RATIO);
+    _scoreLabel     = CCLabelTTF::create("score: 0", FONT, 36 * SIZE_RATIO);
+    ew = _endLayer->getContentSize().width;
+    eh = _endLayer->getContentSize().height;
+    _resultLabel->setPosition(ccp(ew/2, eh - 50*SIZE_RATIO_Y));
+    _scoreLabel->setPosition(ccp(ew/2, eh*3/4 - 15*SIZE_RATIO_Y));
+    
+    _endLayer->addChild(_resultLabel);
+    _endLayer->addChild(_scoreLabel);
+    
+    CCMenuItemImage *quitButton2 = CCMenuItemImage::create("Buttons/QuitButton.png",
+                                                          "Buttons/QuitButtonOnClicked.png",
+                                                          this, menu_selector(GameLayer::onQuitClick));
+    quitButton2->setScale(SIZE_RATIO);
+    quitButton2->setPosition(_endLayer->convertToNodeSpace(ccp(w/2, h*4/10)));
+    CCMenuItemImage *restartButton2 = CCMenuItemImage::create("Buttons/RestartButton.png",
+                                                             "Buttons/RestartButtonOnClicked.png",
+                                                             this, menu_selector(GameLayer::onRestartClick));
+    restartButton2->setScale(SIZE_RATIO);
+    restartButton2->setPosition(_endLayer->convertToNodeSpace(ccp(w/2, h/2)));
+    
+    CCMenu *endMenu = CCMenu::create(quitButton2, restartButton2, NULL);
+    endMenu->setPosition(ccp(0, 0));
+    _endLayer->addChild(endMenu);
+    _endLayer->setVisible(false);
+    
     // Scheduler
     scheduleUpdate();
     this->schedule(schedule_selector(GameLayer::Timer), 1);
@@ -271,15 +279,43 @@ GameLayer::~GameLayer() {
 }
 
 void GameLayer::onQuitClick() {
-    
+    CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5f, RankingScene::scene()));
 }
 
 void GameLayer::onRestartClick() {
-    
+    _isPlaying = true;
+    point = pointCal = 0;
+    this->resumeSchedulerAndActions();
+    _resultLabel->stopAllActions();
+    if (_isPaused) _pauseLayer->setVisible(false);
+    if (_isEnded) _endLayer->setVisible(false);
+    this->gameReset();
 }
 
 void GameLayer::onContinueClick() {
-    
+    _isPlaying = true;
+    _isEnded = false;
+    _isPaused = false;
+    this->resumeSchedulerAndActions();
+    _pauseLayer->setVisible(false);
+}
+
+void GameLayer::onPauseClick() {
+    if (!_isEnded) {
+        if (_pauseLayer->isVisible()) {
+            _pauseLayer->setVisible(false);
+            _isPaused = false;
+            this->resumeSchedulerAndActions();
+        }
+        else {
+            _pauseLayer->setVisible(true);
+            _isPaused = true;
+            this->pauseSchedulerAndActions();
+        }
+    } else {
+        if (_endLayer->isVisible()) _endLayer->setVisible(false);
+        else _endLayer->setVisible(true);
+    }
 }
 
 void GameLayer::playIntro() {
@@ -395,7 +431,7 @@ void GameLayer::createEdge(float x1, float y1,
 }
 
 void GameLayer::onStart() {
-    _playing = true;
+    _isPlaying = true;
 }
 
 #pragma mark DRAW
@@ -410,7 +446,7 @@ void GameLayer::draw() {
 #pragma mark UPDATE
 void GameLayer::update(float dt) {
     _world->Step(dt, 8, 3);
-    if (_playing) {
+    if (_isPlaying) {
         _player1->update(dt);
         _player2->update(dt);
         _puck->update(dt);
@@ -420,15 +456,14 @@ void GameLayer::update(float dt) {
     }
     
     if ((_minutes == 0 && _seconds == 0) || _score1 == 3 || _score2 == 3) {
-        _playing = false ;
-        _isEnd = true;
+        _isPlaying = false ;
+        _isEnded = true;
         _player1->reset();
         _player2->reset();
         human->setPosition(_player1->getPosition());
         ai->setPosition(ccp(_player2->getPosition().x - 25*SIZE_RATIO_X,
                             _player2->getPosition().y + 100*SIZE_RATIO_Y));
         _puck->reset();
-//        this->pauseSchedulerAndActions();
         this->endGame();
     }
 
@@ -552,86 +587,23 @@ void GameLayer::attack() {
 
 #pragma mark TOUCHES HANDLE
 bool GameLayer::ccTouchBegan(CCTouch* touch, CCEvent* event) {
-
-    if (_playing) {
+    if (_isPlaying) {
         if (_mouseJoint != NULL) return false;
         CCPoint tap = touch->getLocation();
         b2Vec2 target = this->ptm(tap);
-        CCRect pauseRect = _pauseButton->boundingBox();
         
-        if (pauseRect.containsPoint(tap)) {
-            _isPauseClicked = true;
-            _continueButton->setVisible(true);
-        } else {
-//            if (tap.y < h/2 - _player1->getRadius() &&
-//                tap.y > 10 + _player1->getRadius()  &&
-//                tap.x > 10 + _player1->getRadius()  &&
-//                tap.x < w - _player1->getRadius()) {
-            if (tap.y < h/2 && tap.y > BORDER_WIDTH_BOTTOM &&
-                tap.x > BORDER_WIDTH_LEFT  && tap.x < w - BORDER_WIDTH_RIGHT) {
-                b2MouseJointDef md;
-                md.bodyA =  _groundBody;
-                md.bodyB = _player1->getBody();
-                md.target = target;
-                md.collideConnected = true;
-                md.maxForce = 1000000.0f * _player1->getBody()->GetMass();
-                md.dampingRatio = 0;
-                md.frequencyHz = 100000;
-                
-                _player1->setSpritePosition(tap);
-                _mouseJoint = (b2MouseJoint *)_world->CreateJoint(&md);
-                _player1->getBody()->SetAwake(true);
-            }
-        }
-    } else {
-        CCPoint tap = touch->getLocation();
-        
-        CCPoint p1 = _endLayerBg->convertToWorldSpace(_restartButton->getPosition());
-        CCPoint p2 = _endLayerBg->convertToWorldSpace(_quitButton->getPosition());
-        CCPoint p3 = _endLayerBg->convertToWorldSpace(_continueButton->getPosition());
-        
-        float rmw = _restartButton->getContentSize().width;
-        float rmh = _restartButton->getContentSize().height;
-        
-        float qw  = _quitButton->getContentSize().width;
-        float qh  = _quitButton->getContentSize().height;
-        
-        float cw = _continueButton->getContentSize().width;
-        float ch = _continueButton->getContentSize().height;
-        
-        CCRect restartRect  = CCRectMake(p1.x - rmw/2, p1.y - rmh/2, rmw, rmh);
-        CCRect quitRect     = CCRectMake(p2.x - qw/2, p2.y - qh/2, qw, qh);
-        CCRect continueRect = CCRectMake(p3.x - cw/2, p3.y - ch/2, cw, ch);
-        
-        CCRect p1Rect = _player1->boundingBox();
-                    if (continueRect.containsPoint(tap)) {
-            _playing = true;
-            this->resumeSchedulerAndActions();
-            _endLayerBg->setVisible(false);
-        }
-        
-        if (quitRect.containsPoint(tap)) {
-            CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5f, RankingScene::scene()));
-        }
-        if (restartRect.containsPoint(tap)) {
-            _playing = true;
-            point = pointCal = 0;
-            this->resumeSchedulerAndActions();
-            _resultLabel->stopAllActions();
-            _resultLabel->setVisible(false);
-            _endLayerBg->setVisible(false);
-            this->gameReset();
-        }
-        if (p1Rect.containsPoint(tap)) {
+        if (tap.y < h/2 && tap.y > BORDER_WIDTH_BOTTOM &&
+            tap.x > BORDER_WIDTH_LEFT  && tap.x < w - BORDER_WIDTH_RIGHT) {
             b2MouseJointDef md;
             md.bodyA =  _groundBody;
             md.bodyB = _player1->getBody();
-            md.target = this->ptm(tap);
+            md.target = target;
             md.collideConnected = true;
             md.maxForce = 1000000.0f * _player1->getBody()->GetMass();
             md.dampingRatio = 0;
             md.frequencyHz = 100000;
             
+            _player1->setSpritePosition(tap);
             _mouseJoint = (b2MouseJoint *)_world->CreateJoint(&md);
             _player1->getBody()->SetAwake(true);
         }
@@ -640,7 +612,7 @@ bool GameLayer::ccTouchBegan(CCTouch* touch, CCEvent* event) {
 }
 
 void GameLayer::ccTouchMoved(CCTouch* touch, CCEvent* event) {
-    if (_playing) {
+    if (_isPlaying) {
         if (_mouseJoint == NULL) {
             CCPoint tap = touch->getLocation();
             b2Vec2 target = this->ptm(tap);
@@ -672,24 +644,9 @@ void GameLayer::ccTouchMoved(CCTouch* touch, CCEvent* event) {
 }
 
 void GameLayer::ccTouchEnded(CCTouch* touch, CCEvent* event) {
-    if (_isPauseClicked) {
-        CCPoint tap = touch->getLocation();
-        CCRect pauseRect = _pauseButton->boundingBox();
-        
-        if (pauseRect.containsPoint(tap)) {
-            _endLayerBg->setVisible(true);
-            this->pauseSchedulerAndActions();
-            _playing = false;
-            if (!_isEnd)    {
-                 _resultLabel->setVisible(false);
-                _scoreLabel->setVisible(false);
-            }
-        }
-    } else {
-        if (_mouseJoint != NULL) {
-            _world->DestroyJoint(_mouseJoint);
-            _mouseJoint = NULL;
-        }
+    if (_mouseJoint != NULL) {
+        _world->DestroyJoint(_mouseJoint);
+        _mouseJoint = NULL;
     }
 }
 
@@ -711,7 +668,7 @@ void GameLayer::gameReset() {
     _player2->reset();
     _puck->reset();
     
-    _isEnd = false;
+    _isEnded = false;
     _score1 = _score2 = 0;
     _minutes = 3;
     _seconds = 0;
@@ -754,7 +711,7 @@ void GameLayer::scoreCounter(int player) {
 
 #pragma mark Timer
 void GameLayer::Timer() {
-    if(_playing && _minutes >= 0) {
+    if(_isPlaying && _minutes >= 0) {
 		if(_seconds > 0)	_seconds--;
 		else {
 			if(_minutes > 0) _minutes--;
@@ -853,7 +810,7 @@ void GameLayer::checkScore(int score) {
             GameManager::sharedGameManager()->setReward(r + 1);
             if (name.empty()) CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5f, GetPresent::scene()));
             else this->upScore(score);
-        } else if (document.Size() <= 9) {
+        } else if (document.Size() <= 2) {
             if (score >= document[rapidjson::SizeType(0)]["point"].GetInt()) {
                 int r = GameManager::sharedGameManager()->getReward();
                 GameManager::sharedGameManager()->setReward(r + 1);
@@ -969,7 +926,7 @@ void GameLayer::onHttpRequestCompleted(CCNode *sender, void *data) {
 }
 
 void GameLayer::endGame() {
-
+    _endLayer->setVisible(true);
     if (_score1 > _score2) {
         if (point == 0) {
             point = _score1 * (_minutes * 60 + _seconds) *
@@ -978,7 +935,6 @@ void GameLayer::endGame() {
             if (point >= GameManager::sharedGameManager()->getBestScore()) {
                 GameManager::sharedGameManager()->setBestScore(point);
             }
-//            this->checkHighScore();
             this->checkScore(point);
         }
         
@@ -1020,19 +976,13 @@ void GameLayer::endGame() {
         _resultLabel->setString("DRAW");
         this->pauseSchedulerAndActions();
     }
-    
     else {
-        
         _scoreLabel->setString("score: 0");
         _scoreLabel->setColor(ccWHITE);
         _resultLabel->setString("YOU LOSE");
         this->pauseSchedulerAndActions();
     }
-    
-    _endLayerBg->setVisible(true);
-    _resultLabel->setVisible(true);
-    _scoreLabel->setVisible(true);
-    _continueButton->setVisible(false);
+
 }
 
 

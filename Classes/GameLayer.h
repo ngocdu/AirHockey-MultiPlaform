@@ -35,6 +35,9 @@ public:
     
     static CCScene* scene();
     
+    CCSprite *_pauseLayer;
+    CCSprite *_endLayer;
+    
     void initPhysics();
     void createEdge(float x1, float y1, float x2, float y2, int groupIndex);
     
@@ -55,6 +58,7 @@ public:
     void onQuitClick();
     void onRestartClick();
     void onContinueClick();
+    void onPauseClick();
     
     virtual bool ccTouchBegan(CCTouch* touch, CCEvent* event);
     virtual void ccTouchMoved(CCTouch* touch, CCEvent* event);
@@ -115,9 +119,9 @@ private:
     // Game Level Easy = 1, Medium = 2, Hard = 3
     int _level;
     
-    bool _playing;
-    bool _isPauseClicked;
-    bool _isEnd;
+    bool _isPlaying;
+    bool _isPaused;
+    bool _isEnded;
     
     float centerX, centerY, centerZ;
     float x, y, px, py;
