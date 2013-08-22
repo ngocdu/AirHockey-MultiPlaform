@@ -9,6 +9,21 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
+int rankingWriter1(char *data, size_t size, size_t nmemb, string *buffer)
+{
+    int result = 0;
+    
+    if (buffer != NULL)
+    {
+        //バッファ追記
+        buffer->append(data, size * nmemb);
+        result = size * nmemb;
+    }
+    
+    return result;
+}
+
+
 CCScene* RewardScene::scene() {
     CCScene *scene = CCScene::create();
     RewardScene *layer1 = RewardScene::create();
@@ -42,14 +57,15 @@ bool RewardScene::init() {
         playerNameLabel->setPosition(ccp(w/2, h*3/4));
         this->addChild(playerNameLabel);
     }
+    this->displayRanking();
     
-    CCHttpRequest* request = new CCHttpRequest();
-    string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-    request->setUrl((ipAddr+"/users.json").c_str());
-    request->setRequestType(CCHttpRequest::kHttpGet);
-    request->setResponseCallback(this, callfuncND_selector(RewardScene::onHttpRequestCompleted));
-    CCHttpClient::getInstance()->send(request);
-    request->release();
+//    CCHttpRequest* request = new CCHttpRequest();
+//    string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+//    request->setUrl((ipAddr+"/users.json").c_str());
+//    request->setRequestType(CCHttpRequest::kHttpGet);
+//    request->setResponseCallback(this, callfuncND_selector(RewardScene::onHttpRequestCompleted));
+//    CCHttpClient::getInstance()->send(request);
+//    request->release();
     
     //create startMenuItem
     CCMenuItemImage *back = CCMenuItemImage::create("Buttons/BackButton.png",
@@ -133,29 +149,29 @@ void RewardScene::onHttpRequestCompleted(CCNode *sender, void *data) {
     tableView->reloadData();
 }
 
-void RewardScene::clickBtSendEmail(cocos2d::CCObject *pSender) {
-    CCLOG("cell: %i", celltouch);
-    CCMenuItemImage *bt_send_email = (CCMenuItemImage*)pSender;
-    CCLOG("tag menu : %i", bt_send_email->getTag());
-    CCHttpRequest * request = new CCHttpRequest();
-    Player1 *p = (Player1*)players->objectAtIndex(bt_send_email->getTag() - 100);
-    int point = p->getPoint();
-    string name = GameManager::sharedGameManager()->getName();
-    convertName2((char*)name.c_str());
-    char strP[20] = {0};
-    sprintf(strP, "%i", point);
-    string email  = GameManager::sharedGameManager()->getEmail();
-    string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-    string url    = ipAddr + "/users?name="+name+"&point="+strP+"&email="+email+"&reward=abc&time="+p->getTime();
-    request->setUrl(url.c_str());
-    request->setRequestType(CCHttpRequest::kHttpPost);
-    CCHttpClient::getInstance()->send(request);
-    request->release();
-    p->setReward(-1);
-    int r = GameManager::sharedGameManager()->getReward();
-    GameManager::sharedGameManager()->setReward(r - 1);
-    bt_send_email->removeFromParentAndCleanup(true);
-}
+//void RewardScene::clickBtSendEmail(cocos2d::CCObject *pSender) {
+//    CCLOG("cell: %i", celltouch);
+//    CCMenuItemImage *bt_send_email = (CCMenuItemImage*)pSender;
+//    CCLOG("tag menu : %i", bt_send_email->getTag());
+//    CCHttpRequest * request = new CCHttpRequest();
+//    Player1 *p = (Player1*)players->objectAtIndex(bt_send_email->getTag() - 100);
+//    int point = p->getPoint();
+//    string name = GameManager::sharedGameManager()->getName();
+//    convertName2((char*)name.c_str());
+//    char strP[20] = {0};
+//    sprintf(strP, "%i", point);
+//    string email  = GameManager::sharedGameManager()->getEmail();
+//    string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+//    string url    = ipAddr + "/users?name="+name+"&point="+strP+"&email="+email+"&reward=abc&time="+p->getTime();
+//    request->setUrl(url.c_str());
+//    request->setRequestType(CCHttpRequest::kHttpPost);
+//    CCHttpClient::getInstance()->send(request);
+//    request->release();
+//    p->setReward(-1);
+//    int r = GameManager::sharedGameManager()->getReward();
+//    GameManager::sharedGameManager()->setReward(r - 1);
+//    bt_send_email->removeFromParentAndCleanup(true);
+//}
 
 void RewardScene::back(CCObject* pSender) {
     CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f, RankingScene::scene()));
@@ -276,9 +292,147 @@ void RewardScene::convertTime2(char *str_time) {
     }
 }
 
-
 unsigned int RewardScene::numberOfCellsInTableView(CCTableView *table) {
     return players->count();
+}
+
+void RewardScene::getRanking() {
+    CURL *curl;
+    CURLcode res;
+    curl = curl_easy_init();
+    if (curl) {
+        //133.242.203.251
+        //http://Pe4L60aeke:dhWLtJ8F1w@takasuapp.com
+        
+        string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+        string url = ipAddr + "/users.json";
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_USERNAME, "Pe4L60aeke");
+        curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+        curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, rankingWriter1);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &dataBuf);
+        res = curl_easy_perform(curl);
+        
+        curl_easy_cleanup(curl);
+        if (res == 0) {
+            CCLOG("0 response OK\n");
+        } else {
+            CCLabelTTF *checkInternetMsg = CCLabelTTF::create("現在ランキングは閉じています", FONT, 30*SIZE_RATIO);
+            checkInternetMsg->setPosition(ccp(w/2, h/2 - 30*SIZE_RATIO));
+            checkInternetMsg->setColor(ccYELLOW);
+            this->addChild(checkInternetMsg);
+        }
+    } else {
+        CCLOG("no curl\n");
+    }
+}
+
+void RewardScene::displayRanking() {
+    this->getRanking();
+    rapidjson::Document document;
+    if(dataBuf.c_str() != NULL && !document.Parse<0>(dataBuf.c_str()).HasParseError()) {
+        string username = GameManager::sharedGameManager()->getName();
+        string email = GameManager::sharedGameManager()->getEmail();
+        for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
+            string name = document[i]["name"].GetString();
+            convertName((char*)name.c_str());
+            if (username == name && email == document[i]["email"].GetString()) {
+                string mail = document[i]["email"].GetString();
+                string time = document[i]["updated_at"].GetString();
+                int p = document[i]["point"].GetInt();
+                int r = document[i]["reward"].GetInt();
+                Player1 *player = new Player1(name, p, mail, time, r);
+                players->addObject(player);
+            }
+        }
+    } else {
+        CCLog(document.GetParseError());
+    }
+//    rapidjson::Document document;
+//    if(data2 != NULL && !document.Parse<0>(data2).HasParseError()) {
+//        string username = GameManager::sharedGameManager()->getName();
+//        string email = GameManager::sharedGameManager()->getEmail();
+//        for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
+//            string name = document[i]["name"].GetString();
+//            convertName((char*)name.c_str());
+//            if (username == name &&
+//                email == document[i]["email"].GetString()){
+//                string mail = document[i]["email"].GetString();
+//                string time = document[i]["updated_at"].GetString();
+//                int p = document[i]["point"].GetInt();
+//                int r = document[i]["reward"].GetInt();
+//                Player1 *player = new Player1(name,p, mail, time, r);
+//                players->addObject(player);
+//            }
+//        }
+//    } else {
+//        CCLog(document.GetParseError());
+//    }
+//    free(data2);
+    
+    CCTableView *tableView=CCTableView::create(this, CCSizeMake(700*SIZE_RATIO_X,
+                                                                350*SIZE_RATIO_Y));
+    tableView->setDirection(kCCScrollViewDirectionVertical);
+    tableView->setAnchorPoint(ccp(0, 0));
+    tableView->setPosition(ccp(w/8, 250*SIZE_RATIO_Y));
+    tableView->setDelegate(this);
+    tableView->setVerticalFillOrder(kCCTableViewFillTopDown);
+    this->addChild(tableView, 21);
+    tableView->reloadData();
+
+}
+
+void RewardScene::clickBtSendEmail(cocos2d::CCObject *pSender) {
+    CCMenuItemImage *bt_send_email = (CCMenuItemImage*)pSender;
+    Player1 *p = (Player1*)players->objectAtIndex(bt_send_email->getTag() - 100);
+    int point = p->getPoint();
+    string name = GameManager::sharedGameManager()->getName();
+    convertName2((char*)name.c_str());
+    char strP[20] = {0};
+    sprintf(strP, "%i", point);
+    string email  = GameManager::sharedGameManager()->getEmail();
+    string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+    string url    = ipAddr + "/users?name="+name+"&point="+strP+"&email="+email+"&reward=abc&time="+p->getTime();
+    CURL *curl;
+    CURLcode res;
+    curl = curl_easy_init();
+    if (curl) {
+        //133.242.203.251
+        //http://Pe4L60aeke:dhWLtJ8F1w@takasuapp.com
+            
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_USERNAME, "Pe4L60aeke");
+        curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "account=kienbg");
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+        curl_easy_setopt(curl, CURLOPT_NOPROGRESS ,1);
+        curl_easy_setopt(curl, CURLOPT_POST, true);
+
+        res = curl_easy_perform(curl);
+        curl_easy_cleanup(curl);
+
+        if (res == 0) {
+            CCLOG("0 response OK");
+        } else {
+                CCLog("code: %i",res);
+        }
+    }
+    p->setReward(-1);
+    int r = GameManager::sharedGameManager()->getReward();
+    GameManager::sharedGameManager()->setReward(r - 1);
+    bt_send_email->removeFromParentAndCleanup(true);
+}
+
+string RewardScene::scoreFormat(string score){
+    string s = score;
+    int i = 1;
+    while ((i * 3) < score.length()) {
+        s.insert(score.length() - i * 3, ",");
+        i++;
+    }
+    return s;
 }
 
 Player1::Player1(string name , int point, string email, string time, int reward) {
