@@ -26,6 +26,8 @@ private:
     CCSize size;
     
     int userOK;
+    int userOKName;
+    int userOKMail;
     
     float w, h;
     float SIZE_RATIO;
@@ -39,6 +41,10 @@ private:
     extension::CCEditBox* m_pUserName;
     CCLabelTTF* m_pTTFShowEditReturn;
     CCMenu* pMenu;
+    
+    string dataBufName;
+    string dataBufEmail;
+    string dataBuf;
 public:
     // Method 'init' in cocos2d-x returns bool, instead of 'id' in cocos2d-iphone (an object pointer)
     virtual bool init();
@@ -63,9 +69,15 @@ public:
     void insertChar(char *xau,int index);
     void standardizeName(char *xau);
     void removeSpace(char *xau);
-    void onHttpRequestCompleted(CCNode *sender, void *data);
-    void onHttpRequestCompleted_checkemail(CCNode *sender, void *data);
-    void onHttpRequestCompleted_checkname(CCNode *sender, void *data);
+    //----------------curl----------------
+    void checkName();
+    void checkEmail();
+    void getDataName();
+    void getDataEmail();
+    void getData();
+    void sendMail();
+    void postUrl(string url);
+    //------------------------------------
     // a selector callback
     CREATE_FUNC(GetPresent);
 };
