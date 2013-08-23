@@ -18,6 +18,8 @@
 #include "rapidjson/document.h"
 #include "RankingScene.h"
 #include "GetPresent.h"
+#include "curl/curl.h"
+
 
 #define GOALSIZE_RATIO 3.8
 
@@ -95,7 +97,6 @@ private:
     
     b2Body *_groundBody;
 
-    CCSprite *_pauseButton;
     CCSprite *_endLayerBg;
     CCSprite *_continueButton;
     CCSprite *_restartButton;

@@ -19,6 +19,7 @@
 #include "Difficulty.h"
 #include "GameManager.h"
 #include "RankingScene.h"
+#include "curl/curl.h"
 
 using namespace std;
 using namespace cocos2d;

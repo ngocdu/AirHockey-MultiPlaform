@@ -15,7 +15,7 @@
 #include "GameManager.h"
 #include "Difficulty.h"
 #include "RewardScene.h"
-#include "curl.h"
+#include "curl/curl.h"
 
 using namespace std;
 using namespace cocos2d;

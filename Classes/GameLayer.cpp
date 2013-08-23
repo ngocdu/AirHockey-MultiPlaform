@@ -40,6 +40,8 @@ CCScene* GameLayer::scene() {
         spaceBackground = CCSprite::create("BackGrounds/Hulk.jpg");
     }
     spaceBackground->setPosition(ccp(w/2,h/2));
+    spaceBackground->setScaleX(w/spaceBackground->getContentSize().width);
+    spaceBackground->setScaleY(w/spaceBackground->getContentSize().height);
     GameLayer *layer = new GameLayer();
     scene->addChild(spaceBackground, SPACE_BACKGROUND_ZORDER);
     scene->addChild(layer);
@@ -131,14 +133,19 @@ GameLayer::GameLayer() {
     _controlLayer->addChild(aiGoal, 2);
     
     GOAL_RADIUS = humanGoal->getContentSize().width*SIZE_RATIO_X/2;
- 
+    
     // Pause Button
-    _pauseButton = CCSprite::create("Buttons/PauseButton.png");
-    _pauseButton->setScaleX(SIZE_RATIO_X);
-    _pauseButton->setScaleY(SIZE_RATIO_Y);
-    _pauseButton->setPosition(ccp(w - _pauseButton->getContentSize().width/2 - 25,
-                                  h/2));
-    this->addChild(_pauseButton);
+    CCMenuItemImage *pauseButton = CCMenuItemImage::create("Buttons/PauseButton.png",
+                                                           "Buttons/PauseButtonOnClicked.png",
+                                                           this, menu_selector(GameLayer::onPauseClick));
+    pauseButton->setScaleX(SIZE_RATIO_X);
+    pauseButton->setScaleY(SIZE_RATIO_Y);
+    pauseButton->setPosition(ccp(w - pauseButton->getContentSize().width/2 -
+                                 25*SIZE_RATIO_X, h/2));
+    
+    CCMenu *pause = CCMenu::create(pauseButton, NULL);
+    pause->setPosition(CCPointZero);
+    this->addChild(pause, 5);
     
     // Score Counter
     CCSprite *humanScoreBG = CCSprite::create("BackGrounds/ScoreBG.png");
@@ -147,10 +154,12 @@ GameLayer::GameLayer() {
     humanScoreBG->setRotation(-90);
     aiScoreBG->setRotation(-90);
     
-    humanScoreBG->setPosition(ccp(_pauseButton->getPosition().x,
-                                  h/2 - humanScoreBG->getContentSize().width/2 - _pauseButton->getContentSize().width));
-    aiScoreBG->setPosition(ccp(_pauseButton->getPosition().x,
-                               h/2 + aiScoreBG->getContentSize().width/2 + _pauseButton->getContentSize().width));
+    humanScoreBG->setPosition(ccp(pauseButton->getPosition().x,
+                                  h/2 - humanScoreBG->getContentSize().width/2 - pauseButton->getContentSize().width));
+    humanScoreBG->setScale(SIZE_RATIO);
+    aiScoreBG->setPosition(ccp(pauseButton->getPosition().x,
+                               h/2 + aiScoreBG->getContentSize().width/2 + pauseButton->getContentSize().width));
+    aiScoreBG->setScale(SIZE_RATIO);
     this->addChild(humanScoreBG);
     this->addChild(aiScoreBG);
 
@@ -167,6 +176,7 @@ GameLayer::GameLayer() {
     CCSprite *timerBG = CCSprite::create("BackGrounds/TimerBG.png");
     timerBG->setRotation(90);
     timerBG->setPosition(ccp(timerBG->getContentSize().height/2 + 15, h/2));
+    timerBG->setScale(SIZE_RATIO);
     this->addChild(timerBG);
 
     _minutes = 3;
@@ -179,18 +189,6 @@ GameLayer::GameLayer() {
     _timer->setRotation(90);
 	_timer->setPosition(timerBG->getPosition());
 	this->addChild(_timer, CONTROL_LAYER_ZORDER);
-
-    CCMenuItemImage *pauseButton = CCMenuItemImage::create("Buttons/PauseButton.png",
-                                                          "Buttons/PauseButtonOnClicked.png",
-                                                          this, menu_selector(GameLayer::onPauseClick));
-    pauseButton->setScaleX(SIZE_RATIO_X);
-    pauseButton->setScaleY(SIZE_RATIO_Y);
-    pauseButton->setPosition(ccp(w - _pauseButton->getContentSize().width/2 - 25,
-                                  h/2));
-    
-    CCMenu *pause = CCMenu::create(pauseButton, NULL);
-    pause->setPosition(CCPointZero);
-    this->addChild(pause, 5);
     
     // Physics
     this->initPhysics();
@@ -213,17 +211,17 @@ GameLayer::GameLayer() {
     CCMenuItemImage *quitButton = CCMenuItemImage::create("Buttons/QuitButton.png",
                                                           "Buttons/QuitButtonOnClicked.png",
                                                           this, menu_selector(GameLayer::onQuitClick));
-    quitButton->setScale(SIZE_RATIO);
+//    quitButton->setScale(SIZE_RATIO);
     quitButton->setPosition(_pauseLayer->convertToNodeSpace(ccp(w/2, h*4/10)));
     CCMenuItemImage *restartButton = CCMenuItemImage::create("Buttons/RestartButton.png",
                                                              "Buttons/RestartButtonOnClicked.png",
                                                              this, menu_selector(GameLayer::onRestartClick));
-    restartButton->setScale(SIZE_RATIO);
+//    restartButton->setScale(SIZE_RATIO);
     restartButton->setPosition(_pauseLayer->convertToNodeSpace(ccp(w/2, h/2)));
     CCMenuItemImage *continueButton = CCMenuItemImage::create("Buttons/ContinueButton.png",
                                                               "Buttons/ContinueButtonOnClicked.png",
                                                               this, menu_selector(GameLayer::onContinueClick));
-    continueButton->setScale(SIZE_RATIO);
+//    continueButton->setScale(SIZE_RATIO);
     continueButton->setPosition(_pauseLayer->convertToNodeSpace(ccp(w/2, h*6/10)));
     
     CCMenu *pauseMenu = CCMenu::create(quitButton,
@@ -240,8 +238,8 @@ GameLayer::GameLayer() {
     _endLayer->setScale(SIZE_RATIO);
     this->addChild(_endLayer);
     
-    _resultLabel    = CCLabelTTF::create("DRAW",FONT, 60 * SIZE_RATIO);
-    _scoreLabel     = CCLabelTTF::create("score: 0", FONT, 36 * SIZE_RATIO);
+    _resultLabel    = CCLabelTTF::create("DRAW",FONT, 60);
+    _scoreLabel     = CCLabelTTF::create("score: 0", FONT, 36);
     ew = _endLayer->getContentSize().width;
     eh = _endLayer->getContentSize().height;
     _resultLabel->setPosition(ccp(ew/2, eh - 50*SIZE_RATIO_Y));
@@ -251,14 +249,14 @@ GameLayer::GameLayer() {
     _endLayer->addChild(_scoreLabel);
     
     CCMenuItemImage *quitButton2 = CCMenuItemImage::create("Buttons/QuitButton.png",
-                                                          "Buttons/QuitButtonOnClicked.png",
-                                                          this, menu_selector(GameLayer::onQuitClick));
-    quitButton2->setScale(SIZE_RATIO);
+                                                           "Buttons/QuitButtonOnClicked.png",
+                                                           this, menu_selector(GameLayer::onQuitClick));
+//    quitButton2->setScale(SIZE_RATIO);
     quitButton2->setPosition(_endLayer->convertToNodeSpace(ccp(w/2, h*4/10)));
     CCMenuItemImage *restartButton2 = CCMenuItemImage::create("Buttons/RestartButton.png",
-                                                             "Buttons/RestartButtonOnClicked.png",
-                                                             this, menu_selector(GameLayer::onRestartClick));
-    restartButton2->setScale(SIZE_RATIO);
+                                                              "Buttons/RestartButtonOnClicked.png",
+                                                              this, menu_selector(GameLayer::onRestartClick));
+//    restartButton2->setScaleX(SIZE_RATIO_X);
     restartButton2->setPosition(_endLayer->convertToNodeSpace(ccp(w/2, h/2)));
     
     CCMenu *endMenu = CCMenu::create(quitButton2, restartButton2, NULL);
@@ -397,6 +395,7 @@ void GameLayer::initPhysics() {
     human = CCSprite::create("GameLayer/Human.png");
     human->setAnchorPoint(ccp(_player1->getContentSize().width/2/human->getContentSize().width,
                               _player1->getContentSize().height/2/human->getContentSize().height));
+    human->setScale(SIZE_RATIO);
     human->setPosition(_player1->getPosition());
     _controlLayer->addChild(human, 3);
     
@@ -407,6 +406,7 @@ void GameLayer::initPhysics() {
     ai = CCSprite::create("GameLayer/AI.png");
     ai->setPosition(ccp(_player2->getPosition().x - 25*SIZE_RATIO_X,
                         _player2->getPosition().y + 100*SIZE_RATIO_Y));
+    ai->setScale(SIZE_RATIO);
     _controlLayer->addChild(ai, 2);
     
     _puck = Ball::create(this, puck, "Player/Puck.png");
