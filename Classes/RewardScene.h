@@ -49,10 +49,15 @@ private:
     
     CCArray *players;
     int celltouch;
+    string dataBuf;
 public:
     virtual bool init();
     static CCScene* scene();
     void onHttpRequestCompleted(CCNode *sender, void *data);
+    
+    void getRanking();
+    void displayRanking();
+    string scoreFormat(string score);
     
     void back(CCObject* pSender);
     void clickBtSendEmail(CCObject* pSender);
