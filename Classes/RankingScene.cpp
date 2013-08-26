@@ -225,7 +225,9 @@ void RankingScene::displayRanking() {
     this->getRanking();
     rapidjson::Document document;
     string nameLocal = GameManager::sharedGameManager()->getName();
+    convertName2((char*)nameLocal.c_str());
     int pointLocalBest = GameManager::sharedGameManager()->getBestScore();
+    int k = 0;
     if(dataBuf.c_str() != NULL && !document.Parse<0>(dataBuf.c_str()).HasParseError()) {
         for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
             string name = document[i]["name"].GetString();
@@ -234,7 +236,10 @@ void RankingScene::displayRanking() {
             string time = document[i]["updated_at"].GetString();
             int p = document[i]["point"].GetInt();
             int r = document[i]["reward"].GetInt();
-            if (p < pointLocalBest && i == 2) {
+            if (pointLocalBest == p) {
+                k++;
+            }
+            if (p < pointLocalBest && i == 2 && k == 0) {
                 char scoreString[20] = {0};
                 sprintf(scoreString, "%i", pointLocalBest);
                 string email  = GameManager::sharedGameManager()->getEmail();
@@ -347,7 +352,16 @@ void RankingScene::convertName(char *str_name) {
         }
     }
 }
-
+void RankingScene::convertName2(char *str_name) {
+    int len = 0;
+    int i = 0;
+    len=strlen(str_name);
+    for(i=0;i<len;i++) {
+        if(str_name[i] == ' ') {
+            str_name[i] = '_';
+        }
+    }
+}
 string RankingScene::scoreFormat(string score){
     string s = score;
     int i = 1;

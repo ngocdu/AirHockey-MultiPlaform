@@ -60,6 +60,7 @@ public:
     void displayRanking();
     string scoreFormat(string score);
     
+    
     void back(CCObject* pSender);
     void clickBtSendEmail(CCObject* pSender);
     virtual void scrollViewDidScroll(CCScrollView* view){};
