@@ -32,6 +32,7 @@ CCScene* RankingScene::scene() {
 }
 
 bool RankingScene::init() {
+    this->upBestScore();
     size = CCDirector::sharedDirector()->getWinSize();
     w = size.width;
     h = size.height;
@@ -104,6 +105,7 @@ bool RankingScene::init() {
         this->runAction(BGM);
     }
     this->addChild(bgm_off);
+    
     this->displayRanking();
     
     return true;
@@ -122,40 +124,35 @@ void RankingScene::playBGM() {
 }
 
 void RankingScene::upBestScore() {
-    string username = GameManager::sharedGameManager()->getName();
-    if (!username.empty()) {
-        int bestScore = GameManager::sharedGameManager()->getBestScore();
-        char bestScoreString[20] = {0};
-        sprintf(bestScoreString, "%i", bestScore);
-        string email  = GameManager::sharedGameManager()->getEmail();
-        string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-        string url = ipAddr + "/users?name="+username+"&point="+bestScoreString+"&email="+email;
-        CURL *curl;
-        CURLcode res;
-        curl = curl_easy_init();
-        if (curl) {
-            //133.242.203.251
-            //http://Pe4L60aeke:dhWLtJ8F1w@takasuapp.com
+    this->getRanking();
+    rapidjson::Document document;
+    string nameLocal = GameManager::sharedGameManager()->getName();
+    convertName2((char*)nameLocal.c_str());
+    int pointLocalBest = GameManager::sharedGameManager()->getBestScore();
+    int k = 0;
+    if(dataBuf.c_str() != NULL && !document.Parse<0>(dataBuf.c_str()).HasParseError()) {
+        for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
+            string name = document[i]["name"].GetString();
             
-            curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-            curl_easy_setopt(curl, CURLOPT_USERNAME, "Pe4L60aeke");
-            curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
-            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "account=kienbg");
-            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-            //        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
-            curl_easy_setopt(curl, CURLOPT_NOPROGRESS ,1);
-            curl_easy_setopt(curl, CURLOPT_POST, true);
-            
-            res = curl_easy_perform(curl);
-            curl_easy_cleanup(curl);
-            
-            if (res == 0) {
-                CCLOG("0 response OK");
-            } else {
-                CCLog("code: %i",res);
+            string mail = document[i]["email"].GetString();
+            string time = document[i]["updated_at"].GetString();
+            int p = document[i]["point"].GetInt();
+            int r = document[i]["reward"].GetInt();
+            if (pointLocalBest == p && name == nameLocal) {
+                k++;
+            }
+            convertName((char*)name.c_str());
+            if (p < pointLocalBest && i == 2 && k == 0) {
+                char scoreString[20] = {0};
+                sprintf(scoreString, "%i", pointLocalBest);
+                string email  = GameManager::sharedGameManager()->getEmail();
+                string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+                string url = ipAddr + "/users?name="+nameLocal+"&point="+scoreString+"&email="+email;
+                this->postUrl(url);
             }
         }
     }
+    dataBuf = "";
 }
 void RankingScene::postUrl(string url) {
     string username = GameManager::sharedGameManager()->getName();
@@ -211,16 +208,13 @@ void RankingScene::getRanking() {
         if (res == 0) {
             CCLOG("0 response OK\n");
         } else {
-            CCLabelTTF *checkInternetMsg = CCLabelTTF::create("現在ランキングは閉じています", FONT, 30*SIZE_RATIO);
-            checkInternetMsg->setPosition(ccp(w/2, h/2 - 30*SIZE_RATIO));
-            checkInternetMsg->setColor(ccYELLOW);
-            this->addChild(checkInternetMsg);
+            
         }
     } else {
         CCLOG("no curl\n");
     }
+    
 }
-
 void RankingScene::displayRanking() {
     this->getRanking();
     rapidjson::Document document;
@@ -231,14 +225,15 @@ void RankingScene::displayRanking() {
     if(dataBuf.c_str() != NULL && !document.Parse<0>(dataBuf.c_str()).HasParseError()) {
         for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
             string name = document[i]["name"].GetString();
-            convertName((char*)name.c_str());
+            
             string mail = document[i]["email"].GetString();
             string time = document[i]["updated_at"].GetString();
             int p = document[i]["point"].GetInt();
             int r = document[i]["reward"].GetInt();
-            if (pointLocalBest == p) {
+            if (pointLocalBest == p && name == nameLocal) {
                 k++;
             }
+            convertName((char*)name.c_str());
             if (p < pointLocalBest && i == 2 && k == 0) {
                 char scoreString[20] = {0};
                 sprintf(scoreString, "%i", pointLocalBest);
@@ -305,6 +300,8 @@ void RankingScene::displayRanking() {
     nameLabel->setPosition(ccp(250 * SIZE_RATIO_X,
                                260 * SIZE_RATIO_Y));
     this->addChild(nameLabel);
+    dataBuf = "";
+    players->removeAllObjects();
 }
 
 void RankingScene::reward(cocos2d::CCObject *pSender) {
@@ -371,7 +368,6 @@ string RankingScene::scoreFormat(string score){
     }
     return s;
 }
-
 Player::Player(string name, int point) {
     this->_point = point;
     this->_name = name;
