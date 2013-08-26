@@ -68,6 +68,7 @@ public:
     
     CREATE_FUNC(RankingScene);
     void convertName(char *str_name);
+    void convertName2(char *str_name);
     string scoreFormat(string score);
 };
 #endif /* defined(__AirHockey__RankingScene__) */

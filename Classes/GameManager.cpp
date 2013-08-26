@@ -4,7 +4,7 @@ GameManager* GameManager::m_mySingleton = NULL;
 
 GameManager::GameManager() {
 //    this->setIpAddr("https://takasuapp.com/takasu_hockey");
-    this->setIpAddr("192.168.1.185:3000");
+    this->setIpAddr("192.168.1.51:3000");
 }
 
 GameManager* GameManager::sharedGameManager() {
