@@ -41,7 +41,7 @@ private:
     float SIZE_RATIO;
     float SIZE_RATIO_X;
     float SIZE_RATIO_Y;
-    
+    int time;
     bool musicPlayed;
     bool introEnd;
     
@@ -60,7 +60,6 @@ public:
     
     void playIntro();
     void playBGM();
-    
     void upBestScore();
     void getRanking();
     void displayRanking();
