@@ -157,6 +157,36 @@ void RankingScene::upBestScore() {
         }
     }
 }
+void RankingScene::postUrl(string url) {
+    string username = GameManager::sharedGameManager()->getName();
+    if (!username.empty()) {
+        CURL *curl;
+        CURLcode res;
+        curl = curl_easy_init();
+        if (curl) {
+            //133.242.203.251
+            //http://Pe4L60aeke:dhWLtJ8F1w@takasuapp.com
+            
+            curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+            curl_easy_setopt(curl, CURLOPT_USERNAME, "Pe4L60aeke");
+            curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "account=kienbg");
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+            //        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+            curl_easy_setopt(curl, CURLOPT_NOPROGRESS ,1);
+            curl_easy_setopt(curl, CURLOPT_POST, true);
+            
+            res = curl_easy_perform(curl);
+            curl_easy_cleanup(curl);
+            
+            if (res == 0) {
+                CCLOG("0 response OK");
+            } else {
+                CCLog("code: %i",res);
+            }
+        }
+    }
+}
 
 void RankingScene::getRanking() {
     CURL *curl;
@@ -194,6 +224,8 @@ void RankingScene::getRanking() {
 void RankingScene::displayRanking() {
     this->getRanking();
     rapidjson::Document document;
+    string nameLocal = GameManager::sharedGameManager()->getName();
+    int pointLocalBest = GameManager::sharedGameManager()->getBestScore();
     if(dataBuf.c_str() != NULL && !document.Parse<0>(dataBuf.c_str()).HasParseError()) {
         for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
             string name = document[i]["name"].GetString();
@@ -202,7 +234,14 @@ void RankingScene::displayRanking() {
             string time = document[i]["updated_at"].GetString();
             int p = document[i]["point"].GetInt();
             int r = document[i]["reward"].GetInt();
-            
+            if (p < pointLocalBest && i == 2) {
+                char scoreString[20] = {0};
+                sprintf(scoreString, "%i", pointLocalBest);
+                string email  = GameManager::sharedGameManager()->getEmail();
+                string ipAddr = GameManager::sharedGameManager()->getIpAddr();
+                string url = ipAddr + "/users?name="+nameLocal+"&point="+scoreString+"&email="+email;
+                this->postUrl(url);
+            }
             Player1 *player = new Player1(name, p, mail, time, r);
             players->addObject(player);
             CCString *point = CCString::createWithFormat("%d",player->getPoint());

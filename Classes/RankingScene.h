@@ -64,6 +64,7 @@ public:
     void upBestScore();
     void getRanking();
     void displayRanking();
+    void postUrl(string url);
     
     CREATE_FUNC(RankingScene);
     void convertName(char *str_name);
