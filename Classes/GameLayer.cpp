@@ -140,8 +140,8 @@ GameLayer::GameLayer() {
                                                            this, menu_selector(GameLayer::onPauseClick));
     pauseButton->setScaleX(SIZE_RATIO_X);
     pauseButton->setScaleY(SIZE_RATIO_Y);
-    pauseButton->setPosition(ccp(w - pauseButton->getContentSize().width/2 -
-                                 25*SIZE_RATIO_X, h/2));
+    pauseButton->setPosition(ccp(w - (pauseButton->getContentSize().width/2 +
+                                 15) * SIZE_RATIO_X, h/2));
     
     CCMenu *pause = CCMenu::create(pauseButton, NULL);
     pause->setPosition(CCPointZero);
@@ -155,10 +155,10 @@ GameLayer::GameLayer() {
     aiScoreBG->setRotation(-90);
     
     humanScoreBG->setPosition(ccp(pauseButton->getPosition().x,
-                                  h/2 - humanScoreBG->getContentSize().width/2 - pauseButton->getContentSize().width));
+                                  h/2 - (humanScoreBG->getContentSize().width/2 + pauseButton->getContentSize().width) * SIZE_RATIO_Y));
     humanScoreBG->setScale(SIZE_RATIO);
     aiScoreBG->setPosition(ccp(pauseButton->getPosition().x,
-                               h/2 + aiScoreBG->getContentSize().width/2 + pauseButton->getContentSize().width));
+                               h/2 + (aiScoreBG->getContentSize().width/2 + pauseButton->getContentSize().width) * SIZE_RATIO_Y ));
     aiScoreBG->setScale(SIZE_RATIO);
     this->addChild(humanScoreBG);
     this->addChild(aiScoreBG);
@@ -175,7 +175,7 @@ GameLayer::GameLayer() {
     // Timer
     CCSprite *timerBG = CCSprite::create("BackGrounds/TimerBG.png");
     timerBG->setRotation(90);
-    timerBG->setPosition(ccp(timerBG->getContentSize().height/2 + 15, h/2));
+    timerBG->setPosition(ccp((timerBG->getContentSize().height/2 + 15) * SIZE_RATIO_X, h/2));
     timerBG->setScale(SIZE_RATIO);
     this->addChild(timerBG);
 
