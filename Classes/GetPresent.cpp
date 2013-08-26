@@ -97,11 +97,9 @@ bool GetPresent::init() {
     m_pUserEmail = extension::CCEditBox::create(editBoxSize, extension::CCScale9Sprite::create("WhiteBox.png"));
     m_pUserEmail->setPosition(ccp(w/2 - w/14, emailLabel1->getPositionY() - 50*SIZE_RATIO));
     m_pUserEmail->setFontSize(40 * SIZE_RATIO);
-    m_pUserEmail->setMaxLength(30);
+    m_pUserEmail->setMaxLength(60);
     m_pUserEmail->setPlaceHolder("input email");
     m_pUserEmail->setFontColor(ccBLACK);
-    
-    m_pUserEmail->setMaxLength(40);
     m_pUserEmail->setReturnType(cocos2d::extension::kKeyboardReturnTypeDone);
     m_pUserEmail->setInputMode(kEditBoxInputModeEmailAddr);
     m_pUserEmail->setDelegate(this);

@@ -873,7 +873,7 @@ void GameLayer::onHttpRequestCompleted(CCNode *sender, void *data) {
             int r = GameManager::sharedGameManager()->getReward();
             GameManager::sharedGameManager()->setReward(r + 1);
             CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5f, GetPresent::scene()));
-        } else if (document.Size() <= 9) {
+        } else if (document.Size() <= 2) {
             if (point >= document[rapidjson::SizeType(0)]["point"].GetInt()) {
                 int r = GameManager::sharedGameManager()->getReward();
                 GameManager::sharedGameManager()->setReward(r + 1);
