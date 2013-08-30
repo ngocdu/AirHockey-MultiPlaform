@@ -455,7 +455,7 @@ void GameLayer::update(float dt) {
                             _player2->getPosition().y + 100*SIZE_RATIO_Y));
     }
     
-    if ((_minutes == 0 && _seconds == 0) || _score1 == 1 || _score2 == 1) {
+    if ((_minutes == 0 && _seconds == 0) || _score1 == 3 || _score2 == 3) {
         _isPlaying = false ;
         _isEnded = true;
         _player1->reset();
@@ -722,9 +722,9 @@ void GameLayer::Timer() {
     
 	char timeBuf[20] = {0};
 	if(_minutes < 10 && _seconds < 10)
-        sprintf(timeBuf, "0%i:0%i", _minutes, _seconds);
+        sprintf(timeBuf, "0%d:0%d", _minutes, _seconds);
 	else if(_minutes < 10 && _seconds >= 10)
-        sprintf(timeBuf, "0%i:%i", _minutes, _seconds);
+        sprintf(timeBuf, "0%d:%d", _minutes, _seconds);
     
     _timer->setString(timeBuf);
 }
@@ -742,9 +742,10 @@ void GameLayer::checkHighScore() {
 
 void GameLayer::upScore(int score) {
     string username = GameManager::sharedGameManager()->getName();
+    this->convertName((char*)username.c_str());
     if (!username.empty()) {
         char scoreString[20] = {0};
-        sprintf(scoreString, "%i", score);
+        sprintf(scoreString, "%d", score);
         string email  = GameManager::sharedGameManager()->getEmail();
         string ipAddr = GameManager::sharedGameManager()->getIpAddr();
         string url = ipAddr + "/users?name="+username+"&point="+scoreString+"&email="+email;
@@ -766,7 +767,7 @@ void GameLayer::upScore(int score) {
             if (res == 0) {
                 CCLOG("0 response OK");
             } else {
-                CCLog("code: %i",res);
+                CCLog("code: %d",res);
             }
         }
     }
@@ -885,7 +886,7 @@ void GameLayer::onHttpRequestCompleted(CCNode *sender, void *data) {
                 string email  = GameManager::sharedGameManager()->getEmail();
                 string ipAddr = GameManager::sharedGameManager()->getIpAddr();
                 char strP[20] = {0};
-                sprintf(strP, "%i", point);
+                sprintf(strP, "%d", point);
                 string url    = ipAddr + "/users?name="+name+"&point="+strP+"&email="+email;
                 request->setUrl(url.c_str());
                 request->setRequestType(CCHttpRequest::kHttpPost);
@@ -905,7 +906,7 @@ void GameLayer::onHttpRequestCompleted(CCNode *sender, void *data) {
                     } else {
                         CCHttpRequest * request = new CCHttpRequest();
                         char strP[20] = {0};
-                        sprintf(strP, "%i", point);
+                        sprintf(strP, "%d", point);
                         string email  = GameManager::sharedGameManager()->getEmail();
                         string ipAddr = GameManager::sharedGameManager()->getIpAddr();
                         string url    = ipAddr + "/users?name="+name+"&point="+strP+"&email="+email;
@@ -929,7 +930,7 @@ void GameLayer::endGame() {
     _endLayer->setVisible(true);
     if (_score1 > _score2) {
         if (point == 0) {
-            point = _score1 * (180 - (_minutes * 60 + _seconds)) *
+            point = _score1 * (_minutes * 60 + _seconds) *
                 pow(10.0, GameManager::sharedGameManager()->getLevel() + 1.0);
             GameManager::sharedGameManager()->setPoint(point);
             if (point >= GameManager::sharedGameManager()->getBestScore()) {
@@ -956,9 +957,9 @@ void GameLayer::endGame() {
                 }
                 char timeBuf[20] = {0};
                 if(_minutes < 10 && _seconds < 10)
-                    sprintf(timeBuf, "0%i:0%i", _minutes, _seconds);
+                    sprintf(timeBuf, "0%d:0%d", _minutes, _seconds);
                 else if(_minutes < 10 && _seconds >= 10)
-                    sprintf(timeBuf, "0%i:%i", _minutes, _seconds);
+                    sprintf(timeBuf, "0%d:%d", _minutes, _seconds);
                 
                 _timer->setString(timeBuf);
                 
