@@ -33,15 +33,15 @@ CCScene* GameLayer::scene() {
     }
     CCSprite *spaceBackground;
     if (_level == 1) {
-        spaceBackground = CCSprite::create("BackGrounds/Wolverine.jpg");
+        spaceBackground = CCSprite::create("BackGrounds/bg-01.jpg");
     } else if (_level == 2) {
-        spaceBackground = CCSprite::create("BackGrounds/Joker.jpg");
+        spaceBackground = CCSprite::create("BackGrounds/bg-02.jpg");
     } else {
-        spaceBackground = CCSprite::create("BackGrounds/Hulk.jpg");
+        spaceBackground = CCSprite::create("BackGrounds/bg-03.jpg");
     }
     spaceBackground->setPosition(ccp(w/2,h/2));
     spaceBackground->setScaleX(w/spaceBackground->getContentSize().width);
-    spaceBackground->setScaleY(w/spaceBackground->getContentSize().height);
+    spaceBackground->setScaleY(h/spaceBackground->getContentSize().height);
     GameLayer *layer = new GameLayer();
     scene->addChild(spaceBackground, SPACE_BACKGROUND_ZORDER);
     scene->addChild(layer);
@@ -388,18 +388,18 @@ void GameLayer::initPhysics() {
     this->createEdge(0, h/2, w, h/2, -10);
     
     // Create 2 Player and Puck
-    _player1 = Ball::create(this, humanPlayer, "GameLayer/Mallet2.png");
+    _player1 = Ball::create(this, humanPlayer, "GameLayer/Mallet.png");
     _player1->setStartPos(ccp(w/2, _player1->getRadius()*2));
     _player1->setOpacity(0);
     _player1->setSpritePosition(_player1->getStartPos());
     human = CCSprite::create("GameLayer/Human.png");
-    human->setAnchorPoint(ccp(_player1->getContentSize().width/2/human->getContentSize().width,
-                              _player1->getContentSize().height/2/human->getContentSize().height));
     human->setScale(SIZE_RATIO);
-    human->setPosition(_player1->getPosition());
+//    human->setOpacity(30);
+    human->setPosition(ccp(_player1->getPosition().x + 50*SIZE_RATIO_X,
+                           _player1->getPosition().y + 100*SIZE_RATIO_Y));
     _controlLayer->addChild(human, 3);
     
-    _player2 = Ball::create(this, aiPlayer, "GameLayer/Mallet2.png");
+    _player2 = Ball::create(this, aiPlayer, "GameLayer/Mallet.png");
     _player2->setStartPos(ccp(w/2, h - _player2->getRadius()*2));
     _player2->setOpacity(0);
     _player2->setSpritePosition(_player2->getStartPos());
@@ -407,6 +407,7 @@ void GameLayer::initPhysics() {
     ai->setPosition(ccp(_player2->getPosition().x - 25*SIZE_RATIO_X,
                         _player2->getPosition().y + 100*SIZE_RATIO_Y));
     ai->setScale(SIZE_RATIO);
+//    ai->setOpacity(30);
     _controlLayer->addChild(ai, 2);
     
     _puck = Ball::create(this, puck, "Player/Puck.png");
@@ -450,7 +451,8 @@ void GameLayer::update(float dt) {
         _player1->update(dt);
         _player2->update(dt);
         _puck->update(dt);
-        human->setPosition(_player1->getPosition());
+        human->setPosition(ccp(_player1->getPosition().x + 50*SIZE_RATIO_X,
+                               _player1->getPosition().y + 100*SIZE_RATIO_Y));
         ai->setPosition(ccp(_player2->getPosition().x - 25*SIZE_RATIO_X,
                             _player2->getPosition().y + 100*SIZE_RATIO_Y));
     }
@@ -460,7 +462,8 @@ void GameLayer::update(float dt) {
         _isEnded = true;
         _player1->reset();
         _player2->reset();
-        human->setPosition(_player1->getPosition());
+        human->setPosition(ccp(_player1->getPosition().x + 50*SIZE_RATIO_X,
+                               _player1->getPosition().y + 100*SIZE_RATIO_Y));
         ai->setPosition(ccp(_player2->getPosition().x - 25*SIZE_RATIO_X,
                             _player2->getPosition().y + 100*SIZE_RATIO_Y));
         _puck->reset();

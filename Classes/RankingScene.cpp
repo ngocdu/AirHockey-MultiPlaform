@@ -39,7 +39,6 @@ bool RankingScene::init() {
     SIZE_RATIO = (w + h)/(768 + 1024);
     SIZE_RATIO_X = w/768;
     SIZE_RATIO_Y = h/1024;
-    CCLOG("%f     %f        %f", SIZE_RATIO_X, SIZE_RATIO_Y, SIZE_RATIO);
 
     players = new CCArray();
     if (GameManager::sharedGameManager()->getBgm()) musicPlayed = true;
@@ -105,8 +104,27 @@ bool RankingScene::init() {
         this->runAction(BGM);
     }
     this->addChild(bgm_off);
+    CCString *bestScore =
+    CCString::createWithFormat("%d", GameManager::sharedGameManager()->getBestScore());
+    string s = RankingScene::scoreFormat(bestScore->getCString());
+    CCLabelTTF *bestScoreLabel = CCLabelTTF::create(s.c_str(),
+                                                    FONT, 45 * SIZE_RATIO);
+    bestScoreLabel->setAnchorPoint(CCPointZero);
+    bestScoreLabel->setPosition(ccp(250 * SIZE_RATIO_X,
+                                    220 * SIZE_RATIO_Y));
+    this->addChild(bestScoreLabel);
     
-    this->displayRanking();
+    string username = GameManager::sharedGameManager()->getName();
+    if (username.empty()) {
+        username = "YOU";
+    }
+    CCLabelTTF *nameLabel = CCLabelTTF::create(username.c_str(),
+                                               FONT, 30 * SIZE_RATIO);
+    nameLabel->setAnchorPoint(CCPointZero);
+    nameLabel->setPosition(ccp(250 * SIZE_RATIO_X,
+                               260 * SIZE_RATIO_Y));
+    this->addChild(nameLabel);
+//    this->displayRanking();
     
     return true;
 }
@@ -168,6 +186,7 @@ void RankingScene::postUrl(string url) {
             curl_easy_setopt(curl, CURLOPT_USERNAME, "Pe4L60aeke");
             curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
             curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "account=kienbg");
+            curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
             //        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
             curl_easy_setopt(curl, CURLOPT_NOPROGRESS ,1);
@@ -180,6 +199,10 @@ void RankingScene::postUrl(string url) {
                 CCLOG("0 response OK");
             } else {
                 CCLog("code: %i",res);
+                CCLabelTTF *checkInternetMsg = CCLabelTTF::create("現在ランキングは閉じています", FONT, 30*SIZE_RATIO);
+                checkInternetMsg->setPosition(ccp(w/2, h/2 - 30*SIZE_RATIO));
+                checkInternetMsg->setColor(ccYELLOW);
+                this->addChild(checkInternetMsg);
             }
         }
     }
@@ -198,6 +221,7 @@ void RankingScene::getRanking() {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_USERNAME, "Pe4L60aeke");
         curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, rankingWriter);
@@ -208,7 +232,11 @@ void RankingScene::getRanking() {
         if (res == 0) {
             CCLOG("0 response OK\n");
         } else {
-            
+            CCLog("code: %i",res);
+            CCLabelTTF *checkInternetMsg = CCLabelTTF::create("現在ランキングは閉じています", FONT, 30*SIZE_RATIO);
+            checkInternetMsg->setPosition(ccp(w/2, h/2 - 30*SIZE_RATIO));
+            checkInternetMsg->setColor(ccYELLOW);
+            this->addChild(checkInternetMsg);
         }
     } else {
         CCLOG("no curl\n");
@@ -279,27 +307,6 @@ void RankingScene::displayRanking() {
     } else {
         CCLog(document.GetParseError());
     }
-    
-    CCString *bestScore =
-    CCString::createWithFormat("%d", GameManager::sharedGameManager()->getBestScore());
-    string s = RankingScene::scoreFormat(bestScore->getCString());
-    CCLabelTTF *bestScoreLabel = CCLabelTTF::create(s.c_str(),
-                                                    FONT, 45 * SIZE_RATIO);
-    bestScoreLabel->setAnchorPoint(CCPointZero);
-    bestScoreLabel->setPosition(ccp(250 * SIZE_RATIO_X,
-                                    220 * SIZE_RATIO_Y));
-    this->addChild(bestScoreLabel);
-    
-    string username = GameManager::sharedGameManager()->getName();
-    if (username.empty()) {
-        username = "YOU";
-    }
-    CCLabelTTF *nameLabel = CCLabelTTF::create(username.c_str(),
-                                               FONT, 30 * SIZE_RATIO);
-    nameLabel->setAnchorPoint(CCPointZero);
-    nameLabel->setPosition(ccp(250 * SIZE_RATIO_X,
-                               260 * SIZE_RATIO_Y));
-    this->addChild(nameLabel);
     dataBuf = "";
     players->removeAllObjects();
 }
