@@ -32,7 +32,6 @@ CCScene* RankingScene::scene() {
 }
 
 bool RankingScene::init() {
-    this->upBestScore();
     size = CCDirector::sharedDirector()->getWinSize();
     w = size.width;
     h = size.height;
@@ -124,7 +123,8 @@ bool RankingScene::init() {
     nameLabel->setPosition(ccp(250 * SIZE_RATIO_X,
                                260 * SIZE_RATIO_Y));
     this->addChild(nameLabel);
-//    this->displayRanking();
+    this->upBestScore();
+    this->displayRanking();
     
     return true;
 }

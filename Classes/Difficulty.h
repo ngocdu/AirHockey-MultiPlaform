@@ -25,7 +25,7 @@ private:
     float SIZE_RATIO;
     float SIZE_RATIO_X;
     float SIZE_RATIO_Y;
-    
+    bool clickBackAble;
     extension::CCEditBox  *m_pEditName;
     CCLabelTTF *m_pTTFShowEditReturn;
     CCMenu *pMenu;

@@ -22,6 +22,7 @@ bool Difficulty::init() {
     SIZE_RATIO = (w + h)/(768 + 1024);
     SIZE_RATIO_X = w/768;
     SIZE_RATIO_Y = h/1024;
+    clickBackAble = true;
     
     CCSprite *background = CCSprite::create("BackGrounds/DifficultyBG.png");
     background->setPosition(ccp(w/2, h/2));
@@ -102,5 +103,9 @@ void Difficulty::menuEasy(CCObject *pSender) {
 }
 
 void Difficulty::clickBtBack(cocos2d::CCObject *pScene) {
-    CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5f, RankingScene::scene()));
+    if (clickBackAble == true) {
+        clickBackAble = false;
+        CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5f,
+                                                        RankingScene::scene()));
+    }
 }

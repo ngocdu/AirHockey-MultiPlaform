@@ -51,10 +51,10 @@ private:
     CCArray *players;
     int celltouch;
     string dataBuf;
+    bool clickBackAble;
 public:
     virtual bool init();
     static CCScene* scene();
-    void onHttpRequestCompleted(CCNode *sender, void *data);
     
     void getRanking();
     void displayRanking();

@@ -39,6 +39,7 @@ bool RewardScene::init() {
     SIZE_RATIO_X = w/768;
     SIZE_RATIO_Y = h/1024;
 
+    clickBackAble = true;
     players = new CCArray();
     
     CCSprite *background = CCSprite::create("BackGrounds/RewardBG.png");
@@ -81,74 +82,6 @@ bool RewardScene::init() {
     return true;
 }
 
-void RewardScene::onHttpRequestCompleted(CCNode *sender, void *data) {
-    CCHttpResponse *response = (CCHttpResponse*)data;
-    
-    if (!response) {
-        return;
-    }
-
-    if (0 != strlen(response->getHttpRequest()->getTag())) {
-        CCLog("%s completed", response->getHttpRequest()->getTag());
-    }
-    
-    int statusCode = response->getResponseCode();
-    char statusString[64] = {0};
-    sprintf(statusString, "HTTP Status Code: %d, tag = %s", statusCode,
-            response->getHttpRequest()->getTag());
-    
-    if (!response->isSucceed()) {
-        CCLabelTTF *checkInternetMsg = CCLabelTTF::create("「現在ランキングは閉じています」", FONT, 24*SIZE_RATIO);
-        checkInternetMsg->setPosition(ccp(w/2, h/2 - 40*SIZE_RATIO_Y));
-        this->addChild(checkInternetMsg);
-
-        return;
-    }
-    
-    // dump data
-    std::vector<char> *buffer = response->getResponseData();
-    char * data2 = (char*)(malloc(buffer->size() *  sizeof(char)));
-    int d = -1;
-    printf("Http Test, dump data: ");
-    for (unsigned int i = 0; i < buffer->size(); i++) {
-        d++ ;
-        data2[d] = (*buffer)[i];
-    }
-    data2[d + 1] = '\0';
-    //-----------------------
-
-    rapidjson::Document document;
-    if(data2 != NULL && !document.Parse<0>(data2).HasParseError()) {
-        string username = GameManager::sharedGameManager()->getName();
-        string email = GameManager::sharedGameManager()->getEmail();
-        for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
-            string name = document[i]["name"].GetString();
-            convertName((char*)name.c_str());
-            if (username == name &&
-                email == document[i]["email"].GetString()){
-                string mail = document[i]["email"].GetString();
-                string time = document[i]["updated_at"].GetString();
-                int p = document[i]["point"].GetInt();
-                int r = document[i]["reward"].GetInt();
-                Player1 *player = new Player1(name,p, mail, time, r);
-                players->addObject(player);
-            }
-        }
-    } else {
-        CCLog(document.GetParseError());
-    }
-    free(data2);
-    CCTableView *tableView=CCTableView::create(this, CCSizeMake(700*SIZE_RATIO_X,
-                                                                350*SIZE_RATIO_Y));
-    tableView->setDirection(kCCScrollViewDirectionVertical);
-    tableView->setAnchorPoint(ccp(0, 0));
-    tableView->setPosition(ccp(w/8, 250*SIZE_RATIO_Y));
-    tableView->setDelegate(this);
-    tableView->setVerticalFillOrder(kCCTableViewFillTopDown);
-    this->addChild(tableView, 21);
-    tableView->reloadData();
-}
-
 //void RewardScene::clickBtSendEmail(cocos2d::CCObject *pSender) {
 //    CCLOG("cell: %i", celltouch);
 //    CCMenuItemImage *bt_send_email = (CCMenuItemImage*)pSender;
@@ -174,7 +107,11 @@ void RewardScene::onHttpRequestCompleted(CCNode *sender, void *data) {
 //}
 
 void RewardScene::back(CCObject* pSender) {
-    CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f, RankingScene::scene()));
+    if (clickBackAble == true) {
+        clickBackAble = false;
+        CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f,
+                                                        RankingScene::scene()));
+    } 
 }
 
 void RewardScene::tableCellTouched(CCTableView* table, CCTableViewCell* cell) {
