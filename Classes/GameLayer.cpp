@@ -211,17 +211,17 @@ GameLayer::GameLayer() {
     CCMenuItemImage *quitButton = CCMenuItemImage::create("Buttons/QuitButton.png",
                                                           "Buttons/QuitButtonOnClicked.png",
                                                           this, menu_selector(GameLayer::onQuitClick));
-//    quitButton->setScale(SIZE_RATIO);
+
     quitButton->setPosition(_pauseLayer->convertToNodeSpace(ccp(w/2, h*4/10)));
     CCMenuItemImage *restartButton = CCMenuItemImage::create("Buttons/RestartButton.png",
                                                              "Buttons/RestartButtonOnClicked.png",
                                                              this, menu_selector(GameLayer::onRestartClick));
-//    restartButton->setScale(SIZE_RATIO);
+
     restartButton->setPosition(_pauseLayer->convertToNodeSpace(ccp(w/2, h/2)));
     CCMenuItemImage *continueButton = CCMenuItemImage::create("Buttons/ContinueButton.png",
                                                               "Buttons/ContinueButtonOnClicked.png",
                                                               this, menu_selector(GameLayer::onContinueClick));
-//    continueButton->setScale(SIZE_RATIO);
+
     continueButton->setPosition(_pauseLayer->convertToNodeSpace(ccp(w/2, h*6/10)));
     
     CCMenu *pauseMenu = CCMenu::create(quitButton,
@@ -388,18 +388,18 @@ void GameLayer::initPhysics() {
     this->createEdge(0, h/2, w, h/2, -10);
     
     // Create 2 Player and Puck
-    _player1 = Ball::create(this, humanPlayer, "GameLayer/Mallet2.png");
+    _player1 = Ball::create(this, humanPlayer, "GameLayer/Mallet.png");
     _player1->setStartPos(ccp(w/2, _player1->getRadius()*2));
     _player1->setOpacity(0);
     _player1->setSpritePosition(_player1->getStartPos());
     human = CCSprite::create("GameLayer/Human.png");
-    human->setAnchorPoint(ccp(_player1->getContentSize().width/2/human->getContentSize().width,
-                              _player1->getContentSize().height/2/human->getContentSize().height));
+    human->setPosition(ccp(_player1->getPosition().x + 50*SIZE_RATIO_X,
+                           _player1->getPosition().y + 100*SIZE_RATIO_Y));
     human->setScale(SIZE_RATIO);
-    human->setPosition(_player1->getPosition());
+//    human->setOpacity(30);
     _controlLayer->addChild(human, 3);
     
-    _player2 = Ball::create(this, aiPlayer, "GameLayer/Mallet2.png");
+    _player2 = Ball::create(this, aiPlayer, "GameLayer/Mallet.png");
     _player2->setStartPos(ccp(w/2, h - _player2->getRadius()*2));
     _player2->setOpacity(0);
     _player2->setSpritePosition(_player2->getStartPos());
@@ -407,9 +407,10 @@ void GameLayer::initPhysics() {
     ai->setPosition(ccp(_player2->getPosition().x - 25*SIZE_RATIO_X,
                         _player2->getPosition().y + 100*SIZE_RATIO_Y));
     ai->setScale(SIZE_RATIO);
+//    ai->setOpacity(30);
     _controlLayer->addChild(ai, 2);
     
-    _puck = Ball::create(this, puck, "Player/Puck.png");
+    _puck = Ball::create(this, puck, "GameLayer/Puck.png");
     _puck->setStartPos(ccp(w/2, h/2));
     _puck->setSpritePosition(_puck->getStartPos());
     
@@ -450,7 +451,8 @@ void GameLayer::update(float dt) {
         _player1->update(dt);
         _player2->update(dt);
         _puck->update(dt);
-        human->setPosition(_player1->getPosition());
+        human->setPosition(ccp(_player1->getPosition().x + 50*SIZE_RATIO_X,
+                               _player1->getPosition().y + 100*SIZE_RATIO_Y));
         ai->setPosition(ccp(_player2->getPosition().x - 25*SIZE_RATIO_X,
                             _player2->getPosition().y + 100*SIZE_RATIO_Y));
     }
@@ -460,7 +462,8 @@ void GameLayer::update(float dt) {
         _isEnded = true;
         _player1->reset();
         _player2->reset();
-        human->setPosition(_player1->getPosition());
+        human->setPosition(ccp(_player1->getPosition().x + 50*SIZE_RATIO_X,
+                               _player1->getPosition().y + 100*SIZE_RATIO_Y));
         ai->setPosition(ccp(_player2->getPosition().x - 25*SIZE_RATIO_X,
                             _player2->getPosition().y + 100*SIZE_RATIO_Y));
         _puck->reset();
@@ -729,17 +732,6 @@ void GameLayer::Timer() {
     _timer->setString(timeBuf);
 }
 
-#pragma mark Check High Score
-void GameLayer::checkHighScore() {
-    CCHttpRequest* request = new CCHttpRequest();
-    string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-    request->setUrl((ipAddr + "/users.json").c_str());
-    request->setRequestType(CCHttpRequest::kHttpGet);
-    request->setResponseCallback(this, callfuncND_selector(GameLayer::onHttpRequestCompleted));
-    CCHttpClient::getInstance()->send(request);
-    request->release();
-}
-
 void GameLayer::upScore(int score) {
     string username = GameManager::sharedGameManager()->getName();
     this->convertName((char*)username.c_str());
@@ -840,90 +832,6 @@ void GameLayer::checkScore(int score) {
     } else {
         CCLog(document.GetParseError());
     }
-}
-
-#pragma mark HTTP REQUEST
-void GameLayer::onHttpRequestCompleted(CCNode *sender, void *data) {
-    CCHttpResponse *response = (CCHttpResponse*)data;
-    if (!response) {
-        CCLOG("Error !! Cannot get Respond !");
-        return;
-    }
-    if (!response->isSucceed()) {
-        CCLOG("Error !! Respond not succeeded !");
-        return;
-    }
-    
-    std::vector<char> *buffer = response->getResponseData();
-    char * data2 = (char*)(malloc(buffer->size() *  sizeof(char)));
-    int d = -1;
-    for (unsigned int i = 0; i < buffer->size(); i++) {
-        d++ ;
-        data2[d] = (*buffer)[i];
-    }
-    data2[d + 1] = '\0';
-    this->getTopRankingList();
-    //-----------------------
-    rapidjson::Document document;
-    if(data2 != NULL && !document.Parse<0>(data2).HasParseError()) {
-        string name = GameManager::sharedGameManager()->getName();
-        convertName((char*)name.c_str());
-        if (point == 0) point = _score1 * (_minutes * 60 + _seconds) *
-            pow(10.0, GameManager::sharedGameManager()->getLevel() + 1.0);
-        if (document.Size() == 0) {
-            int r = GameManager::sharedGameManager()->getReward();
-            GameManager::sharedGameManager()->setReward(r + 1);
-            CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5f, GetPresent::scene()));
-        } else if (document.Size() <= 2) {
-            if (point >= document[rapidjson::SizeType(0)]["point"].GetInt()) {
-                int r = GameManager::sharedGameManager()->getReward();
-                GameManager::sharedGameManager()->setReward(r + 1);
-            }
-            if (name == "")
-                CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5f, GetPresent::scene()));
-            else {
-                CCHttpRequest * request = new CCHttpRequest();
-                string email  = GameManager::sharedGameManager()->getEmail();
-                string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-                char strP[20] = {0};
-                sprintf(strP, "%d", point);
-                string url    = ipAddr + "/users?name="+name+"&point="+strP+"&email="+email;
-                request->setUrl(url.c_str());
-                request->setRequestType(CCHttpRequest::kHttpPost);
-                CCHttpClient::getInstance()->send(request);
-                request->release();
-            }
-        } else {
-            for (rapidjson::SizeType  i = 0; i < document.Size(); i++) {
-                if (point >= document[i]["point"].GetInt()) {
-                    if (i == 0) {
-                        int r = GameManager::sharedGameManager()->getReward();
-                        GameManager::sharedGameManager()->setReward(r + 1);
-                    }
-                    if (name == "") {
-                        CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5f, GetPresent::scene()));
-                        break;
-                    } else {
-                        CCHttpRequest * request = new CCHttpRequest();
-                        char strP[20] = {0};
-                        sprintf(strP, "%d", point);
-                        string email  = GameManager::sharedGameManager()->getEmail();
-                        string ipAddr = GameManager::sharedGameManager()->getIpAddr();
-                        string url    = ipAddr + "/users?name="+name+"&point="+strP+"&email="+email;
-                        request->setUrl(url.c_str());
-                        request->setRequestType(CCHttpRequest::kHttpPost);
-                        CCHttpClient::getInstance()->send(request);
-                        request->release();
-                        break;
-                    }                    
-                }
-            }
-        }
-    } else {
-        CCLog(document.GetParseError());
-    }
-    
-    free(data2);
 }
 
 void GameLayer::endGame() {

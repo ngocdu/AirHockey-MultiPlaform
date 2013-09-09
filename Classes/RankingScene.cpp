@@ -137,7 +137,6 @@ void RankingScene::upBestScore() {
             string mail = document[i]["email"].GetString();
             string time = document[i]["updated_at"].GetString();
             int p = document[i]["point"].GetInt();
-            int r = document[i]["reward"].GetInt();
             if (pointLocalBest == p && name == nameLocal) {
                 k++;
             }
@@ -208,7 +207,11 @@ void RankingScene::getRanking() {
         if (res == 0) {
             CCLOG("0 response OK\n");
         } else {
-            
+            CCLog("code: %i",res);
+            CCLabelTTF *checkInternetMsg = CCLabelTTF::create("現在ランキングは閉じています", FONT, 30*SIZE_RATIO);
+            checkInternetMsg->setPosition(ccp(w/2, h/2 - 30*SIZE_RATIO));
+            checkInternetMsg->setColor(ccYELLOW);
+            this->addChild(checkInternetMsg);
         }
     } else {
         CCLOG("no curl\n");

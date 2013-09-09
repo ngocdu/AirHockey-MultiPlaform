@@ -76,9 +76,6 @@ public:
     void getTopRankingList();
     void checkScore(int score);
     
-    void checkHighScore();
-    void onHttpRequestCompleted(CCNode *sender, void *data);
-    
     void endGame();
     void addEffect(CCPoint point);
     void convertName(char *str_name);
