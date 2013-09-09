@@ -33,15 +33,15 @@ CCScene* GameLayer::scene() {
     }
     CCSprite *spaceBackground;
     if (_level == 1) {
-        spaceBackground = CCSprite::create("BackGrounds/Wolverine.jpg");
+        spaceBackground = CCSprite::create("BackGrounds/bg-01.jpg");
     } else if (_level == 2) {
-        spaceBackground = CCSprite::create("BackGrounds/Joker.jpg");
+        spaceBackground = CCSprite::create("BackGrounds/bg-02.jpg");
     } else {
-        spaceBackground = CCSprite::create("BackGrounds/Hulk.jpg");
+        spaceBackground = CCSprite::create("BackGrounds/bg-03.jpg");
     }
     spaceBackground->setPosition(ccp(w/2,h/2));
     spaceBackground->setScaleX(w/spaceBackground->getContentSize().width);
-    spaceBackground->setScaleY(w/spaceBackground->getContentSize().height);
+    spaceBackground->setScaleY(h/spaceBackground->getContentSize().height);
     GameLayer *layer = new GameLayer();
     scene->addChild(spaceBackground, SPACE_BACKGROUND_ZORDER);
     scene->addChild(layer);
@@ -393,10 +393,17 @@ void GameLayer::initPhysics() {
     _player1->setOpacity(0);
     _player1->setSpritePosition(_player1->getStartPos());
     human = CCSprite::create("GameLayer/Human.png");
+<<<<<<< HEAD
     human->setPosition(ccp(_player1->getPosition().x + 50*SIZE_RATIO_X,
                            _player1->getPosition().y + 100*SIZE_RATIO_Y));
     human->setScale(SIZE_RATIO);
 //    human->setOpacity(30);
+=======
+    human->setScale(SIZE_RATIO);
+//    human->setOpacity(30);
+    human->setPosition(ccp(_player1->getPosition().x + 50*SIZE_RATIO_X,
+                           _player1->getPosition().y + 100*SIZE_RATIO_Y));
+>>>>>>> 635ed067bf3d69297de69dec77d5d1a928cc9d25
     _controlLayer->addChild(human, 3);
     
     _player2 = Ball::create(this, aiPlayer, "GameLayer/Mallet.png");

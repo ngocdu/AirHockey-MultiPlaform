@@ -311,6 +311,7 @@ void RewardScene::getRanking() {
         curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, rankingWriter1);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &dataBuf);
         res = curl_easy_perform(curl);
@@ -406,6 +407,7 @@ void RewardScene::clickBtSendEmail(cocos2d::CCObject *pSender) {
         curl_easy_setopt(curl, CURLOPT_USERNAME, "Pe4L60aeke");
         curl_easy_setopt(curl, CURLOPT_PASSWORD, "dhWLtJ8F1w");
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "account=kienbg");
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS ,1);
         curl_easy_setopt(curl, CURLOPT_POST, true);
@@ -416,7 +418,7 @@ void RewardScene::clickBtSendEmail(cocos2d::CCObject *pSender) {
         if (res == 0) {
             CCLOG("0 response OK");
         } else {
-                CCLog("code: %i",res);
+            CCLog("code: %i",res);
         }
     }
     p->setReward(-1);
