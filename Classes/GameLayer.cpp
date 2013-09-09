@@ -393,17 +393,11 @@ void GameLayer::initPhysics() {
     _player1->setOpacity(0);
     _player1->setSpritePosition(_player1->getStartPos());
     human = CCSprite::create("GameLayer/Human.png");
-<<<<<<< HEAD
-    human->setPosition(ccp(_player1->getPosition().x + 50*SIZE_RATIO_X,
-                           _player1->getPosition().y + 100*SIZE_RATIO_Y));
-    human->setScale(SIZE_RATIO);
-//    human->setOpacity(30);
-=======
+
     human->setScale(SIZE_RATIO);
 //    human->setOpacity(30);
     human->setPosition(ccp(_player1->getPosition().x + 50*SIZE_RATIO_X,
                            _player1->getPosition().y + 100*SIZE_RATIO_Y));
->>>>>>> 635ed067bf3d69297de69dec77d5d1a928cc9d25
     _controlLayer->addChild(human, 3);
     
     _player2 = Ball::create(this, aiPlayer, "GameLayer/Mallet.png");
